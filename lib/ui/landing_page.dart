@@ -6,6 +6,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/common/theme_data.dart';
+import 'package:project_anakkos_app/ui/home_page.dart';
+import 'package:project_anakkos_app/widget/bottomNavigation.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
@@ -58,7 +60,9 @@ class _LandingPageState extends State<LandingPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          SharedCode.navigatorReplacement(context, NavigationWidgetBar());
+                        },
                         child: Row(
                           children: [
                             Text('Selanjutnya',
