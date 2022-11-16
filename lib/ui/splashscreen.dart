@@ -14,7 +14,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     Future.delayed(Duration(seconds: 3), () {
       SharedCode.navigatorReplacement(context, LandingPage());
     });
