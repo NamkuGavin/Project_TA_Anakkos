@@ -30,30 +30,38 @@ class _DummyItemsState extends State<DummyItems> {
                 child:
                     Image.asset(widget.model.picture_kost, fit: BoxFit.cover),
                 aspectRatio: 2),
-            SizedBox(height: 5.h),
-            DottedBorder(
-              color: Colors.black,
-              strokeWidth: 1,
-              child: Text(widget.model.type_kost,
-                  style: GoogleFonts.inter(fontSize: 10)),
-            ),
-            SizedBox(height: 5.h),
-            Text(widget.model.name_kost,
-                style: GoogleFonts.inter(fontSize: 10)),
-            SizedBox(height: 5.h),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(Icons.location_on_rounded, size: 13),
-                Text(widget.model.location_kost,
-                    style: GoogleFonts.inter(fontSize: 10))
-              ],
-            ),
-            SizedBox(height: 5.h),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Text(widget.model.price_kost,
-                  style: GoogleFonts.inter(fontSize: 10)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 5.h),
+                  DottedBorder(
+                    color: Colors.black,
+                    strokeWidth: 1,
+                    child: Text(widget.model.type_kost,
+                        style: GoogleFonts.inter(fontSize: 10)),
+                  ),
+                  SizedBox(height: 5.h),
+                  Text(widget.model.name_kost,
+                      style: GoogleFonts.inter(fontSize: 10)),
+                  SizedBox(height: 5.h),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.location_on_rounded, size: 13),
+                      Text(widget.model.location_kost,
+                          style: GoogleFonts.inter(fontSize: 10))
+                    ],
+                  ),
+                  SizedBox(height: 5.h),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(widget.model.price_kost,
+                        style: GoogleFonts.inter(fontSize: 10)),
+                  )
+                ],
+              ),
             )
           ],
         ),
