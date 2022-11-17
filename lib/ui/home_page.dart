@@ -4,7 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
+import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummywidget.dart';
+import 'package:project_anakkos_app/ui/nearby_kost.dart';
+import 'package:project_anakkos_app/ui/populer_kost.dart';
 
 import '../dummy/dummy model/populer_model.dart';
 
@@ -37,6 +40,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               popularKost(),
+              SizedBox(height: 20.h),
               nearbyKost(),
             ],
           ),
@@ -79,6 +83,7 @@ class _HomePageState extends State<HomePage> {
         Container(
           height: 420.h,
           child: GridView.builder(
+            physics: NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 10.0,
@@ -98,7 +103,9 @@ class _HomePageState extends State<HomePage> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
             ),
-            onPressed: () {},
+            onPressed: () {
+              SharedCode.navigatorPush(context, PopulerKost());
+            },
             child: Text('More',
                 style: GoogleFonts.inter(fontWeight: FontWeight.bold)))
       ],
@@ -114,9 +121,11 @@ class _HomePageState extends State<HomePage> {
               fontWeight: FontWeight.w500,
               fontSize: 14,
             )),
+        SizedBox(height: 10.h),
         Container(
           height: 420.h,
           child: GridView.builder(
+            physics: NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 10.0,
@@ -136,7 +145,9 @@ class _HomePageState extends State<HomePage> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
             ),
-            onPressed: () {},
+            onPressed: () {
+              SharedCode.navigatorPush(context, NearByKost());
+            },
             child: Text('More',
                 style: GoogleFonts.inter(fontWeight: FontWeight.bold)))
       ],

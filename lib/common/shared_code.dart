@@ -44,4 +44,8 @@ class SharedCode {
     Navigator.pushAndRemoveUntil(
         context, MaterialPageRoute(builder: (c) => widget), (route) => false);
   }
+
+  static navigatorPop(BuildContext context) {
+    Navigator.pop(context);
+  }
 }

@@ -12,53 +12,67 @@ class NavigationWidgetBar extends StatefulWidget {
 }
 
 class _NavigationWidgetBarState extends State<NavigationWidgetBar> {
+  int _selectedIndex = 0;
+
+  List _pages = [
+    HomePage(),
+    Center(
+      child: Text("2nd Screen"),
+    ),
+    Center(
+      child: Text("3rd Screen"),
+    ),
+    Center(
+      child: Text("4th Screen"),
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        body: TabBarView(
-          children: [
-            HomePage(),
-            Center(
-              child: Text("2nd Screen"),
+    return Scaffold(
+      body: Center(
+        child: _pages.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: Colors.black, width: 2.w))),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          selectedIconTheme:
+              IconThemeData(color: ColorValues.primaryPurple, size: 30),
+          selectedItemColor: ColorValues.primaryPurple,
+          unselectedIconTheme: IconThemeData(color: HexColor("#D9D9D9")),
+          unselectedItemColor: HexColor("#D9D9D9"),
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
             ),
-            Center(
-              child: Text("3rd Screen"),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat),
+              label: 'Chat',
             ),
-            Center(
-              child: Text("4th Screen"),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.history),
+              label: 'History',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
             ),
           ],
-        ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: Colors.black, width: 2.w))),
-          child: TabBar(
-            labelColor: ColorValues.primaryPurple,
-            unselectedLabelColor: HexColor("#D9D9D9"),
-            indicatorColor: ColorValues.primaryPurple,
-            indicatorWeight: 6,
-            tabs: [
-              Tab(
-                icon: Icon(Icons.home),
-              ),
-              Tab(
-                icon: Icon(Icons.chat),
-              ),
-              Tab(
-                icon: Icon(Icons.history),
-              ),
-              Tab(
-                icon: Icon(Icons.person),
-              ),
-            ],
-          ),
         ),
       ),
     );
   }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 }
-// Center(
-// child: _pages.elementAt(_selectedIndex), //New
-// ),
