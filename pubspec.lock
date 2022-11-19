@@ -85,6 +85,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
+  cupertino_icons:
+    dependency: "direct main"
+    description:
+      name: cupertino_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.5"
   device_info_plus:
     dependency: "direct main"
     description:
@@ -240,6 +247,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  multi_select_flutter:
+    dependency: "direct main"
+    description:
+      name: multi_select_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.2"
   path:
     dependency: transitive
     description:
@@ -345,6 +359,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
+  search_choices:
+    dependency: "direct main"
+    description:
+      name: search_choices
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.5"
   shared_preferences:
     dependency: "direct main"
     description:
