@@ -44,7 +44,9 @@ dependencies:
   device_info_plus:
   flutter_launcher_icons:
   dotted_border:
-
+  cupertino_icons:
+  search_choices:
+  multi_select_flutter:
 
 dev_dependencies:
   flutter_test:
