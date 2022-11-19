@@ -8,8 +8,8 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/fliter_model.dart';
 import 'package:project_anakkos_app/dummy/dummywidget.dart';
-import 'package:project_anakkos_app/ui/nearby_kost.dart';
-import 'package:project_anakkos_app/ui/populer_kost.dart';
+import 'package:project_anakkos_app/widget/nearby_kost.dart';
+import 'package:project_anakkos_app/widget/populer_kost.dart';
 
 import '../dummy/dummy model/populer_model.dart';
 

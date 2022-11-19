@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/ui/role_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -71,7 +72,9 @@ class _HistoryPageState extends State<HistoryPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      SharedCode.navigatorPush(context, RolePage());
+                    },
                     child: Text('Login',
                         style: GoogleFonts.inter(fontWeight: FontWeight.bold))),
               ),
