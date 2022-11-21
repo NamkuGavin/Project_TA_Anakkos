@@ -73,158 +73,8 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 50.h,
             ),
-            Text(
-              'Username',
-              style: GoogleFonts.roboto(
-                fontSize: 13,
-              ),
-            ),
-            SizedBox(
-              height: 7.h,
-            ),
-            CustomTextField(
-              isEnable: true,
-              isreadOnly: false,
-              controller: _usernameController,
-              inputType: TextInputType.emailAddress,
-              validator: (value) => SharedCode().emailValidator(value),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 25.h,
-            ),
-            Text(
-              'Password',
-              style: GoogleFonts.roboto(
-                fontSize: 13,
-              ),
-            ),
-            SizedBox(
-              height: 7.h,
-            ),
-            CustomTextField(
-              inputType: TextInputType.text,
-              isEnable: true,
-              isreadOnly: false,
-              controller: _passwordController,
-              isPassword: _isVisible,
-              validator: (value) => SharedCode().passwordValidator(value),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _isVisible ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.black,
-                    size: 17.w,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isVisible = !_isVisible;
-                    });
-                  },
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 50.h,
-            ),
-            ElevatedButton(
-              onPressed: submit ? () => submitData : null,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 13),
-                child: Text('Login'),
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.disabled))
-                      return ColorValues.primaryBlue.withOpacity(0.5);
-                    return ColorValues
-                        .primaryBlue; // Use the component's default.
-                  },
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 30.h,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Divider(
-                    color: Colors.black,
-                    thickness: 1,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Text('Or'),
-                ),
-                Expanded(
-                  child: Divider(
-                    color: Colors.black,
-                    thickness: 1,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 30.h,
-            ),
-            ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(HexColor("#F8F8F8")),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              onPressed: () {},
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 13),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SvgPicture.asset("assets/logo/google_logo.svg"),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    Text('Login with Google',
-                        style: GoogleFonts.roboto(
-                            color: Colors.black, fontWeight: FontWeight.w500))
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 40.h,
-            ),
-            Center(
-              child: RichText(
-                text: TextSpan(
-                    text: 'Don\'t have an account?',
-                    style: GoogleFonts.roboto(color: HexColor("#818181")),
-                    children: [
-                      TextSpan(
-                          text: ' SignUp',
-                          style: GoogleFonts.roboto(
-                              color: ColorValues.primaryBlue,
-                              fontWeight: FontWeight.w600),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              SharedCode.navigatorPush(context, RegisterPage());
-                            }),
-                    ]),
-              ),
-            ),
+            inputWidget(),
+            loginButton(),
           ],
         ),
       ),
@@ -232,4 +82,173 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   submitData() {}
+
+  inputWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Username',
+          style: GoogleFonts.roboto(
+            fontSize: 13,
+          ),
+        ),
+        SizedBox(
+          height: 7.h,
+        ),
+        CustomTextField(
+          isEnable: true,
+          isreadOnly: false,
+          controller: _usernameController,
+          inputType: TextInputType.emailAddress,
+          validator: (value) => SharedCode().emailValidator(value),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 25.h,
+        ),
+        Text(
+          'Password',
+          style: GoogleFonts.roboto(
+            fontSize: 13,
+          ),
+        ),
+        SizedBox(
+          height: 7.h,
+        ),
+        CustomTextField(
+          inputType: TextInputType.text,
+          isEnable: true,
+          isreadOnly: false,
+          controller: _passwordController,
+          isPassword: _isVisible,
+          validator: (value) => SharedCode().passwordValidator(value),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isVisible ? Icons.visibility_off : Icons.visibility,
+                color: Colors.black,
+                size: 17.w,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isVisible = !_isVisible;
+                });
+              },
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 50.h,
+        ),
+      ],
+    );
+  }
+
+  loginButton() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        ElevatedButton(
+          onPressed: submit ? () => submitData : null,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 13),
+            child: Text('Login'),
+          ),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+                if (states.contains(MaterialState.disabled))
+                  return ColorValues.primaryBlue.withOpacity(0.5);
+                return ColorValues.primaryBlue; // Use the component's default.
+              },
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 30.h,
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: Divider(
+                color: Colors.black,
+                thickness: 1,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25),
+              child: Text('Or'),
+            ),
+            Expanded(
+              child: Divider(
+                color: Colors.black,
+                thickness: 1,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 30.h,
+        ),
+        ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(HexColor("#F8F8F8")),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+          onPressed: () {},
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 13),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SvgPicture.asset("assets/logo/google_logo.svg"),
+                SizedBox(
+                  width: 10.w,
+                ),
+                Text('Login with Google',
+                    style: GoogleFonts.roboto(
+                        color: Colors.black, fontWeight: FontWeight.w500))
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 40.h,
+        ),
+        Center(
+          child: RichText(
+            text: TextSpan(
+                text: 'Don\'t have an account?',
+                style: GoogleFonts.roboto(color: HexColor("#818181")),
+                children: [
+                  TextSpan(
+                      text: ' SignUp',
+                      style: GoogleFonts.roboto(
+                          color: ColorValues.primaryBlue,
+                          fontWeight: FontWeight.w600),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          SharedCode.navigatorPush(context, RegisterPage());
+                        }),
+                ]),
+          ),
+        ),
+      ],
+    );
+  }
 }
