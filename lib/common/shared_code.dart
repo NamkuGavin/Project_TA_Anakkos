@@ -7,13 +7,13 @@ final Color greyColor = HexColor("#f2f2f2");
 class SharedCode {
   String? emptyValidator(value) {
     return value.toString().trim().isEmpty
-        ? 'O campo não pode estar vazio'
+        ? 'username tidak boleh kosong'
         : null;
   }
 
   String? passwordValidator(value) {
     return value.toString().length < 6
-        ? 'A senha não pode ter menos de 6 caracteres'
+        ? 'password tidak boleh kurang dari 6 karakter'
         : null;
   }
 
@@ -21,14 +21,14 @@ class SharedCode {
     bool emailValid = RegExp(
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(value);
-    return !emailValid ? 'E-mail não é válido' : null;
+    return !emailValid ? 'Email tidak valid' : null;
   }
 
   String? phoneValidator(value) {
     bool phoneValid =
         RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')
             .hasMatch(value);
-    return !phoneValid ? 'O número de telefone não é válido' : null;
+    return !phoneValid ? 'Nomor telepon tidak valid' : null;
   }
 
   static navigatorPush(BuildContext context, Widget widget) {
