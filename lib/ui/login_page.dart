@@ -58,24 +58,26 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 25),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 75.h,
-            ),
-            Text("Login",
-                style: GoogleFonts.roboto(
-                  fontSize: 35,
-                  fontWeight: FontWeight.w400,
-                )),
-            SizedBox(
-              height: 50.h,
-            ),
-            inputWidget(),
-            loginButton(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 75.h,
+              ),
+              Text("Login",
+                  style: GoogleFonts.roboto(
+                    fontSize: 35,
+                    fontWeight: FontWeight.w400,
+                  )),
+              SizedBox(
+                height: 50.h,
+              ),
+              inputWidget(),
+              loginButton(),
+            ],
+          ),
         ),
       ),
     );
