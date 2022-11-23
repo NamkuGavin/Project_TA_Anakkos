@@ -17,6 +17,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   Widget _widget = Container();
+  String title = "";
+  String subtitle = "";
 
   @override
   void initState() {
@@ -26,6 +28,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _checkLogin() async {
     final pref = await SharedPreferences.getInstance();
+    title = pref.getString("username").toString();
+    subtitle = pref.getString("email").toString();
     if (pref.getString("username") == null) {
       setState(() {
         _widget = belumLogin();
@@ -88,9 +92,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   sudahLogin() {
     return Scaffold(
-      body: Center(
-        child: Text("Sudah login"),
-      ),
-    );
+        body: Column(
+      children: [
+        SizedBox(
+          height: 50.h,
+        ),
+        //TODO: WIDGET DI BAGIAN SINI
+      ],
+    ));
   }
 }

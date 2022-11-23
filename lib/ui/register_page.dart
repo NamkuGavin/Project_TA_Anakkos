@@ -9,6 +9,7 @@ import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/ui/login_page.dart';
 import 'package:project_anakkos_app/widget/bottomNavigation.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -133,8 +134,12 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  submitData() {
-    return SharedCode.navigatorReplacement(context, NavigationWidgetBar());
+  submitData() async {
+    final pref = await SharedPreferences.getInstance();
+    pref.setString("username", _usernameController.text);
+    pref.setString("email", _emailController.text);
+    pref.setString("password", _passwordController.text);
+    SharedCode.navigatorReplacement(context, NavigationWidgetBar());
   }
 
   inputWidget() {
@@ -274,7 +279,11 @@ class _RegisterPageState extends State<RegisterPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         ElevatedButton(
-          onPressed: submit ? () => submitData : null,
+          onPressed: submit
+              ? () {
+                  return submitData();
+                }
+              : null,
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 13),
             child: Text('Sign Up'),

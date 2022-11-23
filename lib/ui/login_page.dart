@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Username',
+          'Username / Email',
           style: GoogleFonts.roboto(
             fontSize: 13,
           ),
