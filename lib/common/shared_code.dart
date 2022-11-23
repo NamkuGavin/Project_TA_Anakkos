@@ -17,11 +17,22 @@ class SharedCode {
         : null;
   }
 
+  String? confirmPassValidator(value, String check) {
+    return value.toString() != check ? 'password tidak match' : null;
+  }
+
   String? emailValidator(value) {
     bool emailValid = RegExp(
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(value);
     return !emailValid ? 'Email tidak valid' : null;
+  }
+
+  bool? emailCheck(value) {
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(value);
+    return !emailValid ? false : true;
   }
 
   String? phoneValidator(value) {
