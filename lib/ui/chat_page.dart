@@ -44,42 +44,43 @@ class _ChatPageState extends State<ChatPage> {
   belumLogin() {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SvgPicture.asset("assets/logo/blm_login.svg", width: 175.w),
-            SizedBox(height: 30.h),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text("Login terlebih dahulu untuk mengakses fitur ini",
+        child: Padding(
+          padding: EdgeInsets.all(40),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SvgPicture.asset("assets/logo/blm_login.svg", width: 175.w),
+              SizedBox(height: 40.h),
+              Text("Login terlebih dahulu untuk mengakses fitur ini",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.roboto(
                     fontWeight: FontWeight.w500,
                     fontSize: 20,
                   )),
-            ),
-            SizedBox(height: 15.h),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: 300.w,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: ColorValues.primaryBlue,
-                      onPrimary: Colors.white,
-                      minimumSize: Size(double.infinity, 50.h),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                    ),
-                    onPressed: () {
-                      SharedCode.navigatorPush(context, RolePage());
-                    },
-                    child: Text('Login',
-                        style: GoogleFonts.inter(fontWeight: FontWeight.bold))),
-              ),
-            )
-          ],
+              SizedBox(height: 25.h),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: 300.w,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: ColorValues.primaryBlue,
+                        onPrimary: Colors.white,
+                        minimumSize: Size(double.infinity, 50.h),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                      ),
+                      onPressed: () {
+                        SharedCode.navigatorPush(context, RolePage());
+                      },
+                      child: Text('Login',
+                          style:
+                              GoogleFonts.inter(fontWeight: FontWeight.bold))),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -47,7 +47,7 @@ class _LandingPageState extends State<LandingPage> {
               ),
               SizedBox(height: 50.h),
               Padding(
-                padding: EdgeInsets.only(left: 185, right: 30),
+                padding: EdgeInsets.only(left: 225.w, right: 20.w),
                 child: Align(
                     alignment: Alignment.bottomRight,
                     child: ElevatedButton(
@@ -61,17 +61,22 @@ class _LandingPageState extends State<LandingPage> {
                               borderRadius: BorderRadius.circular(20)),
                         ),
                         onPressed: () {
-                          SharedCode.navigatorReplacement(context, NavigationWidgetBar());
+                          SharedCode.navigatorReplacement(
+                              context, NavigationWidgetBar());
                         },
                         child: Row(
                           children: [
-                            Text('Selanjutnya',
-                                style: GoogleFonts.roboto(
-                                    fontWeight: FontWeight.bold)),
-                            SizedBox(width: 5.w),
-                            Icon(
-                              Icons.arrow_right_alt_rounded,
-                              size: 30,
+                            Expanded(
+                              flex: 4,
+                              child: Text('Selanjutnya',
+                                  style: GoogleFonts.roboto(
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            Expanded(
+                              child: Icon(
+                                Icons.arrow_right_alt_rounded,
+                                size: 30,
+                              ),
                             )
                           ],
                         ))),

@@ -120,9 +120,10 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
+        SizedBox(height: 20.h),
         ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: ColorValues.primaryPurple,
+              primary: ColorValues.primaryBlue,
               onPrimary: Colors.white,
               minimumSize: Size(double.infinity, 50.h),
               shape: RoundedRectangleBorder(
@@ -162,9 +163,10 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
+        SizedBox(height: 20.h),
         ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: ColorValues.primaryPurple,
+              primary: ColorValues.primaryBlue,
               onPrimary: Colors.white,
               minimumSize: Size(double.infinity, 50.h),
               shape: RoundedRectangleBorder(
