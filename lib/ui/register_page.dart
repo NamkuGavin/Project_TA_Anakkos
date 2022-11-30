@@ -136,10 +136,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
   submitData() async {
     final pref = await SharedPreferences.getInstance();
+    pref.setString("confirmpassword", _confirmPassController.text);
     pref.setString("username", _usernameController.text);
     pref.setString("email", _emailController.text);
     pref.setString("password", _passwordController.text);
-    SharedCode.navigatorReplacement(context, NavigationWidgetBar());
+    SharedCode.navigatorReplacement(context, LoginPage());
   }
 
   inputWidget() {
