@@ -9,7 +9,7 @@ import 'package:project_anakkos_app/ui/role_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  ProfilePage({Key? key}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -19,6 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _widget = Container();
   String title = "";
   String subtitle = "";
+  bool _alreadyRead = false;
 
   @override
   void initState() {
@@ -93,13 +94,183 @@ class _ProfilePageState extends State<ProfilePage> {
 
   sudahLogin() {
     return Scaffold(
-        body: Column(
-      children: [
-        SizedBox(
-          height: 50.h,
-        ),
-        //TODO: WIDGET DI BAGIAN SINI
-      ],
+        body: Padding(
+      padding: EdgeInsets.all(12),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 50.h),
+          headerProfile(),
+          SizedBox(height: 50.h),
+          akunOption(),
+          SizedBox(height: 50.h),
+          generalOption(),
+        ],
+      ),
     ));
+  }
+
+  headerProfile() {
+    return Row(
+      children: [
+        SizedBox(width: 25.w),
+        SvgPicture.asset("assets/icon/profile.svg", width: 100.w),
+        SizedBox(width: 25.w),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Gavin",
+                style: GoogleFonts.roboto(
+                    fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(height: 20.h),
+            Text("Gavin@gmail.com",
+                style: GoogleFonts.roboto(
+                    fontSize: 20, fontWeight: FontWeight.w600)),
+          ],
+        )
+      ],
+    );
+  }
+
+  akunOption() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Akun",
+            style:
+                GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.w500)),
+        SizedBox(height: 25.h),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            onPrimary: ColorValues.primaryBlue,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Icon(Icons.bookmark, color: Colors.black),
+                SizedBox(width: 10.w),
+                Text("Riwayat",
+                    style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: Colors.black)),
+                SizedBox(width: 80.w),
+                Text("sedang berjalan & riwayat",
+                    style: GoogleFonts.inter(fontSize: 12, color: Colors.grey)),
+                SizedBox(width: 5.w),
+                Icon(Icons.arrow_forward_ios_rounded, color: Colors.black)
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 25.h),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            onPrimary: ColorValues.primaryBlue,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Icon(Icons.person_pin, color: Colors.black),
+                SizedBox(width: 10.w),
+                Text("Edit Akun",
+                    style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: Colors.black)),
+                SizedBox(width: 193.w),
+                Icon(Icons.arrow_forward_ios_rounded, color: Colors.black)
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 25.h),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            onPrimary: ColorValues.primaryBlue,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Icon(Icons.logout_rounded, color: Colors.black),
+                SizedBox(width: 10.w),
+                Text("Logout",
+                    style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: Colors.black)),
+                SizedBox(width: 205.w),
+                Icon(Icons.arrow_forward_ios_rounded, color: Colors.black)
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  generalOption() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("General",
+            style:
+                GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.w500)),
+        SizedBox(height: 25.h),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _alreadyRead = true;
+            });
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            onPrimary: ColorValues.primaryBlue,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Icon(Icons.privacy_tip_rounded, color: Colors.black),
+                SizedBox(width: 10.w),
+                Text("Terms & Privacy",
+                    style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: Colors.black)),
+                SizedBox(width: 100.w),
+                Text(_alreadyRead ? "Accept" : "Not Accept",
+                    style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: _alreadyRead ? Colors.green : Colors.red)),
+                SizedBox(width: 5.w),
+                Icon(Icons.arrow_forward_ios_rounded, color: Colors.black)
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
