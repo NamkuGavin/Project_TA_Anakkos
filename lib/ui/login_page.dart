@@ -9,6 +9,9 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/ui/register_page.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../widget/bottomNavigation.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -83,7 +86,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  submitData() {}
+  submitData() async {
+    final pref = await SharedPreferences.getInstance();
+    if (pref.getString("email") == _usernameController.text &&
+        pref.getString("password") == _passwordController.text) {
+      SharedCode.navigatorPush(context, NavigationWidgetBar());
+    } else {
+      print("String");
+    }
+  }
 
   inputWidget() {
     return Column(
@@ -161,7 +172,11 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         ElevatedButton(
-          onPressed: submit ? () => submitData : null,
+          onPressed: submit
+              ? () {
+                  return submitData();
+                }
+              : null,
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 13),
             child: Text('Login'),
