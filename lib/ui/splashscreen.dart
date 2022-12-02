@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/ui/landing_page.dart';
+import 'package:project_anakkos_app/widget/bottomNavigation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -14,8 +16,15 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 3), () {
-      SharedCode.navigatorReplacement(context, LandingPage());
+    Future.delayed(Duration(seconds: 3), () async {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getString('email') == null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => LandingPage()));
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => NavigationWidgetBar()));
+      }
     });
     super.initState();
   }

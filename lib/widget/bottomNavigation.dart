@@ -17,18 +17,14 @@ class NavigationWidgetBar extends StatefulWidget {
 class _NavigationWidgetBarState extends State<NavigationWidgetBar> {
   int _selectedIndex = 0;
 
-  List _pages = [
-    HomePage(),
-    ChatPage(),
-    HistoryPage(),
-    ProfilePage()
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _pages.elementAt(_selectedIndex),
+        child: IndexedStack(
+          children: [HomePage(), ChatPage(), HistoryPage(), ProfilePage()],
+          index: _selectedIndex,
+        ),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(

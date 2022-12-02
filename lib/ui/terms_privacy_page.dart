@@ -74,7 +74,9 @@ class _TermsPrivacyPageState extends State<TermsPrivacyPage> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        SharedCode.navigatorPop(context);
+                      },
                       child: Text('Accept all',
                           style:
                               GoogleFonts.inter(fontWeight: FontWeight.bold))),
