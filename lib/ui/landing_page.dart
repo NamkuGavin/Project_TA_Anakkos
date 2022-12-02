@@ -47,7 +47,7 @@ class _LandingPageState extends State<LandingPage> {
               ),
               SizedBox(height: 50.h),
               Padding(
-                padding: EdgeInsets.only(left: 225.w, right: 20.w),
+                padding: EdgeInsets.only(left: 200.w, right: 20.w),
                 child: Align(
                     alignment: Alignment.bottomRight,
                     child: ElevatedButton(
