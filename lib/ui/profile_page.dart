@@ -6,6 +6,7 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/ui/login_page.dart';
 import 'package:project_anakkos_app/ui/role_page.dart';
+import 'package:project_anakkos_app/ui/terms_privacy_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -19,7 +20,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _widget = Container();
   String title = "";
   String subtitle = "";
-  bool _alreadyRead = false;
 
   @override
   void initState() {
@@ -115,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Row(
       children: [
         SizedBox(width: 25.w),
-        SvgPicture.asset("assets/icon/profile.svg", width: 100.w),
+        SvgPicture.asset("assets/icon/profile.svg", width: 75.w),
         SizedBox(width: 25.w),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -123,11 +123,11 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             Text("Gavin",
                 style: GoogleFonts.roboto(
-                    fontSize: 20, fontWeight: FontWeight.w600)),
+                    fontSize: 15, fontWeight: FontWeight.w600)),
             SizedBox(height: 20.h),
             Text("Gavin@gmail.com",
                 style: GoogleFonts.roboto(
-                    fontSize: 20, fontWeight: FontWeight.w600)),
+                    fontSize: 15, fontWeight: FontWeight.w600)),
           ],
         )
       ],
@@ -141,7 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         Text("Akun",
             style:
-                GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.w500)),
+                GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
         SizedBox(height: 25.h),
         ElevatedButton(
           onPressed: () {},
@@ -155,18 +155,19 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: EdgeInsets.all(12),
             child: Row(
               children: [
-                Icon(Icons.bookmark, color: Colors.black),
+                Icon(Icons.bookmark, color: Colors.black, size: 20.w),
                 SizedBox(width: 10.w),
                 Text("Riwayat",
                     style: GoogleFonts.inter(
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontSize: 12,
                         color: Colors.black)),
-                SizedBox(width: 80.w),
+                SizedBox(width: 60.w),
                 Text("sedang berjalan & riwayat",
-                    style: GoogleFonts.inter(fontSize: 12, color: Colors.grey)),
+                    style: GoogleFonts.inter(fontSize: 9, color: Colors.grey)),
                 SizedBox(width: 5.w),
-                Icon(Icons.arrow_forward_ios_rounded, color: Colors.black)
+                Icon(Icons.arrow_forward_ios_rounded,
+                    color: Colors.black, size: 20.w)
               ],
             ),
           ),
@@ -184,15 +185,16 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: EdgeInsets.all(12),
             child: Row(
               children: [
-                Icon(Icons.person_pin, color: Colors.black),
+                Icon(Icons.person_pin, color: Colors.black, size: 20.w),
                 SizedBox(width: 10.w),
                 Text("Edit Akun",
                     style: GoogleFonts.inter(
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontSize: 12,
                         color: Colors.black)),
-                SizedBox(width: 193.w),
-                Icon(Icons.arrow_forward_ios_rounded, color: Colors.black)
+                SizedBox(width: 165.w),
+                Icon(Icons.arrow_forward_ios_rounded,
+                    color: Colors.black, size: 20.w)
               ],
             ),
           ),
@@ -210,15 +212,16 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: EdgeInsets.all(12),
             child: Row(
               children: [
-                Icon(Icons.logout_rounded, color: Colors.black),
+                Icon(Icons.logout_rounded, color: Colors.black, size: 20.w),
                 SizedBox(width: 10.w),
                 Text("Logout",
                     style: GoogleFonts.inter(
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontSize: 12,
                         color: Colors.black)),
-                SizedBox(width: 205.w),
-                Icon(Icons.arrow_forward_ios_rounded, color: Colors.black)
+                SizedBox(width: 180.w),
+                Icon(Icons.arrow_forward_ios_rounded,
+                    color: Colors.black, size: 20.w)
               ],
             ),
           ),
@@ -234,13 +237,11 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         Text("General",
             style:
-                GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.w500)),
+                GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
         SizedBox(height: 25.h),
         ElevatedButton(
           onPressed: () {
-            setState(() {
-              _alreadyRead = true;
-            });
+            SharedCode.navigatorPush(context, TermsPrivacyPage());
           },
           style: ElevatedButton.styleFrom(
             primary: Colors.white,
@@ -252,20 +253,20 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: EdgeInsets.all(12),
             child: Row(
               children: [
-                Icon(Icons.privacy_tip_rounded, color: Colors.black),
+                Icon(Icons.privacy_tip_rounded,
+                    color: Colors.black, size: 20.w),
                 SizedBox(width: 10.w),
                 Text("Terms & Privacy",
                     style: GoogleFonts.inter(
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: Colors.black)),
-                SizedBox(width: 100.w),
-                Text(_alreadyRead ? "Accept" : "Not Accept",
-                    style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: _alreadyRead ? Colors.green : Colors.red)),
+                        color: Colors.black)),
+                SizedBox(width: 75.w),
+                Text("Not Accept",
+                    style: GoogleFonts.inter(fontSize: 9, color: Colors.red)),
                 SizedBox(width: 5.w),
-                Icon(Icons.arrow_forward_ios_rounded, color: Colors.black)
+                Icon(Icons.arrow_forward_ios_rounded,
+                    color: Colors.black, size: 20.w)
               ],
             ),
           ),
