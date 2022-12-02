@@ -18,8 +18,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   Widget _widget = Container();
-  String title = "";
-  String subtitle = "";
+  String username = "";
+  String email = "";
 
   @override
   void initState() {
@@ -29,8 +29,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _checkLogin() async {
     final pref = await SharedPreferences.getInstance();
-    title = pref.getString("username").toString();
-    subtitle = pref.getString("email").toString();
+    username = pref.getString("username").toString();
+    email = pref.getString("email").toString();
     if (pref.getString("username") == null) {
       setState(() {
         _widget = belumLogin();
@@ -105,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
           SizedBox(height: 50.h),
           akunOption(),
           SizedBox(height: 50.h),
-          generalOption(),
+          // generalOption(),
         ],
       ),
     ));
@@ -121,11 +121,11 @@ class _ProfilePageState extends State<ProfilePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Gavin",
+            Text(username,
                 style: GoogleFonts.roboto(
                     fontSize: 15, fontWeight: FontWeight.w600)),
             SizedBox(height: 20.h),
-            Text("Gavin@gmail.com",
+            Text(email,
                 style: GoogleFonts.roboto(
                     fontSize: 15, fontWeight: FontWeight.w600)),
           ],
@@ -201,7 +201,9 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         SizedBox(height: 25.h),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            logout();
+          },
           style: ElevatedButton.styleFrom(
             primary: Colors.white,
             onPrimary: ColorValues.primaryBlue,
@@ -230,48 +232,54 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  generalOption() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("General",
-            style:
-                GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () {
-            SharedCode.navigatorPush(context, TermsPrivacyPage());
-          },
-          style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Icon(Icons.privacy_tip_rounded,
-                    color: Colors.black, size: 20.w),
-                SizedBox(width: 10.w),
-                Text("Terms & Privacy",
-                    style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                        color: Colors.black)),
-                SizedBox(width: 75.w),
-                Text("Not Accept",
-                    style: GoogleFonts.inter(fontSize: 9, color: Colors.red)),
-                SizedBox(width: 5.w),
-                Icon(Icons.arrow_forward_ios_rounded,
-                    color: Colors.black, size: 20.w)
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+  // generalOption() {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.start,
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text("General",
+  //           style:
+  //               GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
+  //       SizedBox(height: 25.h),
+  //       ElevatedButton(
+  //         onPressed: () {
+  //           SharedCode.navigatorPush(context, TermsPrivacyPage());
+  //         },
+  //         style: ElevatedButton.styleFrom(
+  //           primary: Colors.white,
+  //           onPrimary: ColorValues.primaryBlue,
+  //           shadowColor: Colors.black,
+  //           elevation: 4.0,
+  //         ),
+  //         child: Padding(
+  //           padding: EdgeInsets.all(12),
+  //           child: Row(
+  //             children: [
+  //               Icon(Icons.privacy_tip_rounded,
+  //                   color: Colors.black, size: 20.w),
+  //               SizedBox(width: 10.w),
+  //               Text("Terms & Privacy",
+  //                   style: GoogleFonts.inter(
+  //                       fontWeight: FontWeight.w600,
+  //                       fontSize: 12,
+  //                       color: Colors.black)),
+  //               SizedBox(width: 75.w),
+  //               Text("Not Accept",
+  //                   style: GoogleFonts.inter(fontSize: 9, color: Colors.red)),
+  //               SizedBox(width: 5.w),
+  //               Icon(Icons.arrow_forward_ios_rounded,
+  //                   color: Colors.black, size: 20.w)
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  logout() async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.clear();
+    SharedCode.navigatorPushAndRemove(context, LoginPage());
   }
 }

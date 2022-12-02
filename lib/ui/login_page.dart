@@ -9,6 +9,7 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/ui/register_page.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
+import 'package:project_anakkos_app/widget/terms_of_use.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widget/bottomNavigation.dart';
@@ -79,6 +80,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
               inputWidget(),
               loginButton(),
+              SizedBox(
+                height: 50.h,
+              ),
+              TermsOfUse(),
             ],
           ),
         ),
