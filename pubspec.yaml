@@ -48,6 +48,16 @@ dependencies:
   multi_select_flutter:
   email_validator:
   flutter_pw_validator:
+  curved_navigation_bar:
+  flutter_easyloading:
+  fluttertoast:
+  flutter_form_bloc:
+  form_bloc:
+  form_validator:
+  flutter_datetime_picker:
+  timelines:
+  steps:
+  im_stepper:
 
 dev_dependencies:
   flutter_test:

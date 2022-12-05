@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui/login_page.dart';
 import 'package:project_anakkos_app/ui/role_page.dart';
 import 'package:project_anakkos_app/ui/terms_privacy_page.dart';
@@ -20,26 +25,57 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _widget = Container();
   String username = "";
   String email = "";
+  Timer? _timer;
+  bool _isloading = false;
+  bool _isRead = false;
 
   @override
   void initState() {
-    _checkLogin();
     super.initState();
+    _checkLogin();
   }
 
   _checkLogin() async {
-    final pref = await SharedPreferences.getInstance();
-    username = pref.getString("username").toString();
-    email = pref.getString("email").toString();
-    if (pref.getString("username") == null) {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    if (pref.getBool("isRead") == null) {
+      await pref.setBool("isRead", false);
+    } else {
+      null;
+    }
+    if (pref.getString("access_token") == null) {
       setState(() {
         _widget = belumLogin();
       });
     } else {
+      await getProfile();
       setState(() {
         _widget = sudahLogin();
       });
     }
+  }
+
+  getProfile() async {
+    setState(() {
+      _isloading = true;
+      _timer?.cancel();
+      EasyLoading.show(
+        status: 'loading...',
+        maskType: EasyLoadingMaskType.black,
+      );
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    LoginModel result = await ApiService().getLogin(
+        email: prefs.getString("email").toString(),
+        password: prefs.getString("password").toString());
+    _isRead = prefs.getBool("isRead")!;
+    print("STATUS TERMS: " + _isRead.toString());
+    username = result.data.name;
+    email = result.data.email;
+    setState(() {
+      _isloading = false;
+      _timer?.cancel();
+      EasyLoading.dismiss();
+    });
   }
 
   @override
@@ -93,21 +129,27 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   sudahLogin() {
+    _timer?.cancel();
+    EasyLoading.dismiss();
     return Scaffold(
         body: Padding(
       padding: EdgeInsets.all(12),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 50.h),
-          headerProfile(),
-          SizedBox(height: 50.h),
-          akunOption(),
-          SizedBox(height: 50.h),
-          // generalOption(),
-        ],
-      ),
+      child: _isloading
+          ? Center()
+          : username.isEmpty || email.isEmpty
+              ? Center(child: Text("No Data Available"))
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 50.h),
+                    headerProfile(),
+                    SizedBox(height: 50.h),
+                    akunOption(),
+                    SizedBox(height: 50.h),
+                    generalOption(),
+                  ],
+                ),
     ));
   }
 
@@ -155,19 +197,29 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: EdgeInsets.all(12),
             child: Row(
               children: [
-                Icon(Icons.bookmark, color: Colors.black, size: 20.w),
-                SizedBox(width: 10.w),
-                Text("Riwayat",
-                    style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                        color: Colors.black)),
-                SizedBox(width: 60.w),
-                Text("sedang berjalan & riwayat",
-                    style: GoogleFonts.inter(fontSize: 9, color: Colors.grey)),
-                SizedBox(width: 5.w),
-                Icon(Icons.arrow_forward_ios_rounded,
-                    color: Colors.black, size: 20.w)
+                Expanded(
+                    flex: 2,
+                    child:
+                        Icon(Icons.bookmark, color: Colors.black, size: 20.w)),
+                Expanded(
+                  flex: 5,
+                  child: Text("Riwayat",
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: Colors.black)),
+                ),
+                Expanded(
+                  flex: 6,
+                  child: Text("sedang berjalan & riwayat",
+                      style:
+                          GoogleFonts.inter(fontSize: 9, color: Colors.grey)),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Icon(Icons.arrow_forward_ios_rounded,
+                      color: Colors.black, size: 20.w),
+                )
               ],
             ),
           ),
@@ -185,16 +237,21 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: EdgeInsets.all(12),
             child: Row(
               children: [
-                Icon(Icons.person_pin, color: Colors.black, size: 20.w),
-                SizedBox(width: 10.w),
-                Text("Edit Akun",
-                    style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                        color: Colors.black)),
-                SizedBox(width: 165.w),
-                Icon(Icons.arrow_forward_ios_rounded,
-                    color: Colors.black, size: 20.w)
+                Expanded(
+                    child: Icon(Icons.person_pin,
+                        color: Colors.black, size: 20.w)),
+                Expanded(
+                  flex: 5,
+                  child: Text("Edit Akun",
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: Colors.black)),
+                ),
+                Expanded(
+                  child: Icon(Icons.arrow_forward_ios_rounded,
+                      color: Colors.black, size: 20.w),
+                )
               ],
             ),
           ),
@@ -214,16 +271,21 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: EdgeInsets.all(12),
             child: Row(
               children: [
-                Icon(Icons.logout_rounded, color: Colors.black, size: 20.w),
-                SizedBox(width: 10.w),
-                Text("Logout",
-                    style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                        color: Colors.black)),
-                SizedBox(width: 180.w),
-                Icon(Icons.arrow_forward_ios_rounded,
-                    color: Colors.black, size: 20.w)
+                Expanded(
+                    child: Icon(Icons.logout_rounded,
+                        color: Colors.black, size: 20.w)),
+                Expanded(
+                  flex: 5,
+                  child: Text("Logout",
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: Colors.black)),
+                ),
+                Expanded(
+                  child: Icon(Icons.arrow_forward_ios_rounded,
+                      color: Colors.black, size: 20.w),
+                )
               ],
             ),
           ),
@@ -232,50 +294,66 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // generalOption() {
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.start,
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Text("General",
-  //           style:
-  //               GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
-  //       SizedBox(height: 25.h),
-  //       ElevatedButton(
-  //         onPressed: () {
-  //           SharedCode.navigatorPush(context, TermsPrivacyPage());
-  //         },
-  //         style: ElevatedButton.styleFrom(
-  //           primary: Colors.white,
-  //           onPrimary: ColorValues.primaryBlue,
-  //           shadowColor: Colors.black,
-  //           elevation: 4.0,
-  //         ),
-  //         child: Padding(
-  //           padding: EdgeInsets.all(12),
-  //           child: Row(
-  //             children: [
-  //               Icon(Icons.privacy_tip_rounded,
-  //                   color: Colors.black, size: 20.w),
-  //               SizedBox(width: 10.w),
-  //               Text("Terms & Privacy",
-  //                   style: GoogleFonts.inter(
-  //                       fontWeight: FontWeight.w600,
-  //                       fontSize: 12,
-  //                       color: Colors.black)),
-  //               SizedBox(width: 75.w),
-  //               Text("Not Accept",
-  //                   style: GoogleFonts.inter(fontSize: 9, color: Colors.red)),
-  //               SizedBox(width: 5.w),
-  //               Icon(Icons.arrow_forward_ios_rounded,
-  //                   color: Colors.black, size: 20.w)
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
+  generalOption() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("General",
+            style:
+                GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
+        SizedBox(height: 25.h),
+        ElevatedButton(
+          onPressed: () async {
+            final result = await Navigator.push(context,
+                MaterialPageRoute(builder: (context) => TermsPrivacyPage()));
+            print('result: ' + result);
+            await getProfile();
+            setState(() {
+              _widget = sudahLogin();
+            });
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            onPrimary: ColorValues.primaryBlue,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Icon(Icons.privacy_tip_rounded,
+                      color: Colors.black, size: 20.w),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Text("Terms & Privacy",
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: Colors.black)),
+                ),
+                Expanded(
+                  flex: _isRead == false ? 2 : 1,
+                  child: Text(_isRead == false ? "Not Accept" : "Accept",
+                      style: GoogleFonts.inter(
+                          fontSize: 9,
+                          color: _isRead == false ? Colors.red : Colors.green)),
+                ),
+                Expanded(
+                  child: Icon(Icons.arrow_forward_ios_rounded,
+                      color: Colors.black, size: 20.w),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   logout() async {
     final preferences = await SharedPreferences.getInstance();

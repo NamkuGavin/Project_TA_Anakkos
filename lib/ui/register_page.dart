@@ -11,8 +11,6 @@ import 'package:project_anakkos_app/widget/bottomNavigation.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../widget/terms_of_use.dart';
-
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
@@ -125,8 +123,6 @@ class _RegisterPageState extends State<RegisterPage> {
               inputWidget(),
               loginButton(),
               SizedBox(height: 50.h),
-              TermsOfUse(),
-              SizedBox(height: 10.h),
             ],
           ),
         ),
