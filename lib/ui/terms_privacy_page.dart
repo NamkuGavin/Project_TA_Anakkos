@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TermsPrivacyPage extends StatefulWidget {
   const TermsPrivacyPage({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class _TermsPrivacyPageState extends State<TermsPrivacyPage> {
         backgroundColor: Colors.white,
         leading: IconButton(
             onPressed: () {
-              SharedCode.navigatorPop(context);
+              Navigator.pop(context, 'update');
             },
             icon: Icon(Icons.arrow_back_rounded, color: Colors.black)),
       ),
@@ -74,8 +75,11 @@ class _TermsPrivacyPageState extends State<TermsPrivacyPage> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                       ),
-                      onPressed: () {
-                        SharedCode.navigatorPop(context);
+                      onPressed: () async {
+                        SharedPreferences pref =
+                            await SharedPreferences.getInstance();
+                        await pref.setBool("isRead", true);
+                        Navigator.pop(context, 'update');
                       },
                       child: Text('Accept all',
                           style:
