@@ -25,7 +25,7 @@ class _ChatPageState extends State<ChatPage> {
 
   _checkLogin() async {
     final pref = await SharedPreferences.getInstance();
-    if (pref.getString("username") == null) {
+    if (pref.getString("access_token") == null) {
       setState(() {
         _widget = belumLogin();
       });

@@ -58,6 +58,10 @@ dependencies:
   timelines:
   steps:
   im_stepper:
+  firebase_auth:
+  google_sign_in:
+  provider:
+  firebase_core:
 
 dev_dependencies:
   flutter_test:
