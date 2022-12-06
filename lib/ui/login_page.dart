@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -14,6 +15,8 @@ import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui/register_page.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
+import 'package:project_anakkos_app/widget/google_signIn_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widget/bottomNavigation.dart';
@@ -68,35 +71,48 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      body: _isloading == false
-          ? Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 75.h,
-                    ),
-                    Text("Login",
-                        style: GoogleFonts.roboto(
-                          fontSize: 35,
-                          fontWeight: FontWeight.w400,
-                        )),
-                    SizedBox(
-                      height: 50.h,
-                    ),
-                    inputWidget(),
-                    loginButton(),
-                    SizedBox(
-                      height: 50.h,
-                    ),
-                  ],
-                ),
-              ),
-            )
-          : Container(),
+      body: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasData) {
+              return NavigationWidgetBar();
+            } else if (snapshot.hasError) {
+              print("ERROR: " + snapshot.hasError.toString());
+              return Center(child: Text("Something Wrong"));
+            } else {
+              return _isloading == false
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 75.h,
+                            ),
+                            Text("Login",
+                                style: GoogleFonts.roboto(
+                                  fontSize: 35,
+                                  fontWeight: FontWeight.w400,
+                                )),
+                            SizedBox(
+                              height: 50.h,
+                            ),
+                            inputWidget(),
+                            loginButton(),
+                            SizedBox(
+                              height: 50.h,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container();
+            }
+          }),
     );
   }
 
@@ -254,7 +270,11 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          onPressed: () {},
+          onPressed: () {
+            final provider =
+                Provider.of<GoogleSignInProvider>(context, listen: false);
+            provider.googleLogin();
+          },
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 13),
             child: Row(

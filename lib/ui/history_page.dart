@@ -25,7 +25,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   _checkLogin() async {
     final pref = await SharedPreferences.getInstance();
-    if (pref.getString("username") == null) {
+    if (pref.getString("access_token") == null) {
       setState(() {
         _widget = belumLogin();
       });
@@ -75,7 +75,8 @@ class _HistoryPageState extends State<HistoryPage> {
                         SharedCode.navigatorPush(context, RolePage());
                       },
                       child: Text('Login',
-                          style: GoogleFonts.inter(fontWeight: FontWeight.bold))),
+                          style:
+                              GoogleFonts.inter(fontWeight: FontWeight.bold))),
                 ),
               )
             ],

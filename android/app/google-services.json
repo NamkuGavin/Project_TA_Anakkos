@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "788286206632",
+    "project_id": "project-anakkos-app",
+    "storage_bucket": "project-anakkos-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:788286206632:android:f1e7cc607c358ea4d4889d",
+        "android_client_info": {
+          "package_name": "com.example.project_anakkos_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "788286206632-k3ph5h492dn8j1u5eo1326cl7mf730dv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEqrP5_mWdy2thTl4L9TXOllzAQ0Eq6HI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "788286206632-k3ph5h492dn8j1u5eo1326cl7mf730dv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

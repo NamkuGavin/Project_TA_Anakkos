@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,16 +15,17 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     Future.delayed(Duration(seconds: 3), () async {
       final prefs = await SharedPreferences.getInstance();
-      if (prefs.getString('email') == null) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => LandingPage()));
+      if (prefs.getString('access_token') == null && user == null) {
+        SharedCode.navigatorReplacement(context, LandingPage());
+      } else if (user != null) {
+        SharedCode.navigatorReplacement(context, NavigationWidgetBar());
       } else {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => NavigationWidgetBar()));
+        SharedCode.navigatorReplacement(context, NavigationWidgetBar());
       }
     });
     super.initState();

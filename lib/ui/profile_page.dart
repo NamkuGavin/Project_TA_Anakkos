@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +13,8 @@ import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui/login_page.dart';
 import 'package:project_anakkos_app/ui/role_page.dart';
 import 'package:project_anakkos_app/ui/terms_privacy_page.dart';
+import 'package:project_anakkos_app/widget/google_signIn_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -22,6 +25,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final user = FirebaseAuth.instance.currentUser;
   Widget _widget = Container();
   String username = "";
   String email = "";
@@ -42,19 +46,26 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       null;
     }
-    if (pref.getString("access_token") == null) {
+    if (pref.getString("access_token") == null && user == null) {
       setState(() {
         _widget = belumLogin();
       });
-    } else {
-      await getProfile();
+    } else if (user != null) {
+      await getProfileGoogle();
+      print("GOOGLE LOGIN");
       setState(() {
-        _widget = sudahLogin();
+        _widget = sudahLoginGoogle();
+      });
+    } else {
+      print("APPS LOGIN");
+      await getProfileApps();
+      setState(() {
+        _widget = sudahLoginApps();
       });
     }
   }
 
-  getProfile() async {
+  getProfileApps() async {
     setState(() {
       _isloading = true;
       _timer?.cancel();
@@ -71,6 +82,29 @@ class _ProfilePageState extends State<ProfilePage> {
     print("STATUS TERMS: " + _isRead.toString());
     username = result.data.name;
     email = result.data.email;
+    setState(() {
+      _isloading = false;
+      _timer?.cancel();
+      EasyLoading.dismiss();
+    });
+  }
+
+  getProfileGoogle() async {
+    setState(() {
+      _isloading = true;
+      _timer?.cancel();
+      EasyLoading.show(
+        status: 'loading...',
+        maskType: EasyLoadingMaskType.black,
+      );
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _isRead = prefs.getBool("isRead")!;
+    print("STATUS TERMS: " + _isRead.toString());
+    setState(() {
+      username = user!.displayName.toString();
+      email = user!.email.toString();
+    });
     setState(() {
       _isloading = false;
       _timer?.cancel();
@@ -128,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  sudahLogin() {
+  sudahLoginApps() {
     _timer?.cancel();
     EasyLoading.dismiss();
     return Scaffold(
@@ -143,17 +177,42 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 50.h),
-                    headerProfile(),
+                    headerProfileApps(),
                     SizedBox(height: 50.h),
-                    akunOption(),
+                    akunOptionApps(),
                     SizedBox(height: 50.h),
-                    generalOption(),
+                    generalOptionApps(),
                   ],
                 ),
     ));
   }
 
-  headerProfile() {
+  sudahLoginGoogle() {
+    _timer?.cancel();
+    EasyLoading.dismiss();
+    return Scaffold(
+        body: Padding(
+      padding: EdgeInsets.all(12),
+      child: _isloading
+          ? Center()
+          : username.isEmpty || email.isEmpty
+              ? Center(child: Text("No Data Available"))
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 50.h),
+                    headerProfileGoogle(),
+                    SizedBox(height: 50.h),
+                    akunOptionGoogle(),
+                    SizedBox(height: 50.h),
+                    generalOptionGoogle(),
+                  ],
+                ),
+    ));
+  }
+
+  headerProfileApps() {
     return Row(
       children: [
         SizedBox(width: 25.w),
@@ -176,7 +235,33 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  akunOption() {
+  headerProfileGoogle() {
+    return Row(
+      children: [
+        SizedBox(width: 25.w),
+        CircleAvatar(
+          radius: 40,
+          backgroundImage: NetworkImage(user!.photoURL.toString()),
+        ),
+        SizedBox(width: 25.w),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(user!.displayName.toString(),
+                style: GoogleFonts.roboto(
+                    fontSize: 15, fontWeight: FontWeight.w600)),
+            SizedBox(height: 20.h),
+            Text(user!.email.toString(),
+                style: GoogleFonts.roboto(
+                    fontSize: 15, fontWeight: FontWeight.w600)),
+          ],
+        )
+      ],
+    );
+  }
+
+  akunOptionApps() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,7 +379,127 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  generalOption() {
+  akunOptionGoogle() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Akun",
+            style:
+                GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
+        SizedBox(height: 25.h),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            onPrimary: ColorValues.primaryBlue,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child:
+                        Icon(Icons.bookmark, color: Colors.black, size: 20.w)),
+                Expanded(
+                  flex: 5,
+                  child: Text("Riwayat",
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: Colors.black)),
+                ),
+                Expanded(
+                  flex: 6,
+                  child: Text("sedang berjalan & riwayat",
+                      style:
+                          GoogleFonts.inter(fontSize: 9, color: Colors.grey)),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Icon(Icons.arrow_forward_ios_rounded,
+                      color: Colors.black, size: 20.w),
+                )
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 25.h),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            onPrimary: ColorValues.primaryBlue,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Expanded(
+                    child: Icon(Icons.person_pin,
+                        color: Colors.black, size: 20.w)),
+                Expanded(
+                  flex: 5,
+                  child: Text("Edit Akun",
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: Colors.black)),
+                ),
+                Expanded(
+                  child: Icon(Icons.arrow_forward_ios_rounded,
+                      color: Colors.black, size: 20.w),
+                )
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 25.h),
+        ElevatedButton(
+          onPressed: () {
+            final provider =
+                Provider.of<GoogleSignInProvider>(context, listen: false);
+            provider.logout();
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            onPrimary: ColorValues.primaryBlue,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Expanded(
+                    child: Icon(Icons.logout_rounded,
+                        color: Colors.black, size: 20.w)),
+                Expanded(
+                  flex: 5,
+                  child: Text("Logout",
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: Colors.black)),
+                ),
+                Expanded(
+                  child: Icon(Icons.arrow_forward_ios_rounded,
+                      color: Colors.black, size: 20.w),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  generalOptionApps() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,9 +513,70 @@ class _ProfilePageState extends State<ProfilePage> {
             final result = await Navigator.push(context,
                 MaterialPageRoute(builder: (context) => TermsPrivacyPage()));
             print('result: ' + result);
-            await getProfile();
+            await getProfileApps();
             setState(() {
-              _widget = sudahLogin();
+              _widget = sudahLoginApps();
+            });
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            onPrimary: ColorValues.primaryBlue,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Icon(Icons.privacy_tip_rounded,
+                      color: Colors.black, size: 20.w),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Text("Terms & Privacy",
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: Colors.black)),
+                ),
+                Expanded(
+                  flex: _isRead == false ? 2 : 1,
+                  child: Text(_isRead == false ? "Not Accept" : "Accept",
+                      style: GoogleFonts.inter(
+                          fontSize: 9,
+                          color: _isRead == false ? Colors.red : Colors.green)),
+                ),
+                Expanded(
+                  child: Icon(Icons.arrow_forward_ios_rounded,
+                      color: Colors.black, size: 20.w),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  generalOptionGoogle() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("General",
+            style:
+                GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
+        SizedBox(height: 25.h),
+        ElevatedButton(
+          onPressed: () async {
+            final result = await Navigator.push(context,
+                MaterialPageRoute(builder: (context) => TermsPrivacyPage()));
+            print('result: ' + result);
+            await getProfileGoogle();
+            setState(() {
+              _widget = sudahLoginGoogle();
             });
           },
           style: ElevatedButton.styleFrom(
