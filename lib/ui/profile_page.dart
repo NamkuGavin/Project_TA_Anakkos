@@ -16,6 +16,7 @@ import 'package:project_anakkos_app/ui/terms_privacy_page.dart';
 import 'package:project_anakkos_app/widget/google_signIn_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final user = FirebaseAuth.instance.currentUser;
+  CollectionReference _users = FirebaseFirestore.instance.collection('users');
   Widget _widget = Container();
   String username = "";
   String email = "";
@@ -101,10 +103,6 @@ class _ProfilePageState extends State<ProfilePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _isRead = prefs.getBool("isRead")!;
     print("STATUS TERMS: " + _isRead.toString());
-    setState(() {
-      username = user!.displayName.toString();
-      email = user!.email.toString();
-    });
     setState(() {
       _isloading = false;
       _timer?.cancel();
@@ -191,25 +189,37 @@ class _ProfilePageState extends State<ProfilePage> {
     _timer?.cancel();
     EasyLoading.dismiss();
     return Scaffold(
-        body: Padding(
-      padding: EdgeInsets.all(12),
-      child: _isloading
-          ? Center()
-          : username.isEmpty || email.isEmpty
-              ? Center(child: Text("No Data Available"))
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 50.h),
-                    headerProfileGoogle(),
-                    SizedBox(height: 50.h),
-                    akunOptionGoogle(),
-                    SizedBox(height: 50.h),
-                    generalOptionGoogle(),
-                  ],
-                ),
-    ));
+        body: FutureBuilder<DocumentSnapshot>(
+            future: _users.doc(user!.uid).get(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                print("ERROR: " + snapshot.hasError.toString());
+                return Center(child: Text("Something Wrong"));
+              } else {
+                Map<String, dynamic> data =
+                    snapshot.data!.data() as Map<String, dynamic>;
+                return Padding(
+                  padding: EdgeInsets.all(12),
+                  child: _isloading
+                      ? Center()
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 50.h),
+                            headerProfileGoogle(data['username'], data['email'],
+                                data['profilePhoto']),
+                            SizedBox(height: 50.h),
+                            akunOptionGoogle(),
+                            SizedBox(height: 50.h),
+                            generalOptionGoogle(),
+                          ],
+                        ),
+                );
+              }
+            }));
   }
 
   headerProfileApps() {
@@ -235,24 +245,24 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  headerProfileGoogle() {
+  headerProfileGoogle(String user, String email, String photo) {
     return Row(
       children: [
         SizedBox(width: 25.w),
         CircleAvatar(
           radius: 40,
-          backgroundImage: NetworkImage(user!.photoURL.toString()),
+          backgroundImage: NetworkImage(photo),
         ),
         SizedBox(width: 25.w),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(user!.displayName.toString(),
+            Text(user,
                 style: GoogleFonts.roboto(
                     fontSize: 15, fontWeight: FontWeight.w600)),
             SizedBox(height: 20.h),
-            Text(user!.email.toString(),
+            Text(email,
                 style: GoogleFonts.roboto(
                     fontSize: 15, fontWeight: FontWeight.w600)),
           ],
@@ -463,7 +473,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ElevatedButton(
           onPressed: () {
             final provider =
-                Provider.of<GoogleSignInProvider>(context, listen: false);
+                Provider.of<GoogleProvider>(context, listen: false);
             provider.logout();
           },
           style: ElevatedButton.styleFrom(

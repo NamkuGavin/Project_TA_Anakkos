@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: false,
       builder: (_, child) {
         return ChangeNotifierProvider(
-          create: (context) => GoogleSignInProvider(),
+          create: (context) => GoogleProvider(),
           child: MaterialApp(
             title: 'Anakkos App',
             theme: AppThemeData.getTheme(),
