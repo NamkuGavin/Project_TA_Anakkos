@@ -272,7 +272,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           onPressed: () {
             final provider =
-                Provider.of<GoogleSignInProvider>(context, listen: false);
+                Provider.of<GoogleProvider>(context, listen: false);
             provider.googleLogin();
           },
           child: Padding(
