@@ -10,6 +10,7 @@ import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
+import 'package:project_anakkos_app/ui/edit_profile.dart';
 import 'package:project_anakkos_app/ui/login_page.dart';
 import 'package:project_anakkos_app/ui/role_page.dart';
 import 'package:project_anakkos_app/ui/terms_privacy_page.dart';
@@ -439,7 +440,14 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         SizedBox(height: 25.h),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            final result = await Navigator.push(context,
+                MaterialPageRoute(builder: (context) => EditProfile()));
+            print('result: ' + result);
+            setState(() {
+              _widget = sudahLoginGoogle();
+            });
+          },
           style: ElevatedButton.styleFrom(
             primary: Colors.white,
             onPrimary: ColorValues.primaryBlue,
