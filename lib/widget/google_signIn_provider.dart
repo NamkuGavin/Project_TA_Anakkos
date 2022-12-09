@@ -55,7 +55,7 @@ class GoogleProvider extends ChangeNotifier {
     FirebaseAuth.instance.signOut();
   }
 
-  Future update(String name, String email) async {
+  Future updateUser(String name, String email) async {
     Map<String, dynamic> dataUpdate = {
       'username': name,
       'email': email,
