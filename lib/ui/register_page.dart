@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/model/register_model.dart';
 import 'package:project_anakkos_app/ui/login_page.dart';
 import 'package:project_anakkos_app/widget/bottomNavigation.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
@@ -26,6 +31,8 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isVisible1 = true;
   bool _isVisible2 = true;
   bool submit = false;
+  bool _isloading = false;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -131,12 +138,24 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   submitData() async {
-    final pref = await SharedPreferences.getInstance();
-    pref.setString("confirmpassword", _confirmPassController.text);
-    pref.setString("username", _usernameController.text);
-    pref.setString("email", _emailController.text);
-    pref.setString("password", _passwordController.text);
-    SharedCode.navigatorReplacement(context, LoginPage());
+    setState(() {
+      _isloading = true;
+      _timer?.cancel();
+      EasyLoading.show(
+        status: 'loading...',
+        maskType: EasyLoadingMaskType.black,
+      );
+    });
+    RegisterModel result = await ApiService().getRegister(
+        username: _usernameController.text,
+        email: _emailController.text,
+        password: _confirmPassController.text);
+    setState(() {
+      _isloading = false;
+      _timer?.cancel();
+      EasyLoading.dismiss();
+    });
+    SharedCode.navigatorPushAndRemove(context, LoginPage());
   }
 
   inputWidget() {
