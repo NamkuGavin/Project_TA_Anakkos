@@ -116,8 +116,8 @@ class _EditProfileState extends State<EditProfile> {
           Text("Edit Profile", style: GoogleFonts.roboto(color: Colors.black)),
       actions: [
         Padding(
-          padding: EdgeInsets.all(8.0),
-          child: FlatButton(
+          padding: EdgeInsets.all(12),
+          child: ElevatedButton(
             onPressed: () async {
               final provider =
                   await Provider.of<GoogleProvider>(context, listen: false);
@@ -126,10 +126,13 @@ class _EditProfileState extends State<EditProfile> {
               Navigator.pop(context, 'update');
             },
             child: Text("Save"),
-            textColor: Colors.white,
-            color: ColorValues.primaryPurple,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: ColorValues.primaryBlue,
+              minimumSize: Size(double.infinity, 50.h),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+            ),
           ),
         ),
       ],

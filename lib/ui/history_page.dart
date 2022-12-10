@@ -25,7 +25,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   _checkLogin() async {
     final pref = await SharedPreferences.getInstance();
-    if (pref.getString("access_token") == null) {
+    if (pref.getString("token") == null) {
       setState(() {
         _widget = belumLogin();
       });

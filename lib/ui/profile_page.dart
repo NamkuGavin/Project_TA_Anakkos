@@ -49,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       null;
     }
-    if (pref.getString("access_token") == null && user == null) {
+    if (pref.getString("token") == null && user == null) {
       setState(() {
         _widget = belumLogin();
       });

@@ -1,29 +1,29 @@
 // To parse this JSON data, do
 //
-//     final loginModel = loginModelFromJson(jsonString);
+//     final registerModel = registerModelFromJson(jsonString);
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-LoginModel loginModelFromJson(String str) =>
-    LoginModel.fromJson(json.decode(str));
+RegisterModel registerModelFromJson(String str) =>
+    RegisterModel.fromJson(json.decode(str));
 
-String loginModelToJson(LoginModel data) => json.encode(data.toJson());
+String registerModelToJson(RegisterModel data) => json.encode(data.toJson());
 
-class LoginModel {
-  LoginModel({
+class RegisterModel {
+  RegisterModel({
     required this.message,
     required this.data,
     required this.token,
   });
 
   String message;
-  LoginData data;
+  RegisterData data;
   String token;
 
-  factory LoginModel.fromJson(Map<String, dynamic> json) => LoginModel(
+  factory RegisterModel.fromJson(Map<String, dynamic> json) => RegisterModel(
         message: json["message"],
-        data: LoginData.fromJson(json["data"]),
+        data: RegisterData.fromJson(json["data"]),
         token: json["token"],
       );
 
@@ -34,8 +34,8 @@ class LoginModel {
       };
 }
 
-class LoginData {
-  LoginData({
+class RegisterData {
+  RegisterData({
     required this.id,
     required this.name,
     required this.email,
@@ -51,7 +51,7 @@ class LoginData {
   String createdAt;
   String updatedAt;
 
-  factory LoginData.fromJson(Map<String, dynamic> json) => LoginData(
+  factory RegisterData.fromJson(Map<String, dynamic> json) => RegisterData(
         id: json["id"],
         name: json["name"],
         email: json["email"],

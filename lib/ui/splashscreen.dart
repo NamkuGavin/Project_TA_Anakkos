@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     Future.delayed(Duration(seconds: 3), () async {
       final prefs = await SharedPreferences.getInstance();
-      if (prefs.getString('access_token') == null && user == null) {
+      if (prefs.getString('token') == null && user == null) {
         SharedCode.navigatorReplacement(context, LandingPage());
       } else if (user != null) {
         SharedCode.navigatorReplacement(context, NavigationWidgetBar());

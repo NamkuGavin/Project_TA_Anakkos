@@ -29,7 +29,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isVisible = true;
   bool submit = false;
@@ -41,8 +41,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _usernameController.addListener(() {
-      if (_usernameController.text.isNotEmpty &&
+    _emailController.addListener(() {
+      if (_emailController.text.isNotEmpty &&
           _passwordController.text.isNotEmpty) {
         setState(() {
           submit = true;
@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
     });
     _passwordController.addListener(() {
       if (_passwordController.text.isNotEmpty &&
-          _usernameController.text.isNotEmpty) {
+          _emailController.text.isNotEmpty) {
         setState(() {
           submit = true;
         });
@@ -74,9 +74,7 @@ class _LoginPageState extends State<LoginPage> {
       body: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasData) {
+            if (snapshot.hasData) {
               return NavigationWidgetBar();
             } else if (snapshot.hasError) {
               print("ERROR: " + snapshot.hasError.toString());
@@ -127,11 +125,10 @@ class _LoginPageState extends State<LoginPage> {
       );
     });
     LoginModel result = await ApiService().getLogin(
-        email: _usernameController.text, password: _passwordController.text);
-    prefs.setString("email", result.data.email);
-    prefs.setString("name", result.data.name);
+        email: _emailController.text, password: _passwordController.text);
+    prefs.setString("email", _emailController.text);
     prefs.setString("password", _passwordController.text);
-    prefs.setString("access_token", result.accessToken);
+    prefs.setString("token", result.token);
     setState(() {
       _isloading = false;
       _timer?.cancel();
@@ -157,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
         CustomTextField(
           isEnable: true,
           isreadOnly: false,
-          controller: _usernameController,
+          controller: _emailController,
           inputType: TextInputType.emailAddress,
           validator: (value) => SharedCode().emailValidator(value),
           decoration: InputDecoration(
