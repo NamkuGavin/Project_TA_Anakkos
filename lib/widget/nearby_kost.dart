@@ -45,7 +45,7 @@ class _NearByKostState extends State<NearByKost> {
           ),
           itemCount: nearby.length,
           itemBuilder: (BuildContext context, int index) {
-            return DummyItems(model: nearby[index]);
+            return DummyItems(model: nearby[index], index: index,);
           },
         ),
       ),

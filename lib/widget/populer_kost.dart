@@ -45,7 +45,10 @@ class _PopulerKostState extends State<PopulerKost> {
           ),
           itemCount: popular.length,
           itemBuilder: (BuildContext context, int index) {
-            return DummyItems(model: popular[index]);
+            return DummyItems(
+              model: popular[index],
+              index: index,
+            );
           },
         ),
       ),
