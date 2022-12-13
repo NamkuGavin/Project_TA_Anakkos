@@ -105,26 +105,24 @@ class _HomePageState extends State<HomePage> {
               fontSize: 14,
             )),
         SizedBox(height: 10.h),
-        Container(
-          height: 420.h,
-          child: GridView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10.0,
-              mainAxisSpacing: 10.0,
-            ),
-            itemCount: items.length,
-            itemBuilder: (BuildContext context, int index) {
-              return DummyItems(model: items[index]);
-            },
+        GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10.0,
+            mainAxisSpacing: 10.0,
           ),
+          itemCount: items.length,
+          itemBuilder: (BuildContext context, int index) {
+            return DummyItems(model: items[index]);
+          },
         ),
         SizedBox(height: 20.h),
         ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: ColorValues.primaryBlue,
-              onPrimary: Colors.white,
+              backgroundColor: ColorValues.primaryBlue,
+              foregroundColor: Colors.white,
               minimumSize: Size(double.infinity, 50.h),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
@@ -148,26 +146,24 @@ class _HomePageState extends State<HomePage> {
               fontSize: 14,
             )),
         SizedBox(height: 10.h),
-        Container(
-          height: 420.h,
-          child: GridView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10.0,
-              mainAxisSpacing: 10.0,
-            ),
-            itemCount: items.length,
-            itemBuilder: (BuildContext context, int index) {
-              return DummyItems(model: items[index]);
-            },
+        GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10.0,
+            mainAxisSpacing: 10.0,
           ),
+          itemCount: items.length,
+          itemBuilder: (BuildContext context, int index) {
+            return DummyItems(model: items[index]);
+          },
         ),
         SizedBox(height: 20.h),
         ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: ColorValues.primaryBlue,
-              onPrimary: Colors.white,
+              backgroundColor: ColorValues.primaryBlue,
+              foregroundColor: Colors.white,
               minimumSize: Size(double.infinity, 50.h),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
