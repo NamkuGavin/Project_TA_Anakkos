@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/ui/detail_kost.dart';
 
 import 'dummy model/populer_model.dart';
 
 class DummyItems extends StatefulWidget {
   final KostDummyModel model;
-  DummyItems({Key? key, required this.model}) : super(key: key);
+  final int index;
+  DummyItems({Key? key, required this.model, required this.index})
+      : super(key: key);
 
   @override
   State<DummyItems> createState() => _DummyItemsState();
@@ -18,7 +22,10 @@ class _DummyItemsState extends State<DummyItems> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        print("INDEX: " + widget.index.toString());
+        SharedCode.navigatorPush(context, DetailKost(model: widget.model));
+      },
       child: Card(
         color: Colors.white,
         elevation: 4,

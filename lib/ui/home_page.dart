@@ -115,7 +115,10 @@ class _HomePageState extends State<HomePage> {
           ),
           itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
-            return DummyItems(model: items[index]);
+            return DummyItems(
+              model: items[index],
+              index: index,
+            );
           },
         ),
         SizedBox(height: 20.h),
@@ -156,7 +159,10 @@ class _HomePageState extends State<HomePage> {
           ),
           itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
-            return DummyItems(model: items[index]);
+            return DummyItems(
+              model: items[index],
+              index: index,
+            );
           },
         ),
         SizedBox(height: 20.h),
