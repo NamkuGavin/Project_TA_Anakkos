@@ -65,8 +65,8 @@ class _ChatPageState extends State<ChatPage> {
                   width: 300.w,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: ColorValues.primaryBlue,
-                        onPrimary: Colors.white,
+                        backgroundColor: ColorValues.primaryBlue,
+                        foregroundColor: Colors.white,
                         minimumSize: Size(double.infinity, 50.h),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
