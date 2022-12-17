@@ -58,6 +58,7 @@ dependencies:
   timelines:
   steps:
   im_stepper:
+  modal_bottom_sheet:
 
 #firebase
   firebase_auth:
