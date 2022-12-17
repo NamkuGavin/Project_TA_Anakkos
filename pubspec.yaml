@@ -59,6 +59,7 @@ dependencies:
   steps:
   im_stepper:
   modal_bottom_sheet:
+  dotted_line:
 
 #firebase
   firebase_auth:

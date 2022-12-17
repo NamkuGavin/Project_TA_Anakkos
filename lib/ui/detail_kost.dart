@@ -1,4 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -203,77 +204,140 @@ class _DetailKostState extends State<DetailKost> {
                   color: Colors.white,
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(20))),
-              padding: EdgeInsets.all(12),
-              child: ListView(
-                controller: controller,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Text("Fasilitas Kamar"),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SvgPicture.asset("assets/icon/Cube.svg")),
-                        Expanded(flex: 7, child: Text("5x4 meter")),
-                      ],
+              padding: EdgeInsets.all(20),
+              child: Scrollbar(
+                child: ListView(
+                  controller: controller,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 6),
+                      child: Text("Fasilitas Kamar",
+                          style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.bold, fontSize: 20)),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child:
-                                SvgPicture.asset("assets/icon/Electric.svg")),
-                        Expanded(flex: 7, child: Text("Termasuk Listrik")),
-                      ],
+                    Text(
+                        widget.model.name_kost +
+                            ", " +
+                            widget.model.location_kost,
+                        style: GoogleFonts.roboto()),
+                    Padding(
+                      padding: EdgeInsets.only(top: 25),
+                      child: Text("Spesifikasi Kamar",
+                          style: GoogleFonts.roboto(fontSize: 17)),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SvgPicture.asset("assets/icon/Bed.svg")),
-                        Expanded(flex: 7, child: Text("Kasur (Spring)")),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: SvgPicture.asset("assets/icon/Cube.svg")),
+                          Expanded(flex: 7, child: Text("5x4 meter")),
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SvgPicture.asset("assets/icon/Wind.svg")),
-                        Expanded(flex: 7, child: Text("AC")),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child:
+                                  SvgPicture.asset("assets/icon/Electric.svg")),
+                          Expanded(flex: 7, child: Text("Termasuk Listrik")),
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SvgPicture.asset("assets/icon/Table.svg")),
-                        Expanded(flex: 7, child: Text("Meja")),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: DottedLine(dashColor: ColorValues.primaryPurple),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child:
-                                SvgPicture.asset("assets/icon/Cupboard.svg")),
-                        Expanded(flex: 7, child: Text("Lemari")),
-                      ],
+                    Text("Tempat Tidur",
+                        style: GoogleFonts.roboto(fontSize: 17)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child:
+                                  SvgPicture.asset("assets/icon/Pillow.svg")),
+                          Expanded(flex: 7, child: Text("Bantal")),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: SvgPicture.asset("assets/icon/Bed.svg")),
+                          Expanded(flex: 7, child: Text("Kasur (Spring)")),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: DottedLine(dashColor: ColorValues.primaryPurple),
+                    ),
+                    Text("Pendingin / Sirkulasi Udara",
+                        style: GoogleFonts.roboto(fontSize: 17)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: SvgPicture.asset("assets/icon/Fan.svg")),
+                          Expanded(flex: 7, child: Text("Kipas Angin")),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child:
+                                  SvgPicture.asset("assets/icon/Window.svg")),
+                          Expanded(flex: 7, child: Text("Jendela")),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: DottedLine(dashColor: ColorValues.primaryPurple),
+                    ),
+                    Text("Furniture", style: GoogleFonts.roboto(fontSize: 17)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child:
+                                  SvgPicture.asset("assets/icon/Cupboard.svg")),
+                          Expanded(flex: 7, child: Text("Lemari")),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: SvgPicture.asset("assets/icon/Table.svg")),
+                          Expanded(flex: 7, child: Text("Meja")),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: SvgPicture.asset("assets/icon/Chair.svg")),
+                          Expanded(flex: 7, child: Text("Kursi")),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }),
