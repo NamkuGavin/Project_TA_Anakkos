@@ -19,175 +19,152 @@ class DetailKost extends StatefulWidget {
 class _DetailKostState extends State<DetailKost> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: ColorValues.primaryPurple,
-        mini: true,
-        onPressed: () {
-          SharedCode.navigatorPop(context);
-        },
-        child: Icon(Icons.arrow_back_rounded, size: 17),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            detailHeader(),
-            Divider(
-              color: Colors.grey[400],
-              thickness: 1,
-            ),
-            detailFasilitas(),
-          ],
+    return SafeArea(
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (context, scrolling) {
+            return <Widget>[
+              SliverOverlapAbsorber(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                sliver: SliverAppBar(
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Colors.transparent,
+                  expandedHeight: 225,
+                  forceElevated: scrolling,
+                  flexibleSpace: FlexibleSpaceBar(background: detailAppbar()),
+                ),
+              ),
+            ];
+          },
+          body: ListView(
+            children: [
+              detailHeader(),
+              detailFasilitas(),
+              detailPeraturan(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  detailHeader() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 8),
-      child: Column(
-        children: [
-          Container(
-              width: double.infinity,
-              child: Image.asset(widget.model.picture_kost,
-                  fit: BoxFit.cover, height: 300.h)),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(widget.model.name_kost,
-                        style: GoogleFonts.roboto(fontSize: 20)),
-                    IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.bookmark, color: Colors.grey[300]))
-                  ],
+  detailAppbar() {
+    return Stack(
+      children: [
+        Image.asset(widget.model.picture_kost,
+            fit: BoxFit.cover, width: double.infinity, height: double.infinity),
+        Positioned(
+            top: 25,
+            left: 15,
+            child: CircleAvatar(
+              backgroundColor: ColorValues.primaryPurple,
+              child: IconButton(
+                onPressed: () {
+                  SharedCode.navigatorPop(context);
+                },
+                icon: Icon(
+                  Icons.arrow_back_rounded,
+                  color: Colors.white,
+                  size: 20,
                 ),
-                Row(
-                  children: [
-                    DottedBorder(
-                      color: Colors.black,
-                      strokeWidth: 1,
-                      child: Padding(
-                        padding: EdgeInsets.all(3),
-                        child: Text(widget.model.type_kost,
-                            style: GoogleFonts.roboto(fontSize: 13)),
-                      ),
-                    ),
-                    SizedBox(width: 15.w),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.location_on_rounded, size: 13),
-                        SizedBox(width: 5.w),
-                        Text(widget.model.location_kost,
-                            style: GoogleFonts.inter(fontSize: 10))
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+              ),
+            )),
+      ],
     );
   }
 
   detailFasilitas() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Text("Fasilitas Kamar"),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: [
-                Expanded(child: SvgPicture.asset("assets/icon/Cube.svg")),
-                Expanded(flex: 7, child: Text("5x4 meter")),
-              ],
+    return Card(
+      color: Colors.white,
+      elevation: 4,
+      shadowColor: Colors.black,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Text("Fasilitas Kamar"),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: [
-                Expanded(child: SvgPicture.asset("assets/icon/Electric.svg")),
-                Expanded(flex: 7, child: Text("Termasuk Listrik")),
-              ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(child: SvgPicture.asset("assets/icon/Cube.svg")),
+                  Expanded(flex: 7, child: Text("5x4 meter")),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: [
-                Expanded(child: SvgPicture.asset("assets/icon/Bed.svg")),
-                Expanded(flex: 7, child: Text("Kasur (Spring)")),
-              ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(child: SvgPicture.asset("assets/icon/Electric.svg")),
+                  Expanded(flex: 7, child: Text("Termasuk Listrik")),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: [
-                Expanded(child: SvgPicture.asset("assets/icon/Wind.svg")),
-                Expanded(flex: 7, child: Text("AC")),
-              ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(child: SvgPicture.asset("assets/icon/Bed.svg")),
+                  Expanded(flex: 7, child: Text("Kasur (Spring)")),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: [
-                Expanded(child: SvgPicture.asset("assets/icon/Table.svg")),
-                Expanded(flex: 7, child: Text("Meja")),
-              ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(child: SvgPicture.asset("assets/icon/Wind.svg")),
+                  Expanded(flex: 7, child: Text("AC")),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: [
-                Expanded(child: SvgPicture.asset("assets/icon/Cupboard.svg")),
-                Expanded(flex: 7, child: Text("Lemari")),
-              ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(child: SvgPicture.asset("assets/icon/Table.svg")),
+                  Expanded(flex: 7, child: Text("Meja")),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  side: BorderSide(width: 2, color: ColorValues.primaryPurple),
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                onPressed: () {
-                  showModalBottomSheet(
-                    backgroundColor: Colors.transparent,
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (context) => buildSheet(),
-                  );
-                },
-                child: Text('Lihat semua fasilitas di kamar ini',
-                    style: GoogleFonts.inter(fontWeight: FontWeight.bold))),
-          )
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(child: SvgPicture.asset("assets/icon/Cupboard.svg")),
+                  Expanded(flex: 7, child: Text("Lemari")),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    side: BorderSide(width: 2, color: ColorValues.primaryPurple),
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (context) => buildSheet(),
+                    );
+                  },
+                  child: Text('Lihat semua fasilitas di kamar ini',
+                      style: GoogleFonts.inter(fontWeight: FontWeight.bold))),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -351,6 +328,147 @@ class _DetailKostState extends State<DetailKost> {
         SharedCode.navigatorPop(context);
       },
       child: GestureDetector(onTap: () {}, child: child),
+    );
+  }
+
+  detailPeraturan() {
+    return Card(
+      color: Colors.white,
+      elevation: 4,
+      shadowColor: Colors.black,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Text("Peraturan Kamar"),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(child: SvgPicture.asset("assets/icon/Bed_maks.svg")),
+                  Expanded(
+                      flex: 7,
+                      child: Text("Tipe ini bisa diisi maks. 1 orang/kamar")),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: SvgPicture.asset("assets/icon/Couple_heart.svg")),
+                  Expanded(flex: 7, child: Text("Tidak untuk pasutri")),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(child: SvgPicture.asset("assets/icon/Child.svg")),
+                  Expanded(flex: 7, child: Text("Tidak boleh bawa anak")),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Text("Peraturan Kost"),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(child: SvgPicture.asset("assets/icon/Time_maks.svg")),
+                  Expanded(flex: 7, child: Text("Akses 05.00 - 22.00")),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: SvgPicture.asset("assets/icon/Ban_smoking.svg")),
+                  Expanded(flex: 7, child: Text("Dilarang Merokok")),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(child: SvgPicture.asset("assets/icon/No_animal.svg")),
+                  Expanded(flex: 7, child: Text("Dilarang bawa hewan")),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(child: SvgPicture.asset("assets/icon/Bill.svg")),
+                  Expanded(flex: 7, child: Text("Denda kerusakan barang kos")),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  detailHeader() {
+    return Card(
+      color: Colors.white,
+      elevation: 4,
+      shadowColor: Colors.black,
+      child: Padding(
+        padding: EdgeInsets.all(12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(widget.model.name_kost,
+                    style: GoogleFonts.roboto(fontSize: 20)),
+                IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.bookmark, color: Colors.grey[300]))
+              ],
+            ),
+            Row(
+              children: [
+                DottedBorder(
+                  color: Colors.black,
+                  strokeWidth: 1,
+                  child: Padding(
+                    padding: EdgeInsets.all(3),
+                    child: Text(widget.model.type_kost,
+                        style: GoogleFonts.roboto(fontSize: 13)),
+                  ),
+                ),
+                SizedBox(width: 15.w),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.location_on_rounded, size: 13),
+                    SizedBox(width: 2.w),
+                    Text(widget.model.location_kost,
+                        style: GoogleFonts.inter(fontSize: 10))
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
