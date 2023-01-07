@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
+import 'package:project_anakkos_app/dummy/dummy%20model/ulasan_model.dart';
 
 class DetailKost extends StatefulWidget {
   final KostDummyModel model;
@@ -17,6 +18,68 @@ class DetailKost extends StatefulWidget {
 }
 
 class _DetailKostState extends State<DetailKost> {
+  String pemilikkost = "Julia";
+  String jumlahUlasan = "143";
+
+  List<UlasanDummyModel> items = [
+    UlasanDummyModel(
+        "assets/icon/photo_profile.png",
+        "Gavin Arasyi",
+        4.5,
+        "10 October",
+        "Menyewa selama 1 bulan",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
+    UlasanDummyModel(
+        "assets/icon/photo_profile1.png",
+        "Kholifatul Maghfirullah",
+        4.0,
+        "5 September",
+        "Menyewa selama 1 tahun",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
+    UlasanDummyModel(
+        "assets/icon/photo_profile1.png",
+        "Sidqi Atallah",
+        4.3,
+        "10 Juni",
+        "Menyewa selama 2 tahun",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
+    UlasanDummyModel(
+        "assets/icon/photo_profile1.png",
+        "Reza Indra",
+        3.9,
+        "1 Januari",
+        "Menyewa selama 365 Hari",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
+    UlasanDummyModel(
+        "assets/icon/photo_profile.png",
+        "Gavin Arasyi",
+        5.0,
+        "31 Desember",
+        "Menyewa selama 1 tahun",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
+    UlasanDummyModel(
+        "assets/icon/photo_profile.png",
+        "Kholifatul Maghfirullah",
+        4.0,
+        "5 September",
+        "Menyewa selama 1 tahun",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
+    UlasanDummyModel(
+        "assets/icon/photo_profile.png",
+        "Iqbal",
+        4.5,
+        "17 Agustus",
+        "Menyewa selama 2 tahun",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
+    UlasanDummyModel(
+        "assets/icon/photo_profile1.png",
+        "Iqbal",
+        4.3,
+        "16 Agustus",
+        "Menyewa selama 12 bulan",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -42,6 +105,11 @@ class _DetailKostState extends State<DetailKost> {
               detailHeader(),
               detailFasilitas(),
               detailPeraturan(),
+              //TODO: FOTO KOST WIDGET
+              //TODO: GOOGLE MAPS
+              pemilikKost(),
+              commentUser(),
+              sewaButton(),
             ],
           ),
         ),
@@ -146,7 +214,8 @@ class _DetailKostState extends State<DetailKost> {
               padding: EdgeInsets.symmetric(vertical: 6),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    side: BorderSide(width: 2, color: ColorValues.primaryPurple),
+                    side:
+                        BorderSide(width: 2, color: ColorValues.primaryPurple),
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
@@ -321,6 +390,139 @@ class _DetailKostState extends State<DetailKost> {
     );
   }
 
+  buildUlasan() {
+    return makeDismissible(
+      child: DraggableScrollableSheet(
+          initialChildSize: 0.8,
+          minChildSize: 0.3,
+          maxChildSize: 0.8,
+          builder: (_, controller) {
+            return Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(20))),
+              padding: EdgeInsets.all(20),
+              child: ListView(
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  Text("Ulasan Penyewa",
+                      style: GoogleFonts.roboto(
+                          fontSize: 20, fontWeight: FontWeight.bold)),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: Row(
+                      children: [
+                        Icon(Icons.star,
+                            color: ColorValues.primaryPurple, size: 12),
+                        SizedBox(width: 3),
+                        Text(widget.model.rating_kost.toString(),
+                            style: GoogleFonts.roboto(fontSize: 12)),
+                        SizedBox(width: 3),
+                        Icon(Icons.circle, size: 6, color: Colors.grey[400]),
+                        SizedBox(width: 3),
+                        Text(
+                          "(" + jumlahUlasan + " Ulasan)",
+                          style: GoogleFonts.roboto(
+                              fontSize: 12, color: Colors.grey[600]),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(widget.model.location_kost,
+                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Container(
+                      height: 400,
+                      child: Scrollbar(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: items.length,
+                            controller: controller,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8),
+                                child: Row(
+                                  children: [
+                                    Image.asset(items[index].picture_ulasan,
+                                        width: 50.w),
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(items[index].nama_ulasan,
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold)),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Icon(Icons.star,
+                                                  color:
+                                                      ColorValues.primaryPurple,
+                                                  size: 11),
+                                              SizedBox(width: 3),
+                                              Text(
+                                                  items[index]
+                                                      .rating_ulasan
+                                                      .toString(),
+                                                  style: GoogleFonts.roboto(
+                                                      fontSize: 12)),
+                                              SizedBox(width: 3),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 3),
+                                                child: Icon(Icons.circle,
+                                                    size: 6,
+                                                    color: Colors.grey[400]),
+                                              ),
+                                              SizedBox(width: 3),
+                                              Text(items[index].tanggal_ulasan,
+                                                  style: GoogleFonts.roboto(
+                                                      fontSize: 11)),
+                                              SizedBox(width: 3),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 3),
+                                                child: Icon(Icons.circle,
+                                                    size: 6,
+                                                    color: Colors.grey[400]),
+                                              ),
+                                              SizedBox(width: 3),
+                                              Text(items[index].lamasewa_ulasan,
+                                                  style: GoogleFonts.roboto(
+                                                      fontSize: 11)),
+                                            ],
+                                          ),
+                                          Text(items[index].isi_ulasan,
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12)),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+    );
+  }
+
   makeDismissible({required Widget child}) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -383,7 +585,8 @@ class _DetailKostState extends State<DetailKost> {
               padding: EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 children: [
-                  Expanded(child: SvgPicture.asset("assets/icon/Time_maks.svg")),
+                  Expanded(
+                      child: SvgPicture.asset("assets/icon/Time_maks.svg")),
                   Expanded(flex: 7, child: Text("Akses 05.00 - 22.00")),
                 ],
               ),
@@ -402,7 +605,8 @@ class _DetailKostState extends State<DetailKost> {
               padding: EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 children: [
-                  Expanded(child: SvgPicture.asset("assets/icon/No_animal.svg")),
+                  Expanded(
+                      child: SvgPicture.asset("assets/icon/No_animal.svg")),
                   Expanded(flex: 7, child: Text("Dilarang bawa hewan")),
                 ],
               ),
@@ -458,14 +662,235 @@ class _DetailKostState extends State<DetailKost> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.location_on_rounded, size: 13),
+                    Icon(Icons.location_on_rounded, size: 15),
                     SizedBox(width: 2.w),
                     Text(widget.model.location_kost,
-                        style: GoogleFonts.inter(fontSize: 10))
+                        style: GoogleFonts.inter(fontSize: 12))
                   ],
                 ),
               ],
             ),
+            Padding(
+              padding: EdgeInsets.only(top: 12),
+              child: Row(
+                children: [
+                  Icon(Icons.star, color: ColorValues.primaryPurple, size: 15),
+                  SizedBox(width: 5),
+                  Text(widget.model.rating_kost.toString() +
+                      " (" +
+                      widget.model.jumlahrating_kost.toString() +
+                      ")")
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  pemilikKost() {
+    return Card(
+      color: Colors.white,
+      elevation: 4,
+      shadowColor: Colors.black,
+      child: Padding(
+        padding: EdgeInsets.all(15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Pemilik Kost",
+              style: GoogleFonts.roboto(fontSize: 20),
+            ),
+            Row(
+              children: [
+                Image.asset("assets/icon/Pemilik_kost.png", width: 75.w),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Kost dikelola oleh " + pemilikkost,
+                        style: GoogleFonts.roboto(fontSize: 15)),
+                    Text("Bergabung 19 Juli 2022",
+                        style: GoogleFonts.roboto(fontSize: 12)),
+                  ],
+                ),
+              ],
+            ),
+            Text("Keunggulan kos",
+                style: GoogleFonts.roboto(
+                    fontSize: 15, fontWeight: FontWeight.bold)),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 4),
+              child: Text(
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus elit nisi, facilisis ut nisi quis, suscipit lacinia mi. Duis aliquet magna eget metus viverra, vitae laoreet libero egestas. Ut vitae ligula ut justo egestas vehicula. Vestibulum vitae metus eget magna hendrerit sagittis. Nullam scelerisque bibendum fermentum.",
+                  style: GoogleFonts.roboto(fontSize: 13)),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    side:
+                        BorderSide(width: 2, color: ColorValues.primaryPurple),
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () {},
+                  child: Text('Kontak Pemilik Kost',
+                      style: GoogleFonts.inter(fontWeight: FontWeight.bold))),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  commentUser() {
+    return Card(
+      color: Colors.white,
+      elevation: 4,
+      shadowColor: Colors.black,
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Ulasan Penyewa",
+              style: GoogleFonts.roboto(fontSize: 20),
+            ),
+            Text(
+              "(" + jumlahUlasan + " Ulasan)",
+              style: GoogleFonts.roboto(fontSize: 12, color: Colors.grey[600]),
+            ),
+            listviewTopUlasan(),
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) => buildUlasan(),
+                );
+              },
+              child: Center(
+                child: Column(
+                  children: [
+                    Text("Lihat semua ulasan",
+                        style: GoogleFonts.roboto(fontSize: 12)),
+                    Icon(
+                      Icons.arrow_drop_down_rounded,
+                      color: ColorValues.primaryPurple,
+                      size: 25,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  listviewTopUlasan() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: 2,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  Image.asset(items[index].picture_ulasan, width: 50.w),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(items[index].nama_ulasan,
+                            style: GoogleFonts.roboto(
+                                fontSize: 12, fontWeight: FontWeight.bold)),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(Icons.star,
+                                color: ColorValues.primaryPurple, size: 12),
+                            SizedBox(width: 3),
+                            Text(items[index].rating_ulasan.toString(),
+                                style: GoogleFonts.roboto(fontSize: 11)),
+                            SizedBox(width: 3),
+                            Padding(
+                              padding: EdgeInsets.only(top: 3),
+                              child: Icon(Icons.circle,
+                                  size: 6, color: Colors.grey[400]),
+                            ),
+                            SizedBox(width: 3),
+                            Text(items[index].tanggal_ulasan,
+                                style: GoogleFonts.roboto(fontSize: 11)),
+                            SizedBox(width: 3),
+                            Padding(
+                              padding: EdgeInsets.only(top: 3),
+                              child: Icon(Icons.circle,
+                                  size: 6, color: Colors.grey[400]),
+                            ),
+                            SizedBox(width: 3),
+                            Text(items[index].lamasewa_ulasan,
+                                style: GoogleFonts.roboto(fontSize: 11)),
+                          ],
+                        ),
+                        Text(items[index].isi_ulasan,
+                            style: GoogleFonts.roboto(fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+    );
+  }
+
+  sewaButton() {
+    return Card(
+      color: Colors.white,
+      elevation: 4,
+      shadowColor: Colors.black,
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(widget.model.price_kost,
+                style: GoogleFonts.inter(
+                    fontSize: 13, fontWeight: FontWeight.bold)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorValues.primaryPurple,
+                    foregroundColor: Colors.white,
+                    minimumSize: Size(double.infinity, 50.h),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () {},
+                  child: Text('Sewa Kamar',
+                      style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 15))),
+            )
           ],
         ),
       ),

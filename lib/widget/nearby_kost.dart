@@ -14,21 +14,21 @@ class NearByKost extends StatefulWidget {
 class _NearByKostState extends State<NearByKost> {
   List<KostDummyModel> nearby = [
     KostDummyModel("assets/dummykos/kost_1.png", "Laki-laki", "Kost Skywalker",
-        "Besito, Gebog", "Rp. 750.000 / bulan"),
+        "Besito, Gebog", "Rp. 750.000 / bulan", 4.3, 200),
     KostDummyModel("assets/dummykos/kost_2.png", "Perempuan", "Kost Hokage",
-        "Besito, Gebog", "Rp. 550.000 / bulan"),
+        "Besito, Gebog", "Rp. 550.000 / bulan", 5.0, 100),
     KostDummyModel("assets/dummykos/kost_3.png", "Laki-laki", "Kost Apasaja",
-        "Besito, Gebog", "Rp. 850.000 / bulan"),
+        "Besito, Gebog", "Rp. 850.000 / bulan", 3.0, 150),
     KostDummyModel("assets/dummykos/kost_4.png", "Campuran", "Kost Subadi",
-        "Besito, Gebog", "Rp. 750.000 / bulan"),
+        "Besito, Gebog", "Rp. 750.000 / bulan", 1.0, 125),
     KostDummyModel("assets/dummykos/kost_3.png", "Campuran", "Kost Pelangi",
-        "Besito, Gebog", "Rp. 800.000 / bulan"),
+        "Besito, Gebog", "Rp. 800.000 / bulan", 4.5, 300),
     KostDummyModel("assets/dummykos/kost_2.png", "Perempuan", "Kost Star",
-        "Besito, Gebog", "Rp. 900.000 / bulan"),
+        "Besito, Gebog", "Rp. 900.000 / bulan", 4.3, 500),
     KostDummyModel("assets/dummykos/kost_1.png", "Perempuan", "Kost Taman",
-        "Besito, Gebog", "Rp. 1.000.000 / bulan"),
+        "Besito, Gebog", "Rp. 1.000.000 / bulan", 4.7, 768),
     KostDummyModel("assets/dummykos/kost_4.png", "Laki-laki", "Kost Regency",
-        "Besito, Gebog", "Rp. 600.000 / bulan"),
+        "Besito, Gebog", "Rp. 600.000 / bulan", 4.8, 163),
   ];
 
   @override
@@ -45,7 +45,10 @@ class _NearByKostState extends State<NearByKost> {
           ),
           itemCount: nearby.length,
           itemBuilder: (BuildContext context, int index) {
-            return DummyItems(model: nearby[index], index: index,);
+            return DummyItems(
+              model: nearby[index],
+              index: index,
+            );
           },
         ),
       ),
