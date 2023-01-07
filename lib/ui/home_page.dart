@@ -23,13 +23,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<KostDummyModel> items = [
     KostDummyModel("assets/dummykos/kost_1.png", "Laki-laki", "Kost Skywalker",
-        "Besito, Gebog", "Rp. 750.000 / bulan"),
+        "Besito, Gebog", "Rp. 750.000 / bulan", 4.0, 232),
     KostDummyModel("assets/dummykos/kost_2.png", "Perempuan", "Kost Hokage",
-        "Besito, Gebog", "Rp. 550.000 / bulan"),
+        "Besito, Gebog", "Rp. 550.000 / bulan", 2.0, 111),
     KostDummyModel("assets/dummykos/kost_3.png", "Laki-laki", "Kost Apasaja",
-        "Besito, Gebog", "Rp. 850.000 / bulan"),
+        "Besito, Gebog", "Rp. 850.000 / bulan", 1.4, 90),
     KostDummyModel("assets/dummykos/kost_4.png", "Campuran", "Kost Subadi",
-        "Besito, Gebog", "Rp. 750.000 / bulan"),
+        "Besito, Gebog", "Rp. 750.000 / bulan", 1.7, 980),
   ];
 
   static List<FilterModel?> _animals = [

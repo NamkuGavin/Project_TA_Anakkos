@@ -4,9 +4,17 @@ class KostDummyModel {
   String name_kost;
   String location_kost;
   String price_kost;
+  double rating_kost;
+  int jumlahrating_kost;
 
-  KostDummyModel(this.picture_kost, this.type_kost, this.name_kost,
-      this.location_kost, this.price_kost);
+  KostDummyModel(
+      this.picture_kost,
+      this.type_kost,
+      this.name_kost,
+      this.location_kost,
+      this.price_kost,
+      this.rating_kost,
+      this.jumlahrating_kost);
 
   String get getPicture {
     return picture_kost;
@@ -26,5 +34,13 @@ class KostDummyModel {
 
   String get getPrice {
     return price_kost;
+  }
+
+  double get getRate {
+    return rating_kost;
+  }
+
+  int get getJumlahrate {
+    return jumlahrating_kost;
   }
 }
