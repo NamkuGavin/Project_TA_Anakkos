@@ -294,46 +294,6 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Row(
               children: [
                 Expanded(
-                    flex: 2,
-                    child:
-                        Icon(Icons.bookmark, color: Colors.black, size: 20.w)),
-                Expanded(
-                  flex: 5,
-                  child: Text("Riwayat",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: Colors.black)),
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Text("sedang berjalan & riwayat",
-                      style:
-                          GoogleFonts.inter(fontSize: 9, color: Colors.grey)),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Icon(Icons.arrow_forward_ios_rounded,
-                      color: Colors.black, size: 20.w),
-                )
-              ],
-            ),
-          ),
-        ),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
                     child: Icon(Icons.person_pin,
                         color: Colors.black, size: 20.w)),
                 Expanded(
@@ -398,46 +358,6 @@ class _ProfilePageState extends State<ProfilePage> {
         Text("Akun",
             style:
                 GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                    flex: 2,
-                    child:
-                        Icon(Icons.bookmark, color: Colors.black, size: 20.w)),
-                Expanded(
-                  flex: 5,
-                  child: Text("Riwayat",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: Colors.black)),
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Text("sedang berjalan & riwayat",
-                      style:
-                          GoogleFonts.inter(fontSize: 9, color: Colors.grey)),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Icon(Icons.arrow_forward_ios_rounded,
-                      color: Colors.black, size: 20.w),
-                )
-              ],
-            ),
-          ),
-        ),
         SizedBox(height: 25.h),
         ElevatedButton(
           onPressed: () async {

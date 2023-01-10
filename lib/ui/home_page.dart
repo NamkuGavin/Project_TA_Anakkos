@@ -61,8 +61,12 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               filterWidget(),
+              SizedBox(height: 20.h),
+              ongoingKost(),
               SizedBox(height: 20.h),
               popularKost(),
               SizedBox(height: 20.h),
@@ -215,6 +219,101 @@ class _HomePageState extends State<HomePage> {
           });
         },
       ),
+    );
+  }
+
+  ongoingKost() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text("Ongoing kost",
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+            )),
+        SizedBox(height: 10.h),
+        Card(
+          color: Colors.white,
+          elevation: 4,
+          shadowColor: Colors.black,
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                    width: 100,
+                    child: Image.asset("assets/dummykos/kost_2.png",
+                        fit: BoxFit.fill)),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Color(0XFFFD9900),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 5),
+                                child: Text("Pending",
+                                    style: GoogleFonts.inter(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 10)),
+                              ),
+                            ),
+                            Text("17 August 2022 ",
+                                style: GoogleFonts.roboto(fontSize: 11)),
+                          ],
+                        ),
+                        SizedBox(height: 5.h),
+                        Text("Kost Duniawi",
+                            style: GoogleFonts.inter(
+                                fontWeight: FontWeight.bold, fontSize: 11)),
+                        SizedBox(height: 5.h),
+                        Text("Total : Rp. 568.400",
+                            style: GoogleFonts.roboto(fontSize: 11)),
+                        SizedBox(height: 5.h),
+                        Text("Stay duration: 27 Aug - 27 Sep",
+                            style: GoogleFonts.roboto(fontSize: 11)),
+                        SizedBox(height: 5.h),
+                        InkWell(
+                          onTap: () {},
+                          child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                border: Border.all(
+                                  color: ColorValues.primaryPurple,
+                                  width: 1.w,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Text('Chat dengan pemilik',
+                                    style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 10)),
+                              )),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
