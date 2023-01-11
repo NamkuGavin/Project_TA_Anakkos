@@ -3,6 +3,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +14,7 @@ import 'package:project_anakkos_app/dummy/dummy%20model/ulasan_model.dart';
 import 'package:project_anakkos_app/dummy/dummy_bookmark.dart';
 import 'package:project_anakkos_app/ui/booking_page.dart';
 import 'package:project_anakkos_app/ui/role_page.dart';
+import 'package:project_anakkos_app/widget/alert_dialog_dates.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailKost extends StatefulWidget {
@@ -921,8 +923,16 @@ class _DetailKostState extends State<DetailKost> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
-                  onPressed: () {
-                    SharedCode.navigatorPush(context, BookingPage());
+                  onPressed: () async {
+                    SharedPreferences pref =
+                        await SharedPreferences.getInstance();
+                    if (pref.getString("token") == null && user == null) {
+                      SharedCode.navigatorPush(context, RolePage());
+                    } else if (user != null) {
+                      _showDialog(context);
+                    } else {
+                      print("APPS LOGIN");
+                    }
                   },
                   child: Text('Sewa Kamar',
                       style: GoogleFonts.inter(
@@ -931,6 +941,15 @@ class _DetailKostState extends State<DetailKost> {
           ],
         ),
       ),
+    );
+  }
+
+  Future _showDialog(context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialogDates();
+      },
     );
   }
 }
