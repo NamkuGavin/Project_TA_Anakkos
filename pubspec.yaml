@@ -60,6 +60,7 @@ dependencies:
   im_stepper:
   modal_bottom_sheet:
   dotted_line:
+  dropdown_button2:
 
 #firebase
   firebase_auth:

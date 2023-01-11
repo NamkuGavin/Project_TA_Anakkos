@@ -128,8 +128,8 @@ class _EditProfileState extends State<EditProfile> {
             child: Text("Save"),
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
-              backgroundColor: ColorValues.primaryBlue,
-              minimumSize: Size(double.infinity, 50.h),
+              backgroundColor: ColorValues.primaryPurple,
+              minimumSize: Size(75.w, 50.h),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
             ),

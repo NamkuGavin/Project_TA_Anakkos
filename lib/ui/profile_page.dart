@@ -10,6 +10,7 @@ import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
+import 'package:project_anakkos_app/ui/bookmark_page.dart';
 import 'package:project_anakkos_app/ui/edit_profile.dart';
 import 'package:project_anakkos_app/ui/login_page.dart';
 import 'package:project_anakkos_app/ui/role_page.dart';
@@ -282,6 +283,40 @@ class _ProfilePageState extends State<ProfilePage> {
                 GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
         SizedBox(height: 25.h),
         ElevatedButton(
+          onPressed: () {
+            SharedCode.navigatorPush(context, BookmarkPage());
+          },
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: ColorValues.primaryBlue,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Expanded(
+                    child:
+                        Icon(Icons.bookmark, color: Colors.black, size: 20.w)),
+                Expanded(
+                  flex: 5,
+                  child: Text("Bookmark",
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: Colors.black)),
+                ),
+                Expanded(
+                  child: Icon(Icons.arrow_forward_ios_rounded,
+                      color: Colors.black, size: 20.w),
+                )
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 25.h),
+        ElevatedButton(
           onPressed: () {},
           style: ElevatedButton.styleFrom(
             primary: Colors.white,
@@ -358,6 +393,40 @@ class _ProfilePageState extends State<ProfilePage> {
         Text("Akun",
             style:
                 GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
+        SizedBox(height: 25.h),
+        ElevatedButton(
+          onPressed: () {
+            SharedCode.navigatorPush(context, BookmarkPage());
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: ColorValues.primaryBlue,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Expanded(
+                    child:
+                        Icon(Icons.bookmark, color: Colors.black, size: 20.w)),
+                Expanded(
+                  flex: 5,
+                  child: Text("Bookmark",
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: Colors.black)),
+                ),
+                Expanded(
+                  child: Icon(Icons.arrow_forward_ios_rounded,
+                      color: Colors.black, size: 20.w),
+                )
+              ],
+            ),
+          ),
+        ),
         SizedBox(height: 25.h),
         ElevatedButton(
           onPressed: () async {
