@@ -88,14 +88,6 @@ class _HomePageState extends State<HomePage> {
           height: 2.h,
         ),
       ),
-      actions: [
-        IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.bookmark,
-              color: HexColor("#F8ECEC"),
-            ))
-      ],
     );
   }
 

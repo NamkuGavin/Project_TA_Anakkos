@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,6 +10,10 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/ulasan_model.dart';
+import 'package:project_anakkos_app/dummy/dummy_bookmark.dart';
+import 'package:project_anakkos_app/ui/booking_page.dart';
+import 'package:project_anakkos_app/ui/role_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailKost extends StatefulWidget {
   final KostDummyModel model;
@@ -18,8 +24,11 @@ class DetailKost extends StatefulWidget {
 }
 
 class _DetailKostState extends State<DetailKost> {
+  Color _iconColor = Colors.grey.shade300;
   String pemilikkost = "Julia";
   String jumlahUlasan = "143";
+  final user = FirebaseAuth.instance.currentUser;
+  CollectionReference _users = FirebaseFirestore.instance.collection('users');
 
   List<UlasanDummyModel> items = [
     UlasanDummyModel(
@@ -79,6 +88,16 @@ class _DetailKostState extends State<DetailKost> {
         "Menyewa selama 12 bulan",
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
   ];
+
+  @override
+  void initState() {
+    if (BookmarkList.bookmarkItems.contains(widget.model) == true) {
+      setState(() {
+        _iconColor = ColorValues.primaryPurple;
+      });
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -643,8 +662,23 @@ class _DetailKostState extends State<DetailKost> {
                 Text(widget.model.name_kost,
                     style: GoogleFonts.roboto(fontSize: 20)),
                 IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.bookmark, color: Colors.grey[300]))
+                    onPressed: () async {
+                      SharedPreferences pref =
+                          await SharedPreferences.getInstance();
+                      if (pref.getString("token") == null && user == null) {
+                        SharedCode.navigatorPush(context, RolePage());
+                      } else if (user != null) {
+                        BookmarkList.bookmarkItems.add(widget.model);
+                        print("BOOKMARK LENGTH: " +
+                            BookmarkList.bookmarkItems.length.toString());
+                        setState(() {
+                          _iconColor = ColorValues.primaryPurple;
+                        });
+                      } else {
+                        print("APPS LOGIN");
+                      }
+                    },
+                    icon: Icon(Icons.bookmark, color: _iconColor))
               ],
             ),
             Row(
@@ -887,9 +921,12 @@ class _DetailKostState extends State<DetailKost> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    SharedCode.navigatorPush(context, BookingPage());
+                  },
                   child: Text('Sewa Kamar',
-                      style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 15))),
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.bold, fontSize: 15))),
             )
           ],
         ),

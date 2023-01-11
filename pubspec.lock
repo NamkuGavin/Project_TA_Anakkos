@@ -141,6 +141,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
+  dropdown_button2:
+    dependency: "direct main"
+    description:
+      name: dropdown_button2
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.9.2"
   email_validator:
     dependency: "direct main"
     description:
