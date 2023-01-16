@@ -7,6 +7,7 @@ import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
@@ -14,7 +15,7 @@ import 'package:project_anakkos_app/dummy/dummy%20model/ulasan_model.dart';
 import 'package:project_anakkos_app/dummy/dummy_bookmark.dart';
 import 'package:project_anakkos_app/ui/booking_page.dart';
 import 'package:project_anakkos_app/ui/role_page.dart';
-import 'package:project_anakkos_app/widget/alert_dialog_dates.dart';
+import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_dates.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailKost extends StatefulWidget {
@@ -114,7 +115,7 @@ class _DetailKostState extends State<DetailKost> {
                 sliver: SliverAppBar(
                   automaticallyImplyLeading: false,
                   backgroundColor: Colors.transparent,
-                  expandedHeight: 225,
+                  expandedHeight: 250.h,
                   forceElevated: scrolling,
                   flexibleSpace: FlexibleSpaceBar(background: detailAppbar()),
                 ),
@@ -127,7 +128,7 @@ class _DetailKostState extends State<DetailKost> {
               detailFasilitas(),
               detailPeraturan(),
               //TODO: FOTO KOST WIDGET
-              //TODO: GOOGLE MAPS
+              mapKost(),
               pemilikKost(),
               commentUser(),
               sewaButton(),
@@ -948,8 +949,44 @@ class _DetailKostState extends State<DetailKost> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialogDates();
+        return AlertDialogDates(model: widget.model);
       },
+    );
+  }
+
+  mapKost() {
+    return Card(
+      color: Colors.white,
+      elevation: 4,
+      shadowColor: Colors.black,
+      child: Padding(
+        padding: EdgeInsets.all(15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Text("Lokasi Kost", style: GoogleFonts.roboto(fontSize: 20)),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                children: [
+                  Icon(Icons.location_pin),
+                  Text("Kudus, Bashir", style: GoogleFonts.roboto()),
+                ],
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Image.asset("assets/dummykos/google_maps.png"),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

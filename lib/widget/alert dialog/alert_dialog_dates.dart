@@ -3,10 +3,12 @@ import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
 import 'package:project_anakkos_app/ui/booking_page.dart';
 
 class AlertDialogDates extends StatefulWidget {
-  const AlertDialogDates({Key? key}) : super(key: key);
+  final KostDummyModel model;
+  AlertDialogDates({Key? key, required this.model}) : super(key: key);
 
   @override
   State<AlertDialogDates> createState() => _AlertDialogDatesState();
@@ -17,6 +19,8 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
   String date_sampai = "";
   DateTime selectedDate_dari = DateTime.now();
   DateTime selectedDate_sampai = DateTime.now();
+  DateTime? selected_dari;
+  DateTime? selected_sampai;
   final DateFormat _dateFormat = DateFormat('dd-MM-yyyy');
 
   @override
@@ -133,7 +137,65 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
                     RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)))),
             onPressed: () {
-              SharedCode.navigatorPush(context, BookingPage());
+              if (selected_sampai == null && selected_dari == null) {
+                setState(() {
+                  selected_dari = DateTime.now();
+                  selected_sampai = DateTime.now();
+                });
+                print("DATES: " +
+                    selected_dari.toString() +
+                    " - " +
+                    selected_sampai.toString());
+                SharedCode.navigatorPush(
+                    context,
+                    BookingPage(
+                      model: widget.model,
+                      dateSampai: selected_sampai!,
+                      dateDari: selected_dari!,
+                    ));
+              } else if (selected_dari == null) {
+                setState(() {
+                  selected_dari = DateTime.now();
+                });
+                print("DATES: " +
+                    selected_dari.toString() +
+                    " - " +
+                    selected_sampai.toString());
+                SharedCode.navigatorPush(
+                    context,
+                    BookingPage(
+                      model: widget.model,
+                      dateSampai: selected_sampai!,
+                      dateDari: selected_dari!,
+                    ));
+              } else if (selected_sampai == null) {
+                setState(() {
+                  selected_sampai = DateTime.now();
+                });
+                print("DATES: " +
+                    selected_dari.toString() +
+                    " - " +
+                    selected_sampai.toString());
+                SharedCode.navigatorPush(
+                    context,
+                    BookingPage(
+                      model: widget.model,
+                      dateSampai: selected_sampai!,
+                      dateDari: selected_dari!,
+                    ));
+              } else {
+                print("DATES: " +
+                    selected_dari.toString() +
+                    " - " +
+                    selected_sampai.toString());
+                SharedCode.navigatorPush(
+                    context,
+                    BookingPage(
+                      model: widget.model,
+                      dateSampai: selected_sampai!,
+                      dateDari: selected_dari!,
+                    ));
+              }
             },
             child: Text(
               'Book Now',
@@ -149,7 +211,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
   }
 
   Future<void> _showDatePicker_dari(BuildContext context) async {
-    final DateTime? selected_dari = await showDatePicker(
+    selected_dari = await showDatePicker(
       context: context,
       initialDate: selectedDate_dari,
       firstDate: DateTime(1970),
@@ -164,8 +226,8 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
 
     if (selected_dari != null && selected_dari != selectedDate_dari) {
       setState(() {
-        selectedDate_dari = selected_dari;
-        date_dari = _dateFormat.format(selected_dari);
+        selectedDate_dari = selected_dari!;
+        date_dari = _dateFormat.format(selected_dari!);
         // else if (selected_sampai != null &&
         //     selected_sampai != selectedDate_sampai) {
         //   selectedDate_sampai = selected_sampai;
@@ -182,7 +244,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
     //   firstDate: DateTime(1970),
     //   lastDate: DateTime.now(),
     // );
-    final DateTime? selected_sampai = await showDatePicker(
+    selected_sampai = await showDatePicker(
       context: context,
       initialDate: selectedDate_sampai,
       firstDate: DateTime(1970),
@@ -195,8 +257,8 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
         //   selectedDate_dari = selected_dari;
         //   date_dari = _dateFormat.format(selected_dari);
         // }
-        selectedDate_sampai = selected_sampai;
-        date_sampai = _dateFormat.format(selected_sampai);
+        selectedDate_sampai = selected_sampai!;
+        date_sampai = _dateFormat.format(selected_sampai!);
       });
     }
   }

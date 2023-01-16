@@ -35,7 +35,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return TextFormField(
       enabled: widget.isEnable,
       readOnly: widget.isreadOnly,
-      style: GoogleFonts.roboto(fontSize: 13),
+      style: GoogleFonts.roboto(fontSize: 15),
       controller: widget.controller,
       keyboardType: widget.inputType,
       validator: validator,
