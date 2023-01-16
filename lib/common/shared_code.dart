@@ -11,6 +11,12 @@ class SharedCode {
         : null;
   }
 
+  String? emptyNoValidator(value) {
+    return value.toString().trim().isEmpty
+        ? 'field ini tidak boleh kosong'
+        : null;
+  }
+
   String? passwordValidator(value) {
     return value.toString().length < 6
         ? 'password tidak boleh kurang dari 6 karakter'
