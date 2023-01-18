@@ -48,7 +48,7 @@ dependencies:
   multi_select_flutter:
   email_validator:
   flutter_pw_validator:
-  curved_navigation_bar:
+  curved_labeled_navigation_bar:
   flutter_easyloading:
   fluttertoast:
   flutter_form_bloc:
@@ -62,6 +62,7 @@ dependencies:
   dotted_line:
   dropdown_button2:
   image_picker:
+  font_awesome_flutter:
 
 #firebase
   firebase_auth:

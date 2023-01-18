@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -57,22 +58,18 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget(),
-      body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              filterWidget(),
-              SizedBox(height: 20.h),
-              ongoingKost(),
-              SizedBox(height: 20.h),
-              popularKost(),
-              SizedBox(height: 20.h),
-              nearbyKost(),
-            ],
-          ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // filterWidget(),
+            SizedBox(height: 10.h),
+            ongoingKost(),
+            SizedBox(height: 20.h),
+            popularKost(),
+            nearbyKost(),
+          ],
         ),
       ),
     );
@@ -80,102 +77,141 @@ class _HomePageState extends State<HomePage> {
 
   appBarWidget() {
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: Colors.white,
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(0.0),
         child: Container(
           color: Colors.black,
-          height: 2.h,
+          height: 1.h,
         ),
       ),
     );
   }
 
   popularKost() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Popular kost",
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-            )),
-        SizedBox(height: 10.h),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10.0,
-            mainAxisSpacing: 10.0,
-          ),
-          itemCount: items.length,
-          itemBuilder: (BuildContext context, int index) {
-            return DummyItems(
-              model: items[index],
-              index: index,
-            );
-          },
-        ),
-        SizedBox(height: 20.h),
-        ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ColorValues.primaryBlue,
-              foregroundColor: Colors.white,
-              minimumSize: Size(double.infinity, 50.h),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Popular kost",
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              )),
+          SizedBox(height: 10.h),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              childAspectRatio: 0.7,
+              crossAxisCount: 2,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
             ),
-            onPressed: () {
-              SharedCode.navigatorPush(context, PopulerKost());
+            itemCount: items.length,
+            itemBuilder: (BuildContext context, int index) {
+              return DummyItems(
+                model: items[index],
+                index: index,
+              );
             },
-            child: Text('More',
-                style: GoogleFonts.inter(fontWeight: FontWeight.bold)))
-      ],
+          ),
+          SizedBox(height: 5.h),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorValues.primaryBlue,
+                  foregroundColor: Colors.white,
+                  minimumSize: Size(20.w, 30.h),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                onPressed: () {
+                  SharedCode.navigatorPush(context, PopulerKost());
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Lainnya', style: GoogleFonts.inter(fontSize: 12)),
+                    Icon(Icons.double_arrow_rounded)
+                  ],
+                )),
+          )
+          // SizedBox(height: 10.h),
+          // GestureDetector(
+          //   onTap: () {
+          //     SharedCode.navigatorPush(context, PopulerKost());
+          //   },
+          //   child: Row(
+          //     crossAxisAlignment: CrossAxisAlignment.end,
+          //     mainAxisAlignment: MainAxisAlignment.end,
+          //     children: [
+          //       Icon(Icons.add, size: 15),
+          //       Text('Lainnya', style: GoogleFonts.inter(fontSize: 12))
+          //     ],
+          //   ),
+          // )
+        ],
+      ),
     );
   }
 
   nearbyKost() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Near by kost",
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-            )),
-        SizedBox(height: 10.h),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10.0,
-            mainAxisSpacing: 10.0,
-          ),
-          itemCount: items.length,
-          itemBuilder: (BuildContext context, int index) {
-            return DummyItems(
-              model: items[index],
-              index: index,
-            );
-          },
-        ),
-        SizedBox(height: 20.h),
-        ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ColorValues.primaryBlue,
-              foregroundColor: Colors.white,
-              minimumSize: Size(double.infinity, 50.h),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Near by kost",
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              )),
+          SizedBox(height: 10.h),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              childAspectRatio: 0.7,
+              crossAxisCount: 2,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
             ),
-            onPressed: () {
-              SharedCode.navigatorPush(context, NearByKost());
+            itemCount: items.length,
+            itemBuilder: (BuildContext context, int index) {
+              return DummyItems(
+                model: items[index],
+                index: index,
+              );
             },
-            child: Text('More',
-                style: GoogleFonts.inter(fontWeight: FontWeight.bold)))
-      ],
+          ),
+          SizedBox(height: 5.h),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorValues.primaryBlue,
+                  foregroundColor: Colors.white,
+                  minimumSize: Size(20.w, 30.h),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                onPressed: () {
+                  SharedCode.navigatorPush(context, NearByKost());
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Lainnya', style: GoogleFonts.inter(fontSize: 12)),
+                    Icon(Icons.double_arrow_rounded)
+                  ],
+                )),
+          )
+        ],
+      ),
     );
   }
 
@@ -215,97 +251,112 @@ class _HomePageState extends State<HomePage> {
   }
 
   ongoingKost() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Text("Ongoing kost",
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-            )),
-        SizedBox(height: 10.h),
-        Card(
-          color: Colors.white,
-          elevation: 4,
-          shadowColor: Colors.black,
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                    width: 100,
-                    child: Image.asset("assets/dummykos/kost_2.png",
-                        fit: BoxFit.fill)),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: Color(0XFFFD9900),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 5),
-                                child: Text("Pending",
-                                    style: GoogleFonts.inter(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 10)),
-                              ),
-                            ),
-                            Text("17 August 2022 ",
-                                style: GoogleFonts.roboto(fontSize: 11)),
-                          ],
-                        ),
-                        SizedBox(height: 5.h),
-                        Text("Kost Duniawi",
-                            style: GoogleFonts.inter(
-                                fontWeight: FontWeight.bold, fontSize: 11)),
-                        SizedBox(height: 5.h),
-                        Text("Total : Rp. 568.400",
-                            style: GoogleFonts.roboto(fontSize: 11)),
-                        SizedBox(height: 5.h),
-                        Text("Stay duration: 27 Aug - 27 Sep",
-                            style: GoogleFonts.roboto(fontSize: 11)),
-                        SizedBox(height: 5.h),
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                                border: Border.all(
-                                  color: ColorValues.primaryPurple,
-                                  width: 1.w,
-                                ),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Text('Chat dengan pemilik',
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 10)),
-                              )),
-                        )
-                      ],
-                    ),
-                  ),
-                )
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text("Ongoing kost",
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              )),
+          SizedBox(height: 10.h),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.8),
+                  spreadRadius: 2,
+                  blurRadius: 5, // changes position of shadow
+                ),
               ],
             ),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius:
+                        BorderRadius.horizontal(left: Radius.circular(10)),
+                    child: Container(
+                      height: 150.h,
+                        width: 100.w,
+                        child: Image.asset("assets/dummykos/kost_2.png",
+                            fit: BoxFit.fill)),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Color(0XFFFD9900),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5))),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 5),
+                                  child: Text("Pending",
+                                      style: GoogleFonts.inter(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 11)),
+                                ),
+                              ),
+                              Text("17 August 2022 ",
+                                  style: GoogleFonts.roboto(fontSize: 12)),
+                            ],
+                          ),
+                          SizedBox(height: 7.h),
+                          Text("Kost Duniawi",
+                              style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.bold, fontSize: 12)),
+                          SizedBox(height: 7.h),
+                          Text("Total : Rp. 568.400",
+                              style: GoogleFonts.roboto(fontSize: 12)),
+                          SizedBox(height: 7.h),
+                          Text("Stay duration: 27 Aug - 27 Sep",
+                              style: GoogleFonts.roboto(fontSize: 12)),
+                          SizedBox(height: 7.h),
+                          InkWell(
+                            onTap: () {},
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                  border: Border.all(
+                                    color: ColorValues.primaryPurple,
+                                    width: 1.w,
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: Text('Chat dengan pemilik',
+                                      style: GoogleFonts.inter(
+                                          fontSize: 11)),
+                                )),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

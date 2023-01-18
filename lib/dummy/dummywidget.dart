@@ -28,31 +28,32 @@ class _DummyItemsState extends State<DummyItems> {
       },
       child: Card(
         color: Colors.white,
-        elevation: 4,
+        elevation: 5,
         shadowColor: Colors.black,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
+            ClipRRect(
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(10)),
                 child:
-                    Image.asset(widget.model.picture_kost, fit: BoxFit.cover),
-                aspectRatio: 2),
+                    Image.asset(widget.model.picture_kost, fit: BoxFit.cover)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 12.h),
                   DottedBorder(
                     color: Colors.black,
                     strokeWidth: 1,
                     child: Text(widget.model.type_kost,
                         style: GoogleFonts.inter(fontSize: 10)),
                   ),
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 6.h),
                   Text(widget.model.name_kost,
                       style: GoogleFonts.inter(fontSize: 10)),
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 6.h),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -61,7 +62,7 @@ class _DummyItemsState extends State<DummyItems> {
                           style: GoogleFonts.inter(fontSize: 10))
                     ],
                   ),
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 6.h),
                   Align(
                     alignment: Alignment.bottomRight,
                     child: Text(widget.model.price_kost,

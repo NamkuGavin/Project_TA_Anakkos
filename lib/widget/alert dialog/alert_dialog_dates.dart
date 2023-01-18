@@ -33,177 +33,172 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      insetPadding: EdgeInsets.zero,
       content: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
         Text(
-          "Choose your stay date:",
+          "Pilih Waktu Sewa:",
           style: TextStyle(
-              fontSize: 12,
+              fontSize: 15,
               color: ColorValues.primaryBlue,
               fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 12.h),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text(
-                      'Dari Tanggal',
-                      style: TextStyle(fontSize: 12),
+        SizedBox(height: 20.h),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    'Dari Tanggal',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    _showDatePicker_dari(context);
+                  },
+                  child: Container(
+                    width: 110.w,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: ColorValues.primaryPurple, width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 3,
+                          ),
+                        ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10)),
+                    height: 30,
+                    child: Center(
+                      child: Text(date_dari.toString(),
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: ColorValues.primaryPurple,
+                              fontWeight: FontWeight.bold)),
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      _showDatePicker_dari(context);
-                    },
-                    child: Container(
-                      width: 100,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: ColorValues.primaryPurple, width: 2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 3,
-                            ),
-                          ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      height: 30,
-                      child: Center(
-                        child: Text(date_dari.toString(),
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: ColorValues.primaryPurple,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(width: 25.w),
-              Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text(
-                      'Sampai Tanggal',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      _showDatePicker_sampai(context);
-                    },
-                    child: Container(
-                      width: 100,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: ColorValues.primaryPurple, width: 2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 3,
-                            ),
-                          ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      height: 30,
-                      child: Center(
-                        child: Text(date_sampai.toString(),
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: ColorValues.primaryPurple,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Container(
-          width: 120,
-          child: ElevatedButton(
-            style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(ColorValues.primaryBlue),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)))),
-            onPressed: () {
-              if (selected_sampai == null && selected_dari == null) {
-                setState(() {
-                  selected_dari = DateTime.now();
-                  selected_sampai = DateTime.now();
-                });
-                print("DATES: " +
-                    selected_dari.toString() +
-                    " - " +
-                    selected_sampai.toString());
-                SharedCode.navigatorPush(
-                    context,
-                    BookingPage(
-                      model: widget.model,
-                      dateSampai: selected_sampai!,
-                      dateDari: selected_dari!,
-                    ));
-              } else if (selected_dari == null) {
-                setState(() {
-                  selected_dari = DateTime.now();
-                });
-                print("DATES: " +
-                    selected_dari.toString() +
-                    " - " +
-                    selected_sampai.toString());
-                SharedCode.navigatorPush(
-                    context,
-                    BookingPage(
-                      model: widget.model,
-                      dateSampai: selected_sampai!,
-                      dateDari: selected_dari!,
-                    ));
-              } else if (selected_sampai == null) {
-                setState(() {
-                  selected_sampai = DateTime.now();
-                });
-                print("DATES: " +
-                    selected_dari.toString() +
-                    " - " +
-                    selected_sampai.toString());
-                SharedCode.navigatorPush(
-                    context,
-                    BookingPage(
-                      model: widget.model,
-                      dateSampai: selected_sampai!,
-                      dateDari: selected_dari!,
-                    ));
-              } else {
-                print("DATES: " +
-                    selected_dari.toString() +
-                    " - " +
-                    selected_sampai.toString());
-                SharedCode.navigatorPush(
-                    context,
-                    BookingPage(
-                      model: widget.model,
-                      dateSampai: selected_sampai!,
-                      dateDari: selected_dari!,
-                    ));
-              }
-            },
-            child: Text(
-              'Book Now',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12),
+                )
+              ],
             ),
+            SizedBox(width: 25.w),
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    'Sampai Tanggal',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    _showDatePicker_sampai(context);
+                  },
+                  child: Container(
+                    width: 110.w,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: ColorValues.primaryPurple, width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 3,
+                          ),
+                        ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10)),
+                    height: 30,
+                    child: Center(
+                      child: Text(date_sampai.toString(),
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: ColorValues.primaryPurple,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(height: 25.h),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: ColorValues.primaryBlue,
+            foregroundColor: Colors.white,
+            minimumSize: Size(125.w, 33.h),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+          onPressed: () {
+            if (selected_sampai == null && selected_dari == null) {
+              setState(() {
+                selected_dari = DateTime.now();
+                selected_sampai = DateTime.now();
+              });
+              print("DATES: " +
+                  selected_dari.toString() +
+                  " - " +
+                  selected_sampai.toString());
+              SharedCode.navigatorPush(
+                  context,
+                  BookingPage(
+                    model: widget.model,
+                    dateSampai: selected_sampai!,
+                    dateDari: selected_dari!,
+                  ));
+            } else if (selected_dari == null) {
+              setState(() {
+                selected_dari = DateTime.now();
+              });
+              print("DATES: " +
+                  selected_dari.toString() +
+                  " - " +
+                  selected_sampai.toString());
+              SharedCode.navigatorPush(
+                  context,
+                  BookingPage(
+                    model: widget.model,
+                    dateSampai: selected_sampai!,
+                    dateDari: selected_dari!,
+                  ));
+            } else if (selected_sampai == null) {
+              setState(() {
+                selected_sampai = DateTime.now();
+              });
+              print("DATES: " +
+                  selected_dari.toString() +
+                  " - " +
+                  selected_sampai.toString());
+              SharedCode.navigatorPush(
+                  context,
+                  BookingPage(
+                    model: widget.model,
+                    dateSampai: selected_sampai!,
+                    dateDari: selected_dari!,
+                  ));
+            } else {
+              print("DATES: " +
+                  selected_dari.toString() +
+                  " - " +
+                  selected_sampai.toString());
+              SharedCode.navigatorPush(
+                  context,
+                  BookingPage(
+                    model: widget.model,
+                    dateSampai: selected_sampai!,
+                    dateDari: selected_dari!,
+                  ));
+            }
+          },
+          child: Text(
+            'Book Now',
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
           ),
         )
       ]),
