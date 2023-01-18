@@ -50,7 +50,7 @@ class _KonfirmasiPhotoPageState extends State<KonfirmasiPhotoPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: ColorValues.primaryPurple,
+          backgroundColor: ColorValues.primaryBlue,
           title: Text(
             "Konfirmasi Foto Pembayaran",
             style: GoogleFonts.roboto(fontSize: 20),
