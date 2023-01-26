@@ -13,22 +13,23 @@ import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
-import 'package:project_anakkos_app/ui/register_page.dart';
+import 'package:project_anakkos_app/ui-Seller/register_seller.dart';
+import 'package:project_anakkos_app/widget/bottomNavigation_seller.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
 import 'package:project_anakkos_app/widget/google_signIn_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../widget/bottomNavigation.dart';
+import '../widget/bottomNavigation_user.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+class LoginSeller extends StatefulWidget {
+  LoginSeller({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginSeller> createState() => _LoginSellerState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginSellerState extends State<LoginSeller> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isVisible = true;
@@ -71,70 +72,40 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      body: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return NavigationWidgetBar();
-            } else if (snapshot.hasError) {
-              print("ERROR: " + snapshot.hasError.toString());
-              return Center(child: Text("Something Wrong"));
-            } else {
-              return _isloading == false
-                  ? Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 75.h,
-                            ),
-                            Text("Login",
-                                style: GoogleFonts.roboto(
-                                  fontSize: 35,
-                                  fontWeight: FontWeight.w400,
-                                )),
-                            SizedBox(
-                              height: 50.h,
-                            ),
-                            inputWidget(),
-                            loginButton(),
-                            SizedBox(
-                              height: 50.h,
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : Container();
-            }
-          }),
+      body: _isloading == false
+          ? Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 75.h,
+                    ),
+                    Text("Login",
+                        style: GoogleFonts.roboto(
+                          fontSize: 35,
+                          fontWeight: FontWeight.w400,
+                        )),
+                    SizedBox(
+                      height: 50.h,
+                    ),
+                    inputWidget(),
+                    loginButton(),
+                    SizedBox(
+                      height: 50.h,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : Container(),
     );
   }
 
   submitData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _isloading = true;
-      _timer?.cancel();
-      EasyLoading.show(
-        status: 'loading...',
-        maskType: EasyLoadingMaskType.black,
-      );
-    });
-    LoginModel result = await ApiService().getLogin(
-        email: _emailController.text, password: _passwordController.text);
-    prefs.setString("email", _emailController.text);
-    prefs.setString("password", _passwordController.text);
-    prefs.setString("token", result.token);
-    setState(() {
-      _isloading = false;
-      _timer?.cancel();
-      EasyLoading.dismiss();
-    });
-    SharedCode.navigatorPushAndRemove(context, NavigationWidgetBar());
+    SharedCode.navigatorPushAndRemove(context, NavigationWidgetBarSeller());
   }
 
   inputWidget() {
@@ -235,63 +206,6 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(
           height: 30.h,
         ),
-        Row(
-          children: [
-            Expanded(
-              child: Divider(
-                color: Colors.black,
-                thickness: 1,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Text('Or'),
-            ),
-            Expanded(
-              child: Divider(
-                color: Colors.black,
-                thickness: 1,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 30.h,
-        ),
-        ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(HexColor("#F8F8F8")),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-          onPressed: () {
-            final provider =
-                Provider.of<GoogleProvider>(context, listen: false);
-            provider.googleLogin();
-          },
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 13),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SvgPicture.asset("assets/logo/google_logo.svg"),
-                SizedBox(
-                  width: 10.w,
-                ),
-                Text('Login with Google',
-                    style: GoogleFonts.roboto(
-                        color: Colors.black, fontWeight: FontWeight.w500))
-              ],
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 40.h,
-        ),
         Center(
           child: RichText(
             text: TextSpan(
@@ -305,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
                           fontWeight: FontWeight.w600),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          SharedCode.navigatorPush(context, RegisterPage());
+                          SharedCode.navigatorPush(context, RegisterSeller());
                         }),
                 ]),
           ),

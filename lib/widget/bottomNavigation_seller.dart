@@ -6,22 +6,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
-import 'package:project_anakkos_app/ui/chat_page.dart';
-import 'package:project_anakkos_app/ui/history_page.dart';
-import 'package:project_anakkos_app/ui/home_page.dart';
-import 'package:project_anakkos_app/ui/profile_page.dart';
+import 'package:project_anakkos_app/ui-Seller/chat_seller.dart';
+import 'package:project_anakkos_app/ui-Seller/home_seller.dart';
+import 'package:project_anakkos_app/ui-Seller/profile_seller.dart';
+import 'package:project_anakkos_app/ui-User/chat_page.dart';
+import 'package:project_anakkos_app/ui-User/history_page.dart';
+import 'package:project_anakkos_app/ui-User/home_page.dart';
+import 'package:project_anakkos_app/ui-User/profile_page.dart';
 
-class NavigationWidgetBar extends StatefulWidget {
-  const NavigationWidgetBar({Key? key}) : super(key: key);
+class NavigationWidgetBarSeller extends StatefulWidget {
+  const NavigationWidgetBarSeller({Key? key}) : super(key: key);
 
   @override
-  State<NavigationWidgetBar> createState() => _NavigationWidgetBarState();
+  State<NavigationWidgetBarSeller> createState() =>
+      _NavigationWidgetBarSellerState();
 }
 
-class _NavigationWidgetBarState extends State<NavigationWidgetBar> {
+class _NavigationWidgetBarSellerState extends State<NavigationWidgetBarSeller> {
   int _selectedIndex = 0;
 
-  List _pages = [HomePage(), ChatPage(), HistoryPage(), ProfilePage()];
+  List _pages = [HomeSeller(), ChatSeller(), ProfileSeller()];
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +60,6 @@ class _NavigationWidgetBarState extends State<NavigationWidgetBar> {
               BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.chat_bubble_text_fill, size: 30),
                 label: 'Chat',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.history, size: 30),
-                label: 'History',
               ),
               BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.profile_circled, size: 30),

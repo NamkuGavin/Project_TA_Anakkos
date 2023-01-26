@@ -63,6 +63,9 @@ dependencies:
   dropdown_button2:
   image_picker:
   font_awesome_flutter:
+  anim_search_bar:
+  cupertino_stepper:
+  custom_radio_grouped_button:
 
 #firebase
   firebase_auth:

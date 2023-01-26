@@ -15,7 +15,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   var hours1;
   var mints1;
   var secs1;
-  var countdownDuration1 = Duration(minutes: 10);
+  var countdownDuration1 = Duration();
   Duration duration1 = Duration();
   Timer? timer1;
   bool countDown1 = true;
@@ -28,17 +28,17 @@ class _TimerWidgetState extends State<TimerWidget> {
     countdownDuration1 =
         Duration(hours: hours1, minutes: mints1, seconds: secs1);
     startTimer1();
-    reset1();
     super.initState();
   }
 
   @override
   void deactivate() {
-    print('DEACTIVATE');
     if (timer1!.isActive) {
       timer1!.cancel();
+      print('DEACTIVATE');
     } else {
       startTimer1();
+      print('ACTIVATE');
     }
     super.deactivate();
   }
@@ -60,16 +60,15 @@ class _TimerWidgetState extends State<TimerWidget> {
     ]);
   }
 
-  void reset1() {
+  void startTimer1() {
+    if (timer1 == null) {
+      timer1 = Timer.periodic(Duration(seconds: 1), (_) => addTime1());
+    }
     if (timer1!.isActive) {
       setState(() => duration1 = countdownDuration1);
     } else {
       setState(() => duration1 = Duration());
     }
-  }
-
-  void startTimer1() {
-    timer1 = Timer.periodic(Duration(seconds: 1), (_) => addTime1());
   }
 
   void addTime1() {

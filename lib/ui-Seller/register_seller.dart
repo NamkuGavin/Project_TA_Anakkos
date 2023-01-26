@@ -11,19 +11,19 @@ import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/model/register_model.dart';
-import 'package:project_anakkos_app/ui/login_page.dart';
-import 'package:project_anakkos_app/widget/bottomNavigation.dart';
+import 'package:project_anakkos_app/ui-Seller/login_seller.dart';
+import 'package:project_anakkos_app/widget/bottomNavigation_user.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class RegisterSeller extends StatefulWidget {
+  const RegisterSeller({Key? key}) : super(key: key);
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<RegisterSeller> createState() => _RegisterSellerState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterSellerState extends State<RegisterSeller> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -155,7 +155,7 @@ class _RegisterPageState extends State<RegisterPage> {
       _timer?.cancel();
       EasyLoading.dismiss();
     });
-    SharedCode.navigatorPushAndRemove(context, LoginPage());
+    SharedCode.navigatorPushAndRemove(context, LoginSeller());
   }
 
   inputWidget() {
@@ -315,59 +315,6 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
         SizedBox(
-          height: 30.h,
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: Divider(
-                color: Colors.black,
-                thickness: 1,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Text('Or'),
-            ),
-            Expanded(
-              child: Divider(
-                color: Colors.black,
-                thickness: 1,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 30.h,
-        ),
-        ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(HexColor("#F8F8F8")),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-          onPressed: () {},
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 13),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SvgPicture.asset("assets/logo/google_logo.svg"),
-                SizedBox(
-                  width: 10.w,
-                ),
-                Text('Login with Google',
-                    style: GoogleFonts.roboto(
-                        color: Colors.black, fontWeight: FontWeight.w500))
-              ],
-            ),
-          ),
-        ),
-        SizedBox(
           height: 40.h,
         ),
         Center(
@@ -383,7 +330,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           fontWeight: FontWeight.w600),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          SharedCode.navigatorReplacement(context, LoginPage());
+                          SharedCode.navigatorReplacement(
+                              context, LoginSeller());
                         }),
                 ]),
           ),

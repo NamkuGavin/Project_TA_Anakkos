@@ -10,11 +10,11 @@ import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
-import 'package:project_anakkos_app/ui/bookmark_page.dart';
-import 'package:project_anakkos_app/ui/edit_profile.dart';
-import 'package:project_anakkos_app/ui/login_page.dart';
-import 'package:project_anakkos_app/ui/role_page.dart';
-import 'package:project_anakkos_app/ui/terms_privacy_page.dart';
+import 'package:project_anakkos_app/ui-User/bookmark_page.dart';
+import 'package:project_anakkos_app/ui-User/edit_profile.dart';
+import 'package:project_anakkos_app/ui-User/login_user.dart';
+import 'package:project_anakkos_app/ui-User/role_page.dart';
+import 'package:project_anakkos_app/ui-User/terms_privacy_page.dart';
 import 'package:project_anakkos_app/widget/google_signIn_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -631,6 +631,6 @@ class _ProfilePageState extends State<ProfilePage> {
   logout() async {
     final preferences = await SharedPreferences.getInstance();
     await preferences.clear();
-    SharedCode.navigatorPushAndRemove(context, LoginPage());
+    SharedCode.navigatorPushAndRemove(context, LoginUser());
   }
 }
