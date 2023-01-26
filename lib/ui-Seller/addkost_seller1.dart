@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/ui-Seller/addkost_seller2.dart';
 import 'package:project_anakkos_app/ui-Seller/addkost_seller3.dart';
 
 class AddKostPage1 extends StatefulWidget {
@@ -219,7 +220,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
                             borderRadius: BorderRadius.circular(10)),
                       ),
                       onPressed: () {
-                        SharedCode.navigatorPush(context, AddKostPage3());
+                        SharedCode.navigatorPush(context, AddKostPage2());
                       },
                       child: Padding(
                         padding: EdgeInsets.all(8),
