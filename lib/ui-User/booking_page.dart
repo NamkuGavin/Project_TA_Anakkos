@@ -1,4 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
-import 'package:project_anakkos_app/ui/konfirmasi_page.dart';
+import 'package:project_anakkos_app/ui-User/konfirmasi_page.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_help.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
 import 'package:project_anakkos_app/widget/timer.dart';
@@ -37,6 +38,7 @@ class _BookingPageState extends State<BookingPage> {
   int detail1 = 55000;
   int detail2 = 13400;
   int detail3 = 500000;
+  int noBank = 0833545234;
 
   @override
   void initState() {
@@ -58,8 +60,11 @@ class _BookingPageState extends State<BookingPage> {
       if (pickedImage != null) {
         await navigator.push(
           MaterialPageRoute(
-            builder: (context) =>
-                KonfirmasiPhotoPage(imagePath: pickedImage!.path),
+            builder: (context) => KonfirmasiPhotoPage(
+                imagePath: pickedImage!.path,
+                model: widget.model,
+                dateDari: widget.dateDari,
+                dateSampai: widget.dateSampai),
           ),
         );
       } else {
@@ -86,11 +91,22 @@ class _BookingPageState extends State<BookingPage> {
               SharedCode.navigatorPop(context);
             },
             icon: Icon(Icons.arrow_back_rounded, color: Colors.black)),
+        actions: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25),
+            child: GestureDetector(
+              onTap: () {
+                _showDialog(context);
+              },
+              child: SvgPicture.asset("assets/icon/Help.svg", width: 20.w),
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: [
           Expanded(
-            flex: 6,
+            flex: 9,
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.all(12),
@@ -101,30 +117,46 @@ class _BookingPageState extends State<BookingPage> {
                     TimerWidget(),
                     SizedBox(height: 40.h),
                     Text(
-                      'Bank account number',
+                      'Seller bank account number',
                       style: GoogleFonts.roboto(
                         fontSize: 13,
                       ),
                     ),
                     SizedBox(height: 7.h),
-                    CustomTextField(
-                      isEnable: true,
-                      isreadOnly: false,
-                      controller: _noKartuController,
-                      inputType: TextInputType.number,
-                      validator: (value) =>
-                          SharedCode().emptyNoValidator(value),
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                    Center(
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(// red as border color
+                              ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: Text(
+                            noBank.toString(),
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.roboto(
+                              fontSize: 23,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 20.h),
-                    Card(
-                        color: Colors.white,
-                        elevation: 4,
-                        shadowColor: Colors.black,
+                    SizedBox(height: 40.h),
+                    Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.8),
+                              spreadRadius: 2,
+                              blurRadius: 5, // changes position of shadow
+                            ),
+                          ],
+                        ),
                         child: Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Column(
@@ -157,55 +189,72 @@ class _BookingPageState extends State<BookingPage> {
           ),
           Expanded(
             child: Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        top: BorderSide(color: Colors.black, width: 2.w))),
-                child: Column(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.8),
+                    spreadRadius: 2,
+                    blurRadius: 5, // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          Text("Total: ",
+                              style: GoogleFonts.roboto(
+                                  fontWeight: FontWeight.bold)),
                           Text(
-                              "Total: " +
-                                  "Rp. " +
+                              "Rp. " +
                                   NumberFormat()
                                       .format(detail1 + detail2 + detail3),
                               style: GoogleFonts.roboto(
                                   fontWeight: FontWeight.bold)),
-                          GestureDetector(
-                            onTap: () {
-                              _showDialog(context);
-                            },
-                            child: SvgPicture.asset("assets/icon/Help.svg"),
-                          ),
                         ],
                       ),
                     ),
+                    SizedBox(width: 25.w),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: ColorValues.primaryPurple,
-                            onPrimary: Colors.white,
-                            minimumSize: Size(double.infinity, 50.h),
+                            backgroundColor: ColorValues.primaryBlue,
+                            foregroundColor: Colors.white,
+                            minimumSize: Size(0.w, 40.h),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             _takePicture(context);
                           },
-                          child: Text('Pay Now',
-                              style: GoogleFonts.inter(
-                                  fontWeight: FontWeight.bold))),
-                    ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Bayar Sekarang',
+                                  style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13)),
+                              SizedBox(width: 5.w),
+                              Icon(CupertinoIcons.money_dollar_circle)
+                            ],
+                          )),
+                    )
                   ],
-                )),
+                ),
+              ),
+            ),
           ),
         ],
       ),

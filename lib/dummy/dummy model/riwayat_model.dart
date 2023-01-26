@@ -6,6 +6,7 @@ class RiwayatDummyModel {
   String tanggal_riwayat;
   String waktu_riwayat;
   String status_riwayat;
+  String kapan_sewa;
 
   RiwayatDummyModel(
       this.picture_riwayat,
@@ -14,7 +15,8 @@ class RiwayatDummyModel {
       this.lokasi_riwayat,
       this.tanggal_riwayat,
       this.waktu_riwayat,
-      this.status_riwayat);
+      this.status_riwayat,
+      this.kapan_sewa);
 
   String get getPicture {
     return picture_riwayat;
@@ -42,5 +44,9 @@ class RiwayatDummyModel {
 
   String get getStatus {
     return status_riwayat;
+  }
+
+  String get getKapansewa {
+    return kapan_sewa;
   }
 }

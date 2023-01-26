@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
-import 'package:project_anakkos_app/ui/booking_page.dart';
+import 'package:project_anakkos_app/ui-User/booking_page.dart';
 
 class AlertDialogDates extends StatefulWidget {
   final KostDummyModel model;

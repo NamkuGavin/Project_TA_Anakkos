@@ -14,8 +14,8 @@ import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/ulasan_model.dart';
 import 'package:project_anakkos_app/dummy/dummy_bookmark.dart';
-import 'package:project_anakkos_app/ui/booking_page.dart';
-import 'package:project_anakkos_app/ui/role_page.dart';
+import 'package:project_anakkos_app/ui-User/booking_page.dart';
+import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_dates.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -334,7 +334,7 @@ class _DetailKostState extends State<DetailKost> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 12),
-                    child: DottedLine(dashColor: ColorValues.primaryPurple),
+                    child: DottedLine(dashColor: Colors.black),
                   ),
                   Text("Tempat Tidur", style: GoogleFonts.roboto(fontSize: 17)),
                   Padding(
@@ -359,7 +359,7 @@ class _DetailKostState extends State<DetailKost> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 12),
-                    child: DottedLine(dashColor: ColorValues.primaryPurple),
+                    child: DottedLine(dashColor: Colors.black),
                   ),
                   Text("Pendingin / Sirkulasi Udara",
                       style: GoogleFonts.roboto(fontSize: 17)),
@@ -385,7 +385,7 @@ class _DetailKostState extends State<DetailKost> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 12),
-                    child: DottedLine(dashColor: ColorValues.primaryPurple),
+                    child: DottedLine(dashColor: Colors.black),
                   ),
                   Text("Furniture", style: GoogleFonts.roboto(fontSize: 17)),
                   Padding(
@@ -940,21 +940,21 @@ class _DetailKostState extends State<DetailKost> {
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 13),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(widget.model.price_kost,
                 style: GoogleFonts.inter(
-                    fontSize: 13, fontWeight: FontWeight.bold)),
+                    fontSize: 14, fontWeight: FontWeight.bold)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: ColorValues.primaryBlue,
                     foregroundColor: Colors.white,
-                    minimumSize: Size(0.w, 33.h),
+                    minimumSize: Size(0.w, 40.h),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
@@ -974,7 +974,7 @@ class _DetailKostState extends State<DetailKost> {
                     children: [
                       Text('Sewa Kamar',
                           style: GoogleFonts.inter(
-                              fontWeight: FontWeight.bold, fontSize: 13)),
+                              fontWeight: FontWeight.bold, fontSize: 14)),
                       SizedBox(width: 5.w),
                       Icon(CupertinoIcons.shopping_cart)
                     ],

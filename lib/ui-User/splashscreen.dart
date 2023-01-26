@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
-import 'package:project_anakkos_app/ui/landing_page.dart';
-import 'package:project_anakkos_app/widget/bottomNavigation.dart';
+import 'package:project_anakkos_app/ui-User/landing_page.dart';
+import 'package:project_anakkos_app/widget/bottomNavigation_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,9 +23,9 @@ class _SplashScreenState extends State<SplashScreen> {
       if (prefs.getString('token') == null && user == null) {
         SharedCode.navigatorReplacement(context, LandingPage());
       } else if (user != null) {
-        SharedCode.navigatorReplacement(context, NavigationWidgetBar());
+        SharedCode.navigatorReplacement(context, NavigationWidgetBarUser());
       } else {
-        SharedCode.navigatorReplacement(context, NavigationWidgetBar());
+        SharedCode.navigatorReplacement(context, NavigationWidgetBarUser());
       }
     });
     super.initState();

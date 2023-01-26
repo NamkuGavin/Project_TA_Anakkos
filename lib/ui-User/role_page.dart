@@ -4,7 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
-import 'package:project_anakkos_app/ui/login_page.dart';
+import 'package:project_anakkos_app/ui-Seller/login_seller.dart';
+import 'package:project_anakkos_app/ui-User/login_user.dart';
 
 class RolePage extends StatefulWidget {
   const RolePage({Key? key}) : super(key: key);
@@ -35,7 +36,7 @@ class _RolePageState extends State<RolePage> {
             SizedBox(height: 50.h),
             ElevatedButton(
               onPressed: () {
-                SharedCode.navigatorPush(context, LoginPage());
+                SharedCode.navigatorPush(context, LoginUser());
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.white,
@@ -60,7 +61,9 @@ class _RolePageState extends State<RolePage> {
             ),
             SizedBox(height: 25.h),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                SharedCode.navigatorPush(context, LoginSeller());
+              },
               style: ElevatedButton.styleFrom(
                 primary: Colors.white,
                 onPrimary: ColorValues.primaryBlue,

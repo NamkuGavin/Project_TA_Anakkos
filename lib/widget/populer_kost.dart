@@ -39,6 +39,7 @@ class _PopulerKostState extends State<PopulerKost> {
         padding: EdgeInsets.all(8.0),
         child: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: 0.7,
             crossAxisCount: 2,
             crossAxisSpacing: 10.0,
             mainAxisSpacing: 10.0,

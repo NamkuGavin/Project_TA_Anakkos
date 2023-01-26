@@ -5,10 +5,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
+import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
+import 'package:project_anakkos_app/ui-User/invoice_page.dart';
 
 class KonfirmasiPhotoPage extends StatefulWidget {
+  final KostDummyModel model;
+  final DateTime dateDari;
+  final DateTime dateSampai;
   final String imagePath;
-  const KonfirmasiPhotoPage({Key? key, required this.imagePath})
+  KonfirmasiPhotoPage(
+      {Key? key,
+      required this.imagePath,
+      required this.model,
+      required this.dateDari,
+      required this.dateSampai})
       : super(key: key);
 
   @override
@@ -28,8 +39,11 @@ class _KonfirmasiPhotoPageState extends State<KonfirmasiPhotoPage> {
       if (pickedImage != null) {
         await navigator.pushReplacement(
           MaterialPageRoute(
-            builder: (context) =>
-                KonfirmasiPhotoPage(imagePath: pickedImage!.path),
+            builder: (context) => KonfirmasiPhotoPage(
+                imagePath: pickedImage!.path,
+                model: widget.model,
+                dateDari: widget.dateDari,
+                dateSampai: widget.dateSampai),
           ),
         );
       } else {
@@ -151,7 +165,15 @@ class _KonfirmasiPhotoPageState extends State<KonfirmasiPhotoPage> {
     );
     Widget okButton = TextButton(
       child: Text("Kirim"),
-      onPressed: () {},
+      onPressed: () {
+        SharedCode.navigatorPush(
+            context,
+            InvoicePage(
+              model: widget.model,
+              dateDari: widget.dateDari,
+              dateSampai: widget.dateSampai,
+            ));
+      },
     );
 
     // set up the AlertDialog

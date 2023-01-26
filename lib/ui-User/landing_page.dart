@@ -6,8 +6,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/common/theme_data.dart';
-import 'package:project_anakkos_app/ui/home_page.dart';
-import 'package:project_anakkos_app/widget/bottomNavigation.dart';
+import 'package:project_anakkos_app/widget/bottomNavigation_user.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
@@ -62,7 +61,7 @@ class _LandingPageState extends State<LandingPage> {
                         ),
                         onPressed: () {
                           SharedCode.navigatorReplacement(
-                              context, NavigationWidgetBar());
+                              context, NavigationWidgetBarUser());
                         },
                         child: Row(
                           children: [

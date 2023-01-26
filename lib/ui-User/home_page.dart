@@ -1,4 +1,6 @@
+import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -53,6 +55,7 @@ class _HomePageState extends State<HomePage> {
       .map((filter) => MultiSelectItem<FilterModel?>(filter, filter!.name))
       .toList();
   List<FilterModel?> _selectedAnimals2 = [];
+  final _seacrhController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -79,11 +82,25 @@ class _HomePageState extends State<HomePage> {
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: Colors.white,
+      actions: [
+        AnimSearchBar(
+          boxShadow: false,
+          width: 375,
+          textController: _seacrhController,
+          onSuffixTap: () {
+            setState(() {
+              _seacrhController.clear();
+            });
+          }, onSubmitted: (String ) {
+            print("hihihihiha");
+        },
+        ),
+      ],
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(0.0),
         child: Container(
           color: Colors.black,
-          height: 1.h,
+          height: 0.2.h,
         ),
       ),
     );
@@ -284,7 +301,7 @@ class _HomePageState extends State<HomePage> {
                     borderRadius:
                         BorderRadius.horizontal(left: Radius.circular(10)),
                     child: Container(
-                      height: 150.h,
+                        height: 150.h,
                         width: 100.w,
                         child: Image.asset("assets/dummykos/kost_2.png",
                             fit: BoxFit.fill)),
@@ -328,23 +345,29 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(height: 7.h),
                           Text("Stay duration: 27 Aug - 27 Sep",
                               style: GoogleFonts.roboto(fontSize: 12)),
-                          SizedBox(height: 7.h),
-                          InkWell(
-                            onTap: () {},
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                  border: Border.all(
-                                    color: ColorValues.primaryPurple,
-                                    width: 1.w,
-                                  ),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  side: BorderSide(
+                                      width: 1,
+                                      color: ColorValues.primaryPurple),
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  minimumSize: Size(0.w, 25.h),
                                 ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(5),
-                                  child: Text('Chat dengan pemilik',
-                                      style: GoogleFonts.inter(
-                                          fontSize: 11)),
+                                onPressed: () {},
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('Chat Pemilik Kost',
+                                        style: GoogleFonts.inter(fontSize: 10)),
+                                    SizedBox(width: 5.w),
+                                    Icon(CupertinoIcons.chat_bubble_text_fill,
+                                        size: 15)
+                                  ],
                                 )),
                           )
                         ],
