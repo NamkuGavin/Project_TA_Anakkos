@@ -1,24 +1,25 @@
 import 'dart:developer';
 
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cupertino_stepper/cupertino_stepper.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:project_anakkos_app/common/check_status.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
-import 'package:project_anakkos_app/ui-Seller/addkost_seller4.dart';
+import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_confirmSeller.dart';
 
-class AddKostPage3 extends StatefulWidget {
+class AddKostPage4 extends StatefulWidget {
   @override
-  _AddKostPage3State createState() => _AddKostPage3State();
+  _AddKostPage4State createState() => _AddKostPage4State();
 }
 
-class _AddKostPage3State extends State<AddKostPage3> {
-  TextEditingController kostRule = TextEditingController();
-  TextEditingController roomRule = TextEditingController();
-
+class _AddKostPage4State extends State<AddKostPage4> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,20 +42,23 @@ class _AddKostPage3State extends State<AddKostPage3> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Peraturan",
+            Text("Lain - Lain",
                 style: GoogleFonts.poppins(
                     fontWeight: FontWeight.bold, fontSize: 22)),
             SizedBox(height: 25.h),
-            Text('Peraturan Kost',
+            Text('Bayaran',
                 style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w600, color: Colors.black45)),
             SizedBox(height: 4.h),
             TextField(
-              controller: kostRule,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                CurrencyTextInputFormatter(
+                    decimalDigits: 0, locale: 'id', symbol: "Rp ")
+              ],
               decoration: InputDecoration(
-                  hintText: 'Tambahkan Peraturan Kost',
+                  suffixText: "/ Bulan",
+                  hintText: 'Tambahkan Biaya Kamar',
                   hintStyle: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.black26,
@@ -69,27 +73,66 @@ class _AddKostPage3State extends State<AddKostPage3> {
             SizedBox(height: 20.h),
             Divider(color: Colors.black),
             SizedBox(height: 20.h),
-            Text('Peraturan Kamar',
+            Text('Listrik',
                 style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w600, color: Colors.black45)),
-            SizedBox(height: 4.h),
-            TextField(
-              controller: roomRule,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              decoration: InputDecoration(
-                  hintText: 'Tambahkan Peraturan Kamar',
-                  hintStyle: GoogleFonts.poppins(
-                      fontSize: 14,
-                      color: Colors.black26,
-                      fontWeight: FontWeight.w500),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffD6D6D6)),
-                      borderRadius: BorderRadius.circular(8)),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: ColorValues.primaryBlue),
-                      borderRadius: BorderRadius.circular(8))),
+            Row(
+              children: [
+                Text("Termasuk"),
+                Checkbox(
+                  value: CheckStatus.termasukListrik,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      CheckStatus.termasukListrik = value!;
+                      if (value == true) {
+                        CheckStatus.bayarListrik = false;
+                      }
+                      print("TERMASUK: " + value.toString());
+                      print("BERBAYAR: " + CheckStatus.bayarListrik.toString());
+                    });
+                  },
+                ),
+                Text("Berbayar"),
+                Checkbox(
+                  value: CheckStatus.bayarListrik,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      CheckStatus.bayarListrik = value!;
+                      if (value == true) {
+                        CheckStatus.termasukListrik = false;
+                      }
+                      print("BERBAYAR: " + value.toString());
+                      print("TERMASUK: " +
+                          CheckStatus.termasukListrik.toString());
+                    });
+                  },
+                ),
+              ],
             ),
+            SizedBox(height: 4.h),
+            CheckStatus.termasukListrik
+                ? TextField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      CurrencyTextInputFormatter(
+                          decimalDigits: 0, locale: 'id', symbol: "Rp ")
+                    ],
+                    decoration: InputDecoration(
+                        suffixText: "/ Bulan",
+                        hintText: 'Tambahkan Biaya Listrik',
+                        hintStyle: GoogleFonts.poppins(
+                            fontSize: 14,
+                            color: Colors.black26,
+                            fontWeight: FontWeight.w500),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xffD6D6D6)),
+                            borderRadius: BorderRadius.circular(8)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: ColorValues.primaryBlue),
+                            borderRadius: BorderRadius.circular(8))),
+                  )
+                : Container(),
             Expanded(
               child: Align(
                 alignment: FractionalOffset.bottomCenter,
@@ -128,7 +171,7 @@ class _AddKostPage3State extends State<AddKostPage3> {
                               borderRadius: BorderRadius.circular(10)),
                         ),
                         onPressed: () {
-                          SharedCode.navigatorPush(context, AddKostPage4());
+                          _showDialog(context);
                         },
                         child: Padding(
                           padding: EdgeInsets.all(8),
@@ -149,6 +192,15 @@ class _AddKostPage3State extends State<AddKostPage3> {
           ],
         ),
       ),
+    );
+  }
+
+  Future _showDialog(context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialogConfirmSeller();
+      },
     );
   }
 }

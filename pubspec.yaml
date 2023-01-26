@@ -66,6 +66,7 @@ dependencies:
   anim_search_bar:
   cupertino_stepper:
   custom_radio_grouped_button:
+  currency_text_input_formatter:
 
 #firebase
   firebase_auth:
@@ -127,3 +128,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+dependency_overrides:
+  intl:
