@@ -1,4 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
@@ -9,7 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/dummy/dummy%20model/paymentType_model.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
+import 'package:project_anakkos_app/ui-User/invoice_page.dart';
 import 'package:project_anakkos_app/ui-User/konfirmasi_page.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_help.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
@@ -31,7 +34,12 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
-  final _noKartuController = TextEditingController();
+  List<PaymentTypeModel> paymentList = [
+    PaymentTypeModel("Credit atau Debit Card", "assets/logo/card.png", 1),
+    PaymentTypeModel("GoPay", "assets/logo/gopay.png", 2),
+  ];
+  PaymentTypeModel? paymentValue;
+  bool showCardField = false;
   String tanggal_dari = "";
   String tanggal_sampai = "";
   final DateFormat _dateFormat = DateFormat('dd MMM yyyy');
@@ -45,39 +53,6 @@ class _BookingPageState extends State<BookingPage> {
     tanggal_dari = _dateFormat.format(widget.dateDari);
     tanggal_sampai = _dateFormat.format(widget.dateSampai);
     super.initState();
-  }
-
-  Future _takePicture(BuildContext context) async {
-    final navigator = Navigator.of(context);
-    final ImagePicker picker = ImagePicker();
-    XFile? pickedImage;
-
-    try {
-      pickedImage = await picker.pickImage(
-          source: ImageSource.camera,
-          preferredCameraDevice: CameraDevice.front);
-
-      if (pickedImage != null) {
-        await navigator.push(
-          MaterialPageRoute(
-            builder: (context) => KonfirmasiPhotoPage(
-                imagePath: pickedImage!.path,
-                model: widget.model,
-                dateDari: widget.dateDari,
-                dateSampai: widget.dateSampai),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("No image was selected"),
-          ),
-        );
-      }
-    } catch (e) {
-      print(e);
-      print("error");
-    }
   }
 
   @override
@@ -103,111 +78,316 @@ class _BookingPageState extends State<BookingPage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 9,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(12),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TimerWidget(),
-                    SizedBox(height: 40.h),
-                    Text(
-                      'Seller bank account number',
-                      style: GoogleFonts.roboto(
-                        fontSize: 13,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TimerWidget(),
+              SizedBox(height: 50.h),
+              Text('Payment summary',
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600, color: Colors.black45)),
+              SizedBox(height: 10.h),
+              Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.8),
+                        spreadRadius: 2,
+                        blurRadius: 5, // changes position of shadow
                       ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        infoKost(),
+                        Divider(thickness: 1),
+                        detailHarga(),
+                        Divider(thickness: 1),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Total payment",
+                                style: GoogleFonts.roboto(
+                                    fontWeight: FontWeight.bold)),
+                            Text("Rp. " +
+                                NumberFormat()
+                                    .format(detail1 + detail2 + detail3))
+                          ],
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 7.h),
-                    Center(
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(// red as border color
+                  )),
+              SizedBox(height: 30.h),
+              Text('Bayar dengan',
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600, color: Colors.black45)),
+              SizedBox(height: 5.h),
+              DropdownButton2<PaymentTypeModel>(
+                isExpanded: true,
+                value: paymentValue,
+                iconOnClick:
+                    Icon(Icons.keyboard_arrow_up_rounded, color: Colors.black),
+                icon: Icon(Icons.keyboard_arrow_down_rounded,
+                    color: Colors.black),
+                buttonPadding: EdgeInsets.symmetric(horizontal: 12),
+                buttonDecoration: BoxDecoration(
+                  border: Border.all(
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.white,
+                ),
+                buttonHeight: 40.h,
+                buttonWidth: double.infinity,
+                buttonElevation: 2,
+                dropdownDecoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                dropdownElevation: 4,
+                offset: Offset(0, -10),
+                onChanged: (PaymentTypeModel? newValue) {
+                  setState(() {
+                    paymentValue = newValue!;
+                    if (newValue.id == 1) {
+                      showCardField = true;
+                    } else {
+                      showCardField = false;
+                    }
+                  });
+                },
+                hint: Text(
+                  'Pilih Payment Type',
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: Colors.black45),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                isDense: true,
+                underline: SizedBox.shrink(),
+                items: paymentList.map((item) {
+                  return DropdownMenuItem<PaymentTypeModel>(
+                    child: Row(
+                      children: [
+                        Image.asset(item.logo, width: 25.w),
+                        SizedBox(width: 15.w),
+                        Text(item.type,
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                                color: Colors.black45)),
+                      ],
+                    ),
+                    value: item,
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 10.h),
+              showCardField
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                              hintText: 'Card Number',
+                              hintStyle: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  color: Colors.black26,
+                                  fontWeight: FontWeight.w500),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xffD6D6D6)),
+                                  borderRadius: BorderRadius.circular(8)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ColorValues.primaryBlue),
+                                  borderRadius: BorderRadius.circular(8))),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 168.w,
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    hintText: 'Exp date',
+                                    hintStyle: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        color: Colors.black26,
+                                        fontWeight: FontWeight.w500),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xffD6D6D6)),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: ColorValues.primaryBlue),
+                                        borderRadius:
+                                            BorderRadius.circular(8))),
                               ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Text(
-                            noBank.toString(),
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.roboto(
-                              fontSize: 23,
-                              fontWeight: FontWeight.bold,
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 40.h),
-                    Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.8),
-                              spreadRadius: 2,
-                              blurRadius: 5, // changes position of shadow
+                            SizedBox(
+                              width: 168.w,
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    hintText: 'CVV',
+                                    hintStyle: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        color: Colors.black26,
+                                        fontWeight: FontWeight.w500),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xffD6D6D6)),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: ColorValues.primaryBlue),
+                                        borderRadius:
+                                            BorderRadius.circular(8))),
+                              ),
                             ),
                           ],
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              infoKost(),
-                              Divider(thickness: 1),
-                              detailHarga(),
-                              Divider(thickness: 1),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Total payment",
-                                      style: GoogleFonts.roboto(
-                                          fontWeight: FontWeight.bold)),
-                                  Text("Rp. " +
-                                      NumberFormat()
-                                          .format(detail1 + detail2 + detail3))
-                                ],
+                        SizedBox(height: 25.h),
+                        Text('Alamat Tagihan',
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black45)),
+                        SizedBox(height: 5.h),
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                              hintText: 'Jalan',
+                              hintStyle: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  color: Colors.black26,
+                                  fontWeight: FontWeight.w500),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xffD6D6D6)),
+                                  borderRadius: BorderRadius.circular(8)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ColorValues.primaryBlue),
+                                  borderRadius: BorderRadius.circular(8))),
+                        ),
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                              hintText: 'Nomor Suite atau APT',
+                              hintStyle: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  color: Colors.black26,
+                                  fontWeight: FontWeight.w500),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xffD6D6D6)),
+                                  borderRadius: BorderRadius.circular(8)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ColorValues.primaryBlue),
+                                  borderRadius: BorderRadius.circular(8))),
+                        ),
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                              hintText: 'Kota / Provinsi',
+                              hintStyle: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  color: Colors.black26,
+                                  fontWeight: FontWeight.w500),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xffD6D6D6)),
+                                  borderRadius: BorderRadius.circular(8)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ColorValues.primaryBlue),
+                                  borderRadius: BorderRadius.circular(8))),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 168.w,
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    hintText: 'Negara',
+                                    hintStyle: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        color: Colors.black26,
+                                        fontWeight: FontWeight.w500),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xffD6D6D6)),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: ColorValues.primaryBlue),
+                                        borderRadius:
+                                            BorderRadius.circular(8))),
                               ),
-                            ],
-                          ),
-                        ))
+                            ),
+                            SizedBox(
+                              width: 168.w,
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    hintText: 'Zip Code',
+                                    hintStyle: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        color: Colors.black26,
+                                        fontWeight: FontWeight.w500),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xffD6D6D6)),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: ColorValues.primaryBlue),
+                                        borderRadius:
+                                            BorderRadius.circular(8))),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  : Container(),
+              SizedBox(height: 75.h),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.8),
+                      spreadRadius: 2,
+                      blurRadius: 5, // changes position of shadow
+                    ),
                   ],
                 ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.8),
-                    spreadRadius: 2,
-                    blurRadius: 5, // changes position of shadow
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SingleChildScrollView(
-                      child: Column(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -223,12 +403,8 @@ class _BookingPageState extends State<BookingPage> {
                                   fontWeight: FontWeight.bold)),
                         ],
                       ),
-                    ),
-                    SizedBox(width: 25.w),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                      child: ElevatedButton(
+                      SizedBox(width: 70.w),
+                      ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: ColorValues.primaryBlue,
                             foregroundColor: Colors.white,
@@ -236,8 +412,14 @@ class _BookingPageState extends State<BookingPage> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
                           ),
-                          onPressed: () async {
-                            _takePicture(context);
+                          onPressed: () {
+                            SharedCode.navigatorPush(
+                                context,
+                                InvoicePage(
+                                  model: widget.model,
+                                  dateSampai: widget.dateSampai,
+                                  dateDari: widget.dateDari,
+                                ));
                           },
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -249,14 +431,14 @@ class _BookingPageState extends State<BookingPage> {
                               SizedBox(width: 5.w),
                               Icon(CupertinoIcons.money_dollar_circle)
                             ],
-                          )),
-                    )
-                  ],
+                          ))
+                    ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -308,8 +490,6 @@ class _BookingPageState extends State<BookingPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Payment summary"),
-        SizedBox(height: 5.h),
         IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,

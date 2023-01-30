@@ -135,7 +135,7 @@ class _DetailKostState extends State<DetailKost> {
               detailHeader(),
               detailFasilitas(),
               detailPeraturan(),
-              //TODO: FOTO KOST WIDGET
+              fotoKostWidget(),
               mapKost(),
               pemilikKost(),
               commentUser(),
@@ -1024,6 +1024,34 @@ class _DetailKostState extends State<DetailKost> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
                 child: Image.asset("assets/dummykos/google_maps.png"),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  fotoKostWidget() {
+    return Card(
+      color: Colors.white,
+      elevation: 4,
+      shadowColor: Colors.black,
+      child: Padding(
+        padding: EdgeInsets.all(15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child:
+                  Text("Preview Kost", style: GoogleFonts.roboto(fontSize: 20)),
+            ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Image.asset("assets/dummykos/foto_kos.png"),
               ),
             )
           ],

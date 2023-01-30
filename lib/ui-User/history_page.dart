@@ -163,7 +163,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 return Center(
                     child: Lottie.asset(
                   'assets/lottie/loading.json',
-                  width: 175.w,
+                  width: 150.w,
                 ));
               } else if (snapshot.hasError) {
                 print("ERROR: " + snapshot.hasError.toString());
