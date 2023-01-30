@@ -67,6 +67,8 @@ dependencies:
   cupertino_stepper:
   custom_radio_grouped_button:
   currency_text_input_formatter:
+  grouped_list:
+  lottie:
 
 #firebase
   firebase_auth:
@@ -102,6 +104,7 @@ flutter:
   - assets/logo/
   - assets/dummykos/
   - assets/icon/
+  - assets/lottie/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -15,7 +15,8 @@ class NavigationWidgetBarUser extends StatefulWidget {
   const NavigationWidgetBarUser({Key? key}) : super(key: key);
 
   @override
-  State<NavigationWidgetBarUser> createState() => _NavigationWidgetBarUserState();
+  State<NavigationWidgetBarUser> createState() =>
+      _NavigationWidgetBarUserState();
 }
 
 class _NavigationWidgetBarUserState extends State<NavigationWidgetBarUser> {

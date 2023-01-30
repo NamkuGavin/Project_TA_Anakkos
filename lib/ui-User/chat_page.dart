@@ -7,11 +7,14 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/dummy/dummy%20model/chat_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
+import 'package:project_anakkos_app/widget/chatWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatPage extends StatefulWidget {
@@ -27,6 +30,32 @@ class _ChatPageState extends State<ChatPage> {
   CollectionReference _users = FirebaseFirestore.instance.collection('users');
   Timer? _timer;
   bool _isloading = false;
+  List<ChatModel> chat = [
+    ChatModel("Hai, dengan Pemilik Kost disini. Ada yang bisa saya bantu?",
+        DateTime.now().subtract(Duration(days: 3)), false),
+    ChatModel(
+        "Halo, saya ingin bertanya apakah di kos ini boleh membawa kulkas?",
+        DateTime.now().subtract(Duration(days: 3)),
+        true),
+    ChatModel("Boleh tapi tanggungan harga listrik nya nanti bertamah y",
+        DateTime.now().subtract(Duration(days: 3)), false),
+    ChatModel("Oooh bertambah y, hmm...",
+        DateTime.now().subtract(Duration(days: 3)), true),
+    ChatModel("Kalau boleh kemungkinan tambah biaya listrik nya berapaan?",
+        DateTime.now().subtract(Duration(days: 3)), true),
+    ChatModel(
+        "kalau biaya listrik nya harus menyesuaikan berapa Watt kulkas anda",
+        DateTime.now().subtract(Duration(days: 3)),
+        false),
+    ChatModel("kulkas saya bertenaga 500 Watt, itu kira kira bisa berapa?",
+        DateTime.now().subtract(Duration(days: 3)), true),
+    ChatModel("kalo 500 Watt mungkin bertambah sekitar 100rb an",
+        DateTime.now().subtract(Duration(days: 3)), false),
+    ChatModel("ooh gitu...y udah ini ta pikirkan dulu, terima kasih banyak",
+        DateTime.now().subtract(Duration(days: 3)), true),
+    ChatModel(
+        "oke sama sama", DateTime.now().subtract(Duration(days: 3)), false),
+  ];
 
   @override
   void initState() {
@@ -141,15 +170,52 @@ class _ChatPageState extends State<ChatPage> {
             future: _users.doc(user!.uid).get(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: Lottie.asset(
+                  'assets/lottie/loading.json',
+                  width: 175.w,
+                ));
               } else if (snapshot.hasError) {
                 print("ERROR: " + snapshot.hasError.toString());
                 return Center(child: Text("Something Wrong"));
               } else {
-                return Center(
-                  child: Text("Sudah login Apps"),
+                return Scaffold(
+                  appBar: appbarWidget(),
+                  body: ListView(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          SharedCode.navigatorPush(context,
+                              ChatWidget(chats: chat, title: 'Seller 1'));
+                        },
+                        child: Card(
+                          child: ListTile(
+                            leading: SvgPicture.asset("assets/icon/profile.svg",
+                                width: 30.w),
+                            title: Text('Seller 1'),
+                            trailing: Text("12:00"),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // body: ChatWidget(chats: chat),
                 );
               }
             }));
+  }
+
+  appbarWidget() {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.white,
+      title: Text("Chat", style: GoogleFonts.roboto(color: Colors.black)),
+      bottom: PreferredSize(
+        preferredSize: Size.fromHeight(0.0),
+        child: Container(
+          color: Colors.black,
+          height: 0.2.h,
+        ),
+      ),
+    );
   }
 }

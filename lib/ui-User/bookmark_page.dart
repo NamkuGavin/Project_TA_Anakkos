@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy_bookmark.dart';
@@ -28,21 +29,25 @@ class _BookmarkPageState extends State<BookmarkPage> {
         title: Text("Bookmark", style: GoogleFonts.roboto(color: Colors.black)),
       ),
       body: BookmarkList.bookmarkItems.isEmpty
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                    child: SvgPicture.asset("assets/icon/empty_list.svg",
-                        width: 125.w)),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Center(
-                      child: Text("No Bookmark Available",
-                          style: GoogleFonts.roboto(
-                              fontWeight: FontWeight.bold, fontSize: 15))),
-                )
-              ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                    'assets/lottie/not_found.json',
+                    width: 250.w,
+                    repeat: false,
+                  ),
+                  Text(
+                    'Bookmark masih kosong',
+                    style: Theme.of(context).textTheme.headline3!.copyWith(
+                          fontSize: 20,
+                          color: Color(0XFF9B9B9B),
+                          fontWeight: FontWeight.w500,
+                        ),
+                  ),
+                ],
+              ),
             )
           : ListView.builder(
               itemCount: BookmarkList.bookmarkItems.length,

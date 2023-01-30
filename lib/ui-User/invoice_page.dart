@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
@@ -51,13 +52,21 @@ class _InvoicePageState extends State<InvoicePage> {
             children: [
               SizedBox(height: 40.h),
               Center(
-                child: Text("Success!",
-                    style: GoogleFonts.inter(
-                      fontSize: 30,
-                    )),
+                child: Text(
+                  'Success!',
+                  style: Theme.of(context).textTheme.headline3!.copyWith(
+                    fontSize: 25,
+                    color: Color(0XFF9B9B9B),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
-              SvgPicture.asset("assets/icon/success_mark.svg", width: 125.w),
-              SizedBox(height: 35.h),
+              Lottie.asset(
+                'assets/lottie/success.json',
+                width: 125.w,
+                repeat: false,
+              ),
+              SizedBox(height: 25.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25),
                 child: Container(
