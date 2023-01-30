@@ -101,6 +101,7 @@ class _AddKostPage3State extends State<AddKostPage3> {
               Text('Deskripsi Kos',
                   style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w600, color: Colors.black45)),
+              SizedBox(height: 5.h),
               TextField(
                 controller: roomRule,
                 keyboardType: TextInputType.multiline,

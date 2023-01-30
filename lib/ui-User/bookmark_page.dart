@@ -35,13 +35,13 @@ class _BookmarkPageState extends State<BookmarkPage> {
                 children: [
                   Lottie.asset(
                     'assets/lottie/not_found.json',
-                    width: 250.w,
+                    width: 225.w,
                     repeat: false,
                   ),
                   Text(
                     'Bookmark masih kosong',
                     style: Theme.of(context).textTheme.headline3!.copyWith(
-                          fontSize: 20,
+                          fontSize: 17,
                           color: Color(0XFF9B9B9B),
                           fontWeight: FontWeight.w500,
                         ),

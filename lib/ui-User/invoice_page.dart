@@ -55,10 +55,10 @@ class _InvoicePageState extends State<InvoicePage> {
                 child: Text(
                   'Success!',
                   style: Theme.of(context).textTheme.headline3!.copyWith(
-                    fontSize: 25,
-                    color: Color(0XFF9B9B9B),
-                    fontWeight: FontWeight.w500,
-                  ),
+                        fontSize: 25,
+                        color: Color(0XFF9B9B9B),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
               Lottie.asset(
@@ -106,38 +106,32 @@ class _InvoicePageState extends State<InvoicePage> {
                       ),
                     )),
               ),
-              SizedBox(height: 25.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
-                child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.8),
-                          spreadRadius: 2,
-                          blurRadius: 5, // changes position of shadow
-                        ),
+              SizedBox(height: 50.h),
+              Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.8),
+                        spreadRadius: 2,
+                        blurRadius: 5, // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 25),
+                    child: Column(
+                      children: [
+                        Text("Yay pesanan Anda telah selesai",
+                            style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.bold)),
+                        SizedBox(height: 3.h),
+                        Text("Pesanan sudah tersimpan di riwayat anda",
+                            style: GoogleFonts.roboto()),
                       ],
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Catatan",
-                              style: GoogleFonts.roboto(
-                                  fontWeight: FontWeight.bold)),
-                          SizedBox(height: 3.h),
-                          Text(
-                              "Bukti transfer anda telah berhasil terkirim, mohon tunggu pemilik untuk mengkonfirmasi pembayaran anda",
-                              style: GoogleFonts.roboto()),
-                        ],
-                      ),
-                    )),
-              ),
+                  )),
               SizedBox(height: 10.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25),
@@ -160,7 +154,7 @@ class _InvoicePageState extends State<InvoicePage> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.double_arrow_rounded, size: 17),
+                          Icon(Icons.keyboard_double_arrow_left_rounded),
                           SizedBox(width: 5.w),
                           Text('Kembali Beranda',
                               style: GoogleFonts.inter(fontSize: 12)),
