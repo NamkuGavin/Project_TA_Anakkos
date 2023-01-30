@@ -9,6 +9,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
@@ -44,37 +45,6 @@ class _HistoryPageState extends State<HistoryPage> {
         "10, Jan 2022"),
     RiwayatDummyModel("assets/dummykos/kost_3.png", "Perempuan", "Kost Hokage",
         "Kudus, Bastio", "01 Sep", "17:16", "Transaksi Selesai", "1, Mar 2022"),
-    RiwayatDummyModel(
-        "assets/dummykos/kost_1.png",
-        "Laki-laki",
-        "Kost Apasaja",
-        "Kudus, Bastio",
-        "01 Sep",
-        "17:16",
-        "Transaksi Selesai",
-        "15, Apr 2022"),
-    RiwayatDummyModel(
-        "assets/dummykos/kost_1.png",
-        "Laki-laki",
-        "Kost Pelangi",
-        "Kudus, Bastio",
-        "01 Sep",
-        "17:16",
-        "Transaksi Selesai",
-        "30, Jun 2022"),
-    RiwayatDummyModel("assets/dummykos/kost_2.png", "Campur", "Kost Star",
-        "Kudus, Bastio", "01 Sep", "17:16", "Transaksi Gagal", "20 Sep 2022"),
-    RiwayatDummyModel(
-        "assets/dummykos/kost_4.png",
-        "Perempuan",
-        "Kost Taman",
-        "Kudus, Bastio",
-        "01 Sep",
-        "17:16",
-        "Transaksi Selesai",
-        "10, Des 2022"),
-    RiwayatDummyModel("assets/dummykos/kost_3.png", "Perempuan", "Kost Regency",
-        "Kudus, Bastio", "01 Sep", "17:16", "Transaksi Gagal", "1, Jan 2023"),
   ];
 
   @override
@@ -190,45 +160,23 @@ class _HistoryPageState extends State<HistoryPage> {
             future: _users.doc(user!.uid).get(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                    child: Lottie.asset(
+                  'assets/lottie/loading.json',
+                  width: 175.w,
+                ));
               } else if (snapshot.hasError) {
                 print("ERROR: " + snapshot.hasError.toString());
                 return Center(child: Text("Something Wrong"));
               } else {
-                return DefaultTabController(
-                  length: 2,
-                  child: Scaffold(
-                    appBar: AppBar(
-                      backgroundColor: Colors.white,
-                      centerTitle: true,
-                      bottom: TabBar(
-                        indicatorWeight: 3,
-                        indicatorColor: ColorValues.primaryPurple,
-                        tabs: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text('Riwayat',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 11)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text('Booking Pending',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 11)),
-                          ),
-                        ],
-                      ),
-                      title: Text('History',
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                    body: TabBarView(
-                      children: [
-                        riwayat(),
-                        bookingPending(),
-                      ],
-                    ),
+                return Scaffold(
+                  appBar: AppBar(
+                    automaticallyImplyLeading: false,
+                    backgroundColor: Colors.white,
+                    title:
+                        Text('History', style: TextStyle(color: Colors.black)),
                   ),
+                  body: riwayat(),
                 );
               }
             }));
@@ -362,80 +310,6 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  bookingPending() {
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: ListView(
-        children: [
-          Card(
-            color: Colors.white,
-            elevation: 4,
-            shadowColor: Colors.black,
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                      width: 100,
-                      child: Image.asset(items[1].picture_riwayat,
-                          fit: BoxFit.fill)),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DottedBorder(
-                            color: Colors.black,
-                            strokeWidth: 1,
-                            child: Text(items[1].jenis_kostRiwayat,
-                                style: GoogleFonts.inter(fontSize: 10)),
-                          ),
-                          SizedBox(height: 5.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(items[1].nama_riwayat,
-                                  style: GoogleFonts.inter(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 11)),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Icon(Icons.location_on_rounded, size: 13),
-                                  Text(items[1].lokasi_riwayat,
-                                      style: GoogleFonts.inter(fontSize: 10))
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 5.h),
-                          Text("Tanggal: " + items[1].tanggal_riwayat,
-                              style: GoogleFonts.roboto(fontSize: 11)),
-                          SizedBox(height: 5.h),
-                          Text("Pukul: " + items[1].waktu_riwayat,
-                              style: GoogleFonts.roboto(fontSize: 11)),
-                          Align(
-                            alignment: AlignmentDirectional.bottomEnd,
-                            child: Text("Pending",
-                                style: GoogleFonts.roboto(
-                                    fontSize: 11, color: Colors.orange)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   _ongoingKost() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 4),
@@ -484,6 +358,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         BorderRadius.horizontal(left: Radius.circular(10)),
                     child: Container(
                         width: 100.w,
+                        height: 125.h,
                         child: Image.asset("assets/dummykos/kost_2.png",
                             fit: BoxFit.fill)),
                   ),
@@ -494,32 +369,32 @@ class _HistoryPageState extends State<HistoryPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Color(0XFFFD9900),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 5),
-                                  child: Text("Pending",
-                                      style: GoogleFonts.inter(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 10)),
-                                ),
-                              ),
-                              Text("17 August 2022 ",
-                                  style: GoogleFonts.roboto(fontSize: 11)),
-                            ],
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Color(0XFFFD9900),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 5),
+                              child: Text("Pay Due",
+                                  style: GoogleFonts.inter(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10)),
+                            ),
                           ),
                           SizedBox(height: 7.h),
                           Text("Kost Duniawi",
                               style: GoogleFonts.inter(
                                   fontWeight: FontWeight.bold, fontSize: 11)),
+                          SizedBox(height: 7.h),
+                          DottedBorder(
+                            color: Colors.black,
+                            strokeWidth: 1,
+                            child: Text("Campuran",
+                                style: GoogleFonts.inter(fontSize: 10)),
+                          ),
                           SizedBox(height: 7.h),
                           Text("Total : Rp. 568.400",
                               style: GoogleFonts.roboto(fontSize: 11)),

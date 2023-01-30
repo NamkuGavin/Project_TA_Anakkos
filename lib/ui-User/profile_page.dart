@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
@@ -195,7 +196,11 @@ class _ProfilePageState extends State<ProfilePage> {
             future: _users.doc(user!.uid).get(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                    child: Lottie.asset(
+                  'assets/lottie/loading.json',
+                  width: 175.w,
+                ));
               } else if (snapshot.hasError) {
                 print("ERROR: " + snapshot.hasError.toString());
                 return Center(child: Text("Something Wrong"));

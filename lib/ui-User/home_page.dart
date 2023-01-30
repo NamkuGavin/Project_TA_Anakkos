@@ -9,8 +9,10 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/dummy/dummy%20model/chat_model.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/fliter_model.dart';
 import 'package:project_anakkos_app/dummy/dummywidget.dart';
+import 'package:project_anakkos_app/widget/chatWidget.dart';
 import 'package:project_anakkos_app/widget/nearby_kost.dart';
 import 'package:project_anakkos_app/widget/populer_kost.dart';
 
@@ -57,6 +59,33 @@ class _HomePageState extends State<HomePage> {
   List<FilterModel?> _selectedAnimals2 = [];
   final _seacrhController = TextEditingController();
 
+  List<ChatModel> chat = [
+    ChatModel("Hai, dengan Pemilik Kost disini. Ada yang bisa saya bantu?",
+        DateTime.now().subtract(Duration(days: 3)), false),
+    ChatModel(
+        "Halo, saya ingin bertanya apakah di kos ini boleh membawa kulkas?",
+        DateTime.now().subtract(Duration(days: 3)),
+        true),
+    ChatModel("Boleh tapi tanggungan harga listrik nya nanti bertamah y",
+        DateTime.now().subtract(Duration(days: 3)), false),
+    ChatModel("Oooh bertambah y, hmm...",
+        DateTime.now().subtract(Duration(days: 3)), true),
+    ChatModel("Kalau boleh kemungkinan tambah biaya listrik nya berapaan?",
+        DateTime.now().subtract(Duration(days: 3)), true),
+    ChatModel(
+        "kalau biaya listrik nya harus menyesuaikan berapa Watt kulkas anda",
+        DateTime.now().subtract(Duration(days: 3)),
+        false),
+    ChatModel("kulkas saya bertenaga 500 Watt, itu kira kira bisa berapa?",
+        DateTime.now().subtract(Duration(days: 3)), true),
+    ChatModel("kalo 500 Watt mungkin bertambah sekitar 100rb an",
+        DateTime.now().subtract(Duration(days: 3)), false),
+    ChatModel("ooh gitu...y udah ini ta pikirkan dulu, terima kasih banyak",
+        DateTime.now().subtract(Duration(days: 3)), true),
+    ChatModel(
+        "oke sama sama", DateTime.now().subtract(Duration(days: 3)), false),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,9 +120,10 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               _seacrhController.clear();
             });
-          }, onSubmitted: (String ) {
+          },
+          onSubmitted: (String) {
             print("hihihihiha");
-        },
+          },
         ),
       ],
       bottom: PreferredSize(
@@ -358,7 +388,12 @@ class _HomePageState extends State<HomePage> {
                                       borderRadius: BorderRadius.circular(10)),
                                   minimumSize: Size(0.w, 25.h),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  SharedCode.navigatorPush(
+                                      context,
+                                      ChatWidget(
+                                          chats: chat, title: 'Seller 1'));
+                                },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [

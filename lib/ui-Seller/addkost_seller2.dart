@@ -25,6 +25,7 @@ class _AddKostPage2State extends State<AddKostPage2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
@@ -40,155 +41,142 @@ class _AddKostPage2State extends State<AddKostPage2> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Fasilitas",
-                  style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold, fontSize: 22)),
-              SizedBox(height: 25.h),
-              Row(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Fasilitas",
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.bold, fontSize: 22)),
+            SizedBox(height: 25.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 135.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('Panjang Kamar',
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black45,
+                              fontSize: 12)),
+                      SizedBox(height: 4.h),
+                      TextField(
+                        controller: panjang,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            suffixText: "m²",
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color(0xffD6D6D6)),
+                                borderRadius: BorderRadius.circular(8)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: ColorValues.primaryBlue),
+                                borderRadius: BorderRadius.circular(8))),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  "X",
+                  style: TextStyle(fontSize: 20),
+                ),
+                SizedBox(
+                  width: 135.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('Lebar Kamar',
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black45,
+                              fontSize: 12)),
+                      SizedBox(height: 4.h),
+                      TextField(
+                        controller: lebar,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            suffixText: "m²",
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color(0xffD6D6D6)),
+                                borderRadius: BorderRadius.circular(8)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: ColorValues.primaryBlue),
+                                borderRadius: BorderRadius.circular(8))),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            Divider(color: Colors.black),
+            SizedBox(height: 10.h),
+            IntrinsicHeight(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    width: 135.w,
+                  Padding(
+                    padding: EdgeInsets.only(left: 12),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text('Panjang Kamar',
-                            style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black45,
-                                fontSize: 12)),
-                        SizedBox(height: 4.h),
-                        TextField(
-                          controller: panjang,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                              suffixText: "m²",
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0xffD6D6D6)),
-                                  borderRadius: BorderRadius.circular(8)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: ColorValues.primaryBlue),
-                                  borderRadius: BorderRadius.circular(8))),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    "X",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(
-                    width: 135.w,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text('Lebar Kamar',
-                            style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black45,
-                                fontSize: 12)),
-                        SizedBox(height: 4.h),
-                        TextField(
-                          controller: lebar,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                              suffixText: "m²",
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0xffD6D6D6)),
-                                  borderRadius: BorderRadius.circular(8)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: ColorValues.primaryBlue),
-                                  borderRadius: BorderRadius.circular(8))),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-              Divider(color: Colors.black),
-              SizedBox(height: 10.h),
-              IntrinsicHeight(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 12),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Tempat Tidur',
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black45)),
-                          SizedBox(height: 4.h),
-                          Row(
-                            children: [
-                              Text("Bantal"),
-                              Checkbox(
-                                value: CheckStatus.bantal,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.bantal = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("Guling"),
-                              Checkbox(
-                                value: CheckStatus.guling,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.guling = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("Kasur"),
-                              Checkbox(
-                                value: CheckStatus.kasur,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.kasur = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    VerticalDivider(color: Colors.black),
-                    Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Kebersihan',
+                        Text('Tempat Tidur',
                             style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black45)),
                         SizedBox(height: 4.h),
                         Row(
                           children: [
-                            Text("Kamar Mandi"),
+                            Checkbox(
+                              value: CheckStatus.bantal,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  CheckStatus.bantal = value!;
+                                });
+                              },
+                            ),
+                            Text("Bantal"),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: CheckStatus.kasur,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  CheckStatus.kasur = value!;
+                                });
+                              },
+                            ),
+                            Text("Kasur"),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  VerticalDivider(color: Colors.black),
+                  Padding(
+                    padding: EdgeInsets.only(right: 12),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Kamar mandi',
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black45)),
+                        SizedBox(height: 4.h),
+                        Row(
+                          children: [
                             Checkbox(
                               value: CheckStatus.kamarMandi,
                               onChanged: (bool? value) {
@@ -197,11 +185,11 @@ class _AddKostPage2State extends State<AddKostPage2> {
                                 });
                               },
                             ),
+                            Text("Luar"),
                           ],
                         ),
                         Row(
                           children: [
-                            Text("Laundry"),
                             Checkbox(
                               value: CheckStatus.laundry,
                               onChanged: (bool? value) {
@@ -210,286 +198,168 @@ class _AddKostPage2State extends State<AddKostPage2> {
                                 });
                               },
                             ),
+                            Text("Dalam"),
                           ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Divider(color: Colors.black),
-              SizedBox(height: 10.h),
-              IntrinsicHeight(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 12),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Konsumsi',
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black45)),
-                          SizedBox(height: 4.h),
-                          Row(
-                            children: [
-                              Text("Dapur"),
-                              Checkbox(
-                                value: CheckStatus.dapur,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.dapur = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("Kulkas"),
-                              Checkbox(
-                                value: CheckStatus.kulkas,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.kulkas = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("Katering"),
-                              Checkbox(
-                                value: CheckStatus.katering,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.katering = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    VerticalDivider(color: Colors.black),
-                    Padding(
-                      padding: EdgeInsets.only(right: 65),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Hiburan',
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black45)),
-                          SizedBox(height: 4.h),
-                          Row(
-                            children: [
-                              Text("Wifi"),
-                              Checkbox(
-                                value: CheckStatus.wifi,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.wifi = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("TV"),
-                              Checkbox(
-                                value: CheckStatus.tv,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.tv = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Divider(color: Colors.black),
-              SizedBox(height: 10.h),
-              IntrinsicHeight(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 12),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Furniture',
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black45)),
-                          SizedBox(height: 4.h),
-                          Row(
-                            children: [
-                              Text("Lemari"),
-                              Checkbox(
-                                value: CheckStatus.lemari,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.lemari = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("Meja"),
-                              Checkbox(
-                                value: CheckStatus.meja,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.meja = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("Kursi"),
-                              Checkbox(
-                                value: CheckStatus.kursi,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.kursi = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    VerticalDivider(color: Colors.black),
-                    Padding(
-                      padding: EdgeInsets.only(right: 30),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Udara',
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black45)),
-                          SizedBox(height: 4.h),
-                          Row(
-                            children: [
-                              Text("Jendela"),
-                              Checkbox(
-                                value: CheckStatus.jendela,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.jendela = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("Kipas"),
-                              Checkbox(
-                                value: CheckStatus.kipas,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.kipas = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("AC"),
-                              Checkbox(
-                                value: CheckStatus.ac,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    CheckStatus.ac = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 25.h),
-              Row(
+            ),
+            Divider(color: Colors.black),
+            SizedBox(height: 10.h),
+            IntrinsicHeight(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                        minimumSize: Size(0.w, 0.h),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                      onPressed: () {
-                        SharedCode.navigatorPop(context);
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.min,
+                  Padding(
+                    padding: EdgeInsets.only(left: 12, right: 7),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Lain - lain',
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black45)),
+                        SizedBox(height: 4.h),
+                        Row(
                           children: [
-                            Icon(Icons.close),
-                            Text('Batal',
-                                style: GoogleFonts.inter(fontSize: 15)),
+                            Checkbox(
+                              value: CheckStatus.lemari,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  CheckStatus.lemari = value!;
+                                });
+                              },
+                            ),
+                            Text("Lemari"),
                           ],
                         ),
-                      )),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorValues.primaryPurple,
-                        foregroundColor: Colors.white,
-                        minimumSize: Size(0.w, 0.h),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                      onPressed: () {
-                        SharedCode.navigatorPush(context, AddKostPage3());
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.min,
+                        Row(
                           children: [
-                            Text('Selanjutnya',
-                                style: GoogleFonts.inter(fontSize: 15)),
-                            Icon(Icons.arrow_forward_ios_rounded)
+                            Checkbox(
+                              value: CheckStatus.meja,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  CheckStatus.meja = value!;
+                                });
+                              },
+                            ),
+                            Text("Meja"),
                           ],
                         ),
-                      )),
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: CheckStatus.kursi,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  CheckStatus.kursi = value!;
+                                });
+                              },
+                            ),
+                            Text("Kursi"),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  VerticalDivider(color: Colors.black),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Sirkulasi Udara',
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black45)),
+                      SizedBox(height: 4.h),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: CheckStatus.kipas,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                CheckStatus.kipas = value!;
+                              });
+                            },
+                          ),
+                          Text("Kipas"),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: CheckStatus.ac,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                CheckStatus.ac = value!;
+                              });
+                            },
+                          ),
+                          Text("AC"),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+            Expanded(child: Container()),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                      minimumSize: Size(0.w, 0.h),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    onPressed: () {
+                      SharedCode.navigatorPop(context);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.keyboard_double_arrow_left),
+                          Text('Kembali',
+                              style: GoogleFonts.inter(fontSize: 15)),
+                        ],
+                      ),
+                    )),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorValues.primaryPurple,
+                      foregroundColor: Colors.white,
+                      minimumSize: Size(0.w, 0.h),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    onPressed: () {
+                      SharedCode.navigatorPush(context, AddKostPage3());
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Selanjutnya',
+                              style: GoogleFonts.inter(fontSize: 15)),
+                          Icon(Icons.arrow_forward_ios_rounded)
+                        ],
+                      ),
+                    )),
+              ],
+            )
+          ],
         ),
       ),
     );

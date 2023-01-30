@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project_anakkos_app/common/color_values.dart';
 
 class TimerWidget extends StatefulWidget {
   const TimerWidget({Key? key}) : super(key: key);
@@ -109,12 +110,12 @@ class _TimerWidgetState extends State<TimerWidget> {
           Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: Colors.black12, borderRadius: BorderRadius.circular(10)),
+                color: Color(0xFFF8ECEC), borderRadius: BorderRadius.circular(10)),
             child: Text(
               time,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Color(0XFF455A64),
                   fontSize: 35),
             ),
           ),
