@@ -33,11 +33,17 @@ class ApiService {
   Future<RegisterModel> getRegister(
       {required String username,
       required String email,
-      required String password}) async {
+      required String password,
+      required String role}) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
-    final body = {"name": username, "email": email, "password": password};
+    final body = {
+      "name": username,
+      "email": email,
+      "password": password,
+      "role": role
+    };
     print("RAW REGISTER: " + body.toString());
     print("URL REGISTER: " + ServerConfig.baseURL + ServerConfig.register);
     final res = await http.post(
@@ -48,6 +54,25 @@ class ApiService {
     print("RES REGISTER: " + res.body.toString());
     if (res.statusCode == 200) {
       return RegisterModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future logout(String token) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    print("URL LOGOUT: " + ServerConfig.baseURL + ServerConfig.logout);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.logout),
+        headers: headers);
+    print("STATUS CODE(LOGOUT): " + res.statusCode.toString());
+    print("RES LOGOUT: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body);
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

@@ -39,7 +39,7 @@ class LoginData {
     required this.id,
     required this.name,
     required this.email,
-    required this.rememberToken,
+    required this.role,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -47,7 +47,7 @@ class LoginData {
   int id;
   String name;
   String email;
-  dynamic rememberToken;
+  String role;
   String createdAt;
   String updatedAt;
 
@@ -55,7 +55,7 @@ class LoginData {
         id: json["id"],
         name: json["name"],
         email: json["email"],
-        rememberToken: json["remember_token"],
+        role: json["role"],
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
       );
@@ -64,7 +64,7 @@ class LoginData {
         "id": id,
         "name": name,
         "email": email,
-        "remember_token": rememberToken,
+        "role": role,
         "created_at": createdAt,
         "updated_at": updatedAt,
       };

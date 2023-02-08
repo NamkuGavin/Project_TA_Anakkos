@@ -5,13 +5,29 @@ final Color blackColor = HexColor("#3d3d3d");
 final Color greyColor = HexColor("#f2f2f2");
 
 class SharedCode {
-  String? emptyValidator(value) {
+  String? usernameValidator(value) {
     return value.toString().trim().isEmpty
         ? 'username tidak boleh kosong'
         : null;
   }
 
-  String? emptyNoValidator(value) {
+  String? nameValidator(value) {
+    bool nameValid = RegExp(r'[0-9]').hasMatch(value);
+
+    if (nameValid) {
+      return 'Nama tidak boleh mengandung angka';
+    } else if (value.toString().trim().isEmpty) {
+      return 'Nama tidak boleh kosong';
+    } else {
+      return null;
+    }
+  }
+
+  String getInitials(String name) => name.isNotEmpty
+      ? name.trim().split(RegExp(' +')).map((s) => s[0]).take(2).join()
+      : '';
+
+  String? emptyValidator(value) {
     return value.toString().trim().isEmpty
         ? 'field ini tidak boleh kosong'
         : null;

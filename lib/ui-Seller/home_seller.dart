@@ -21,7 +21,7 @@ class _HomeSellerState extends State<HomeSeller> {
     SellerDummyModel("assets/dummykos/kost_4.png", "Kost Subadi", "Disewakan",
         "4.9 rating", "10 tenant"),
     SellerDummyModel("assets/dummykos/kost_2.png", "Kost Skywalker",
-        "Sewa Gagal", "5.0 rating", "15 tenant"),
+        "Ditolak", "0 rating", "15 tenant"),
     SellerDummyModel("assets/dummykos/kost_3.png", "Kost Hokage", "Disewakan",
         "4.0 rating", "5 tenant"),
   ];
@@ -91,7 +91,7 @@ class _HomeSellerState extends State<HomeSeller> {
                                 Container(
                                   decoration: BoxDecoration(
                                       color: items[index].status_kost_seller ==
-                                              "Sewa Gagal"
+                                              "Ditolak"
                                           ? Colors.red
                                           : Colors.green,
                                       borderRadius:
@@ -193,7 +193,7 @@ class _HomeSellerState extends State<HomeSeller> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Sewa Kost',
+                Text('Buat Kost Baru',
                     style: GoogleFonts.inter(
                         fontWeight: FontWeight.bold, fontSize: 11)),
                 SizedBox(width: 5.w),

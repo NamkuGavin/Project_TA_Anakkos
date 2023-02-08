@@ -12,11 +12,17 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/helper/firebase_service.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
+import 'package:project_anakkos_app/ui-Seller/home_seller.dart';
 import 'package:project_anakkos_app/ui-Seller/register_seller.dart';
+import 'package:project_anakkos_app/ui-User/register_user.dart';
 import 'package:project_anakkos_app/widget/bottomNavigation_seller.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
+import 'package:project_anakkos_app/widget/custom_text_form.dart';
 import 'package:project_anakkos_app/widget/google_signIn_provider.dart';
+import 'package:project_anakkos_app/widget/google_signin_button.dart';
+import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,199 +38,135 @@ class LoginSeller extends StatefulWidget {
 class _LoginSellerState extends State<LoginSeller> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isVisible = true;
-  bool submit = false;
-  bool _isloading = false;
-  Timer? _timer;
+  final _formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _isLoad = false;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _emailController.addListener(() {
-      if (_emailController.text.isNotEmpty &&
-          _passwordController.text.isNotEmpty) {
-        setState(() {
-          submit = true;
-        });
-      } else {
-        setState(() {
-          submit = false;
-        });
-      }
-    });
-    _passwordController.addListener(() {
-      if (_passwordController.text.isNotEmpty &&
-          _emailController.text.isNotEmpty) {
-        setState(() {
-          submit = true;
-        });
-      } else {
-        setState(() {
-          submit = false;
-        });
-      }
-    });
+  Future getLogin() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    try {
+      setState(() {
+        _isLoad = true;
+      });
+      LoginModel model = await ApiService().getLogin(
+          email: _emailController.text, password: _passwordController.text);
+      pref.setString('pass', _passwordController.text);
+      pref.setString('email', _emailController.text);
+      pref.setString('token', model.token);
+      setState(() {
+        _isLoad = false;
+      });
+    } catch (error) {
+      print('no internet ' + error.toString());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       key: scaffoldKey,
-      body: _isloading == false
-          ? Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Center(
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 75.h,
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/logo/anakkos_logo1.svg',
+                          width: size.width * 0.4,
+                        ),
+                        SizedBox(
+                          height: 48.h,
+                        ),
+                        Text(
+                          'Selamat Datang',
+                          style: textTheme.headline5!
+                              .copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        Text(
+                          'Masukkan email dan kata sandi untuk masuk',
+                          style: textTheme.bodyText2,
+                        ),
+                        SizedBox(
+                          height: 24.h,
+                        ),
+                        CustomTextFormField(
+                          label: 'Masukkan email',
+                          controller: _emailController,
+                          textInputType: TextInputType.emailAddress,
+                          validator: (value) =>
+                              SharedCode().emailValidator(value),
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        CustomTextFormField(
+                          label: 'Masukkan kata sandi',
+                          controller: _passwordController,
+                          isPassword: true,
+                          validator: (value) =>
+                              SharedCode().passwordValidator(value),
+                        ),
+                        SizedBox(
+                          height: 26.h,
+                        ),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  ColorValues.primaryBlue)),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              await getLogin();
+                              await SharedCode.navigatorReplacement(
+                                  context, NavigationWidgetBarSeller());
+                            }
+                          },
+                          child: Text('Masuk'),
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            text: 'Belum punya akun? ',
+                            style: textTheme.bodyText1,
+                            children: [
+                              TextSpan(
+                                text: 'Daftar',
+                                style: textTheme.bodyText1!.copyWith(
+                                  color: Color(0XFF2FA0DF),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () => SharedCode.navigatorPush(
+                                      context, RegisterSeller()),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    Text("Login",
-                        style: GoogleFonts.roboto(
-                          fontSize: 35,
-                          fontWeight: FontWeight.w400,
-                        )),
-                    SizedBox(
-                      height: 50.h,
-                    ),
-                    inputWidget(),
-                    loginButton(),
-                    SizedBox(
-                      height: 50.h,
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            )
-          : Container(),
-    );
-  }
-
-  submitData() async {
-    SharedCode.navigatorPushAndRemove(context, NavigationWidgetBarSeller());
-  }
-
-  inputWidget() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Email',
-          style: GoogleFonts.roboto(
-            fontSize: 13,
-          ),
-        ),
-        SizedBox(
-          height: 7.h,
-        ),
-        CustomTextField(
-          isEnable: true,
-          isreadOnly: false,
-          controller: _emailController,
-          inputType: TextInputType.emailAddress,
-          validator: (value) => SharedCode().emailValidator(value),
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
             ),
-          ),
+            _isLoad ? LoadingAnimation() : Container(),
+          ],
         ),
-        SizedBox(
-          height: 25.h,
-        ),
-        Text(
-          'Password',
-          style: GoogleFonts.roboto(
-            fontSize: 13,
-          ),
-        ),
-        SizedBox(
-          height: 7.h,
-        ),
-        CustomTextField(
-          inputType: TextInputType.text,
-          isEnable: true,
-          isreadOnly: false,
-          controller: _passwordController,
-          isPassword: _isVisible,
-          validator: (value) => SharedCode().passwordValidator(value),
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(
-                _isVisible ? Icons.visibility_off : Icons.visibility,
-                color: Colors.black,
-                size: 17.w,
-              ),
-              onPressed: () {
-                setState(() {
-                  _isVisible = !_isVisible;
-                });
-              },
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 50.h,
-        ),
-      ],
-    );
-  }
-
-  loginButton() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        ElevatedButton(
-          onPressed: submit
-              ? () {
-                  return submitData();
-                }
-              : null,
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 13),
-            child: Text('Login'),
-          ),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) {
-                if (states.contains(MaterialState.disabled))
-                  return ColorValues.primaryBlue.withOpacity(0.5);
-                return ColorValues.primaryBlue; // Use the component's default.
-              },
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 30.h,
-        ),
-        Center(
-          child: RichText(
-            text: TextSpan(
-                text: 'Don\'t have an account?',
-                style: GoogleFonts.roboto(color: HexColor("#818181")),
-                children: [
-                  TextSpan(
-                      text: ' SignUp',
-                      style: GoogleFonts.roboto(
-                          color: ColorValues.primaryBlue,
-                          fontWeight: FontWeight.w600),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          SharedCode.navigatorPush(context, RegisterSeller());
-                        }),
-                ]),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

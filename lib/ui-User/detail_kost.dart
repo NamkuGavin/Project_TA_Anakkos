@@ -17,6 +17,7 @@ import 'package:project_anakkos_app/dummy/dummy_bookmark.dart';
 import 'package:project_anakkos_app/ui-User/booking_page.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_dates.dart';
+import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_image.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailKost extends StatefulWidget {
@@ -1021,10 +1022,25 @@ class _DetailKostState extends State<DetailKost> {
               ),
             ),
             Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Image.asset("assets/dummykos/google_maps.png"),
-              ),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      side: BorderSide(
+                          width: 1, color: ColorValues.primaryPurple),
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      minimumSize: Size(double.infinity, 40.h)),
+                  onPressed: () {},
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Click sini untuk liat lokasi kost',
+                          style: GoogleFonts.inter(fontSize: 13)),
+                      SizedBox(width: 10.w),
+                      Icon(CupertinoIcons.location_solid, size: 17)
+                    ],
+                  )),
             )
           ],
         ),
@@ -1048,15 +1064,29 @@ class _DetailKostState extends State<DetailKost> {
               child:
                   Text("Preview Kost", style: GoogleFonts.roboto(fontSize: 20)),
             ),
-            Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Image.asset("assets/dummykos/foto_kos.png"),
+            GestureDetector(
+              onTap: () {
+                _showImage(context);
+              },
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Image.asset("assets/dummykos/foto_kos.png"),
+                ),
               ),
             )
           ],
         ),
       ),
+    );
+  }
+
+  Future _showImage(context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialogImage();
+      },
     );
   }
 }

@@ -30,7 +30,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     dynamic validator = widget.validator;
-    validator ??= SharedCode().emptyValidator;
+    validator ??= SharedCode().usernameValidator;
 
     return TextFormField(
       enabled: widget.isEnable,

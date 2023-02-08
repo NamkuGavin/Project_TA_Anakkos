@@ -6,6 +6,7 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/ui-Seller/login_seller.dart';
 import 'package:project_anakkos_app/ui-User/login_user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RolePage extends StatefulWidget {
   const RolePage({Key? key}) : super(key: key);
@@ -35,8 +36,10 @@ class _RolePageState extends State<RolePage> {
                     fontWeight: FontWeight.w500, fontSize: 20)),
             SizedBox(height: 50.h),
             ElevatedButton(
-              onPressed: () {
-                SharedCode.navigatorPush(context, LoginUser());
+              onPressed: () async {
+                SharedPreferences pref = await SharedPreferences.getInstance();
+                await pref.setString("user", "user");
+                await SharedCode.navigatorPush(context, LoginUser());
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.white,
@@ -61,8 +64,10 @@ class _RolePageState extends State<RolePage> {
             ),
             SizedBox(height: 25.h),
             ElevatedButton(
-              onPressed: () {
-                SharedCode.navigatorPush(context, LoginSeller());
+              onPressed: () async {
+                SharedPreferences pref = await SharedPreferences.getInstance();
+                await pref.setString("owner", "owner");
+                await SharedCode.navigatorPush(context, LoginSeller());
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.white,

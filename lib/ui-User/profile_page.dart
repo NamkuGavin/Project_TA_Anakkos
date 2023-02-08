@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
@@ -17,6 +17,7 @@ import 'package:project_anakkos_app/ui-User/login_user.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/ui-User/terms_privacy_page.dart';
 import 'package:project_anakkos_app/widget/google_signIn_provider.dart';
+import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,13 +31,10 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final user = FirebaseAuth.instance.currentUser;
-  CollectionReference _users = FirebaseFirestore.instance.collection('users');
   Widget _widget = Container();
   String username = "";
   String email = "";
-  Timer? _timer;
   bool _isloading = false;
-  bool _isRead = false;
 
   @override
   void initState() {
@@ -46,17 +44,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _checkLogin() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    if (pref.getBool("isRead") == null) {
-      await pref.setBool("isRead", false);
-    } else {
-      null;
-    }
     if (pref.getString("token") == null && user == null) {
       setState(() {
         _widget = belumLogin();
       });
     } else if (user != null) {
-      await getProfileGoogle();
       print("GOOGLE LOGIN");
       setState(() {
         _widget = sudahLoginGoogle();
@@ -64,53 +56,28 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       print("APPS LOGIN");
       await getProfileApps();
-      setState(() {
-        _widget = sudahLoginApps();
-      });
     }
   }
 
   getProfileApps() async {
-    setState(() {
-      _isloading = true;
-      _timer?.cancel();
-      EasyLoading.show(
-        status: 'loading...',
-        maskType: EasyLoadingMaskType.black,
-      );
-    });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    LoginModel result = await ApiService().getLogin(
-        email: prefs.getString("email").toString(),
-        password: prefs.getString("password").toString());
-    _isRead = prefs.getBool("isRead")!;
-    print("STATUS TERMS: " + _isRead.toString());
-    username = result.data.name;
-    email = result.data.email;
-    setState(() {
-      _isloading = false;
-      _timer?.cancel();
-      EasyLoading.dismiss();
-    });
-  }
-
-  getProfileGoogle() async {
-    setState(() {
-      _isloading = true;
-      _timer?.cancel();
-      EasyLoading.show(
-        status: 'loading...',
-        maskType: EasyLoadingMaskType.black,
-      );
-    });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _isRead = prefs.getBool("isRead")!;
-    print("STATUS TERMS: " + _isRead.toString());
-    setState(() {
-      _isloading = false;
-      _timer?.cancel();
-      EasyLoading.dismiss();
-    });
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    try {
+      setState(() {
+        _isloading = true;
+        _widget = LoadingAnimation();
+      });
+      LoginModel result = await ApiService().getLogin(
+          email: pref.getString("email").toString(),
+          password: pref.getString("pass").toString());
+      username = result.data.name;
+      email = result.data.email;
+      setState(() {
+        _isloading = false;
+        _widget = sudahLoginApps();
+      });
+    } catch (error) {
+      print('no internet ' + error.toString());
+    }
   }
 
   @override
@@ -164,36 +131,99 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   sudahLoginApps() {
-    _timer?.cancel();
-    EasyLoading.dismiss();
     return Scaffold(
-        body: Padding(
-      padding: EdgeInsets.all(12),
-      child: _isloading
-          ? Center()
-          : username.isEmpty || email.isEmpty
+        backgroundColor: Color(0XFFF9F9F9),
+        body: SafeArea(
+          child: username.isEmpty || email.isEmpty
               ? Center(child: Text("No Data Available"))
               : Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 50.h),
-                    headerProfileApps(),
-                    SizedBox(height: 50.h),
-                    akunOptionApps(),
-                    SizedBox(height: 50.h),
-                    generalOptionApps(),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(28, 75, 28, 0),
+                      child: Column(
+                        children: [
+                          headerProfileApps(username, email),
+                          SizedBox(
+                            height: 16.h,
+                          ),
+                          Divider(
+                            color: Color(0XFFECEEF2),
+                            thickness: 1,
+                          ),
+                          SizedBox(
+                            height: 32.h,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        width: double.infinity,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 28, vertical: 30),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(50),
+                            topRight: Radius.circular(50),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            _button(
+                              onPress: () {
+                                SharedCode.navigatorPush(
+                                    context, BookmarkPage());
+                              },
+                              icon: 'Bookmark',
+                              title: 'Bookmark',
+                            ),
+                            SizedBox(
+                              height: 16.h,
+                            ),
+                            _button(
+                              onPress: () {
+                                SharedCode.navigatorPush(
+                                    context, EditProfile());
+                              },
+                              icon: 'PersonalInfo',
+                              title: 'Edit Profil',
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            _button(
+                              onPress: () async {
+                                SharedPreferences pref =
+                                    await SharedPreferences.getInstance();
+                                await ApiService()
+                                    .logout(pref.getString('token').toString());
+                                await pref.clear();
+                                await SharedCode.navigatorPushAndRemove(
+                                    context, LoginUser());
+                              },
+                              icon: 'Logout',
+                              title: 'Keluar',
+                              isLogout: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-    ));
+        ));
   }
 
   sudahLoginGoogle() {
-    _timer?.cancel();
-    EasyLoading.dismiss();
+    final _document =
+        FirebaseFirestore.instance.collection('users').doc(user!.uid);
     return Scaffold(
-        body: FutureBuilder<DocumentSnapshot>(
-            future: _users.doc(user!.uid).get(),
+        backgroundColor: Color(0XFFF9F9F9),
+        body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            stream: _document.snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -205,437 +235,215 @@ class _ProfilePageState extends State<ProfilePage> {
                 print("ERROR: " + snapshot.hasError.toString());
                 return Center(child: Text("Something Wrong"));
               } else {
-                Map<String, dynamic> data =
-                    snapshot.data!.data() as Map<String, dynamic>;
-                return Padding(
-                  padding: EdgeInsets.all(12),
-                  child: _isloading
-                      ? Center()
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                var data = snapshot.data!;
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(28, 75, 28, 0),
+                      child: Column(
+                        children: [
+                          headerProfileGoogle(data['full_name'], data['email'],
+                              data['photo_profile']),
+                          SizedBox(
+                            height: 16.h,
+                          ),
+                          Divider(
+                            color: Color(0XFFECEEF2),
+                            thickness: 1,
+                          ),
+                          SizedBox(
+                            height: 32.h,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        width: double.infinity,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 28, vertical: 30),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(50),
+                            topRight: Radius.circular(50),
+                          ),
+                        ),
+                        child: Column(
                           children: [
-                            SizedBox(height: 50.h),
-                            headerProfileGoogle(data['username'], data['email'],
-                                data['profilePhoto']),
-                            SizedBox(height: 50.h),
-                            akunOptionGoogle(),
-                            SizedBox(height: 50.h),
-                            generalOptionGoogle(),
+                            _button(
+                              onPress: () {
+                                SharedCode.navigatorPush(
+                                    context, BookmarkPage());
+                              },
+                              icon: 'Bookmark',
+                              title: 'Bookmark',
+                            ),
+                            SizedBox(
+                              height: 16.h,
+                            ),
+                            _button(
+                              onPress: () {
+                                SharedCode.navigatorPush(
+                                    context, EditProfile());
+                              },
+                              icon: 'PersonalInfo',
+                              title: 'Edit Profil',
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            _button(
+                              onPress: () async {
+                                await FirebaseAuth.instance.signOut();
+                                await GoogleSignIn().signOut();
+                                if (!mounted) return;
+                                SharedCode.navigatorPushAndRemove(
+                                    context, LoginUser());
+                              },
+                              icon: 'Logout',
+                              title: 'Keluar',
+                              isLogout: true,
+                            ),
                           ],
                         ),
+                      ),
+                    ),
+                  ],
                 );
               }
             }));
   }
 
-  headerProfileApps() {
-    return Row(
-      children: [
-        SizedBox(width: 25.w),
-        SvgPicture.asset("assets/icon/profile.svg", width: 75.w),
-        SizedBox(width: 25.w),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(username,
-                style: GoogleFonts.roboto(
-                    fontSize: 15, fontWeight: FontWeight.w600)),
-            SizedBox(height: 20.h),
-            Text(email,
-                style: GoogleFonts.roboto(
-                    fontSize: 15, fontWeight: FontWeight.w600)),
-          ],
-        )
-      ],
-    );
-  }
-
   headerProfileGoogle(String user, String email, String photo) {
-    return Row(
+    return Column(
       children: [
-        SizedBox(width: 25.w),
         CircleAvatar(
-          radius: 40,
-          backgroundImage: NetworkImage(photo),
+          backgroundColor: Color(0XFFE7E7E7),
+          radius: 50,
+          backgroundImage: photo != '' ? NetworkImage(photo) : null,
+          child: photo != ''
+              ? null
+              : Text(
+                  getInitials(user),
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 22,
+                  ),
+                ),
         ),
-        SizedBox(width: 25.w),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        SizedBox(
+          height: 24.h,
+        ),
+        Text(
+          user,
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          email,
+          style: GoogleFonts.poppins(),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
+  headerProfileApps(String user, String email) {
+    return Column(
+      children: [
+        CircleAvatar(
+          backgroundColor: Color(0XFFE7E7E7),
+          radius: 50,
+          // backgroundImage: photo != '' ? NetworkImage(photo) : null,
+          backgroundImage: null,
+          // child: photo != ''
+          //     ? null
+          //     : Text(
+          //         getInitials(user),
+          //         style: GoogleFonts.poppins(
+          //           color: Colors.black,
+          //           fontSize: 22,
+          //         ),
+          //       ),
+          child: Text(
+            getInitials(user),
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: 22,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 24.h,
+        ),
+        Text(
+          user,
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          email,
+          style: GoogleFonts.poppins(),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
+  Widget _button({
+    required void Function() onPress,
+    required String icon,
+    required String title,
+    bool isLogout = false,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPress,
+        splashColor: Colors.white,
+        borderRadius: BorderRadius.circular(12.5),
+        child: Row(
           children: [
-            Text(user,
-                style: GoogleFonts.roboto(
-                    fontSize: 15, fontWeight: FontWeight.w600)),
-            SizedBox(height: 20.h),
-            Text(email,
-                style: GoogleFonts.roboto(
-                    fontSize: 15, fontWeight: FontWeight.w600)),
+            Container(
+              height: 45,
+              width: 45,
+              decoration: BoxDecoration(
+                color: Color(0XFFF9F9F9),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12.5),
+                ),
+              ),
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/icon/$icon.svg',
+                  fit: BoxFit.fill,
+                  color: isLogout ? Colors.red : Colors.black,
+                ),
+              ),
+            ),
+            SizedBox(width: 15),
+            Text(
+              title,
+              style: GoogleFonts.poppins(
+                color: isLogout ? Colors.red : Colors.black,
+              ),
+            ),
+            Spacer(),
+            Icon(Icons.navigate_next_sharp)
           ],
-        )
-      ],
+        ),
+      ),
     );
   }
 
-  akunOptionApps() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Akun",
-            style:
-                GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () {
-            SharedCode.navigatorPush(context, BookmarkPage());
-          },
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                    child:
-                        Icon(Icons.bookmark, color: Colors.black, size: 20.w)),
-                Expanded(
-                  flex: 5,
-                  child: Text("Bookmark",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: Colors.black)),
-                ),
-                Expanded(
-                  child: Icon(Icons.arrow_forward_ios_rounded,
-                      color: Colors.black, size: 20.w),
-                )
-              ],
-            ),
-          ),
-        ),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                    child: Icon(Icons.person_pin,
-                        color: Colors.black, size: 20.w)),
-                Expanded(
-                  flex: 5,
-                  child: Text("Edit Akun",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: Colors.black)),
-                ),
-                Expanded(
-                  child: Icon(Icons.arrow_forward_ios_rounded,
-                      color: Colors.black, size: 20.w),
-                )
-              ],
-            ),
-          ),
-        ),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () {
-            logout();
-          },
-          style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                    child: Icon(Icons.logout_rounded,
-                        color: Colors.black, size: 20.w)),
-                Expanded(
-                  flex: 5,
-                  child: Text("Logout",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: Colors.black)),
-                ),
-                Expanded(
-                  child: Icon(Icons.arrow_forward_ios_rounded,
-                      color: Colors.black, size: 20.w),
-                )
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  akunOptionGoogle() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Akun",
-            style:
-                GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () {
-            SharedCode.navigatorPush(context, BookmarkPage());
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                    child:
-                        Icon(Icons.bookmark, color: Colors.black, size: 20.w)),
-                Expanded(
-                  flex: 5,
-                  child: Text("Bookmark",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: Colors.black)),
-                ),
-                Expanded(
-                  child: Icon(Icons.arrow_forward_ios_rounded,
-                      color: Colors.black, size: 20.w),
-                )
-              ],
-            ),
-          ),
-        ),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () async {
-            final result = await Navigator.push(context,
-                MaterialPageRoute(builder: (context) => EditProfile()));
-            print('result: ' + result);
-            setState(() {
-              _widget = sudahLoginGoogle();
-            });
-          },
-          style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                    child: Icon(Icons.person_pin,
-                        color: Colors.black, size: 20.w)),
-                Expanded(
-                  flex: 5,
-                  child: Text("Edit Akun",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: Colors.black)),
-                ),
-                Expanded(
-                  child: Icon(Icons.arrow_forward_ios_rounded,
-                      color: Colors.black, size: 20.w),
-                )
-              ],
-            ),
-          ),
-        ),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () {
-            final provider =
-                Provider.of<GoogleProvider>(context, listen: false);
-            provider.logout();
-          },
-          style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                    child: Icon(Icons.logout_rounded,
-                        color: Colors.black, size: 20.w)),
-                Expanded(
-                  flex: 5,
-                  child: Text("Logout",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: Colors.black)),
-                ),
-                Expanded(
-                  child: Icon(Icons.arrow_forward_ios_rounded,
-                      color: Colors.black, size: 20.w),
-                )
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  generalOptionApps() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("General",
-            style:
-                GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () async {
-            final result = await Navigator.push(context,
-                MaterialPageRoute(builder: (context) => TermsPrivacyPage()));
-            print('result: ' + result);
-            await getProfileApps();
-            setState(() {
-              _widget = sudahLoginApps();
-            });
-          },
-          style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Icon(Icons.privacy_tip_rounded,
-                      color: Colors.black, size: 20.w),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Text("Terms & Privacy",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: Colors.black)),
-                ),
-                Expanded(
-                  flex: _isRead == false ? 2 : 1,
-                  child: Text(_isRead == false ? "Not Accept" : "Accept",
-                      style: GoogleFonts.inter(
-                          fontSize: 9,
-                          color: _isRead == false ? Colors.red : Colors.green)),
-                ),
-                Expanded(
-                  child: Icon(Icons.arrow_forward_ios_rounded,
-                      color: Colors.black, size: 20.w),
-                )
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  generalOptionGoogle() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("General",
-            style:
-                GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () async {
-            final result = await Navigator.push(context,
-                MaterialPageRoute(builder: (context) => TermsPrivacyPage()));
-            print('result: ' + result);
-            await getProfileGoogle();
-            setState(() {
-              _widget = sudahLoginGoogle();
-            });
-          },
-          style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Icon(Icons.privacy_tip_rounded,
-                      color: Colors.black, size: 20.w),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Text("Terms & Privacy",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: Colors.black)),
-                ),
-                Expanded(
-                  flex: _isRead == false ? 2 : 1,
-                  child: Text(_isRead == false ? "Not Accept" : "Accept",
-                      style: GoogleFonts.inter(
-                          fontSize: 9,
-                          color: _isRead == false ? Colors.red : Colors.green)),
-                ),
-                Expanded(
-                  child: Icon(Icons.arrow_forward_ios_rounded,
-                      color: Colors.black, size: 20.w),
-                )
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  logout() async {
-    final preferences = await SharedPreferences.getInstance();
-    await preferences.clear();
-    SharedCode.navigatorPushAndRemove(context, LoginUser());
-  }
+  String getInitials(String name) => name.isNotEmpty
+      ? name.trim().split(RegExp(' +')).map((s) => s[0]).take(2).join()
+      : '';
 }
