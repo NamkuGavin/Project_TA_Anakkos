@@ -23,11 +23,12 @@ class _ChatWidgetState extends State<ChatWidget> {
     return Scaffold(
       appBar: AppBar(
         title:
-            Text(widget.title, style: GoogleFonts.roboto(color: Colors.black)),
-        backgroundColor: Color(0xFFF8ECEC),
+            Text(widget.title, style: GoogleFonts.roboto(color: Colors.white)),
+        backgroundColor: ColorValues.primaryBlue,
         iconTheme: IconThemeData(
-          color: Colors.black,
+          color: Colors.white,
         ),
+        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -47,11 +48,14 @@ class _ChatWidgetState extends State<ChatWidget> {
                 height: 40.h,
                 child: Center(
                   child: Card(
-                    color: Color(0xFFF8ECEC),
+                    color:
+                    // Color(0xFFF8ECEC),
+                    ColorValues.primaryPurple,
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Text(
                         DateFormat.yMMMd().format(chat.date),
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),

@@ -68,7 +68,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
           isreadOnly: false,
           controller: _usernameController,
           inputType: TextInputType.name,
-          validator: (value) => SharedCode().emptyValidator(value),
+          validator: (value) => SharedCode().usernameValidator(value),
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),

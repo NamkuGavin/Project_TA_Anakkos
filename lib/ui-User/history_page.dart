@@ -32,19 +32,26 @@ class _HistoryPageState extends State<HistoryPage> {
   Timer? _timer;
   bool _isloading = false;
   List<RiwayatDummyModel> items = [
-    RiwayatDummyModel("assets/dummykos/kost_4.png", "Laki-laki", "Kost Subadi",
+    RiwayatDummyModel("assets/dummykos/kost_4.png", "Completed", "Kost Subadi",
         "Kudus, Bastio", "01 Sep", "17:16", "Transaksi gagal", "10, Oct 2021"),
     RiwayatDummyModel(
-        "assets/dummykos/kost_2.png",
-        "Campur",
-        "Kost Skywalker",
+        "assets/dummykos/kost_4.png",
+        "Completed",
+        "Kost Subadi",
         "Kudus, Bastio",
         "01 Sep",
         "17:16",
         "Transaksi Selesai",
-        "10, Jan 2022"),
-    RiwayatDummyModel("assets/dummykos/kost_3.png", "Perempuan", "Kost Hokage",
-        "Kudus, Bastio", "01 Sep", "17:16", "Transaksi Selesai", "1, Mar 2022"),
+        "10, Nov 2021"),
+    RiwayatDummyModel(
+        "assets/dummykos/kost_4.png",
+        "Completed",
+        "Kost Subadi",
+        "Kudus, Bastio",
+        "01 Sep",
+        "17:16",
+        "Transaksi Selesai",
+        "10, Des 2021"),
   ];
 
   @override
@@ -245,23 +252,45 @@ class _HistoryPageState extends State<HistoryPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          DottedBorder(
-                                            color: Colors.black,
-                                            strokeWidth: 1,
-                                            child: Text(
-                                                items[index].jenis_kostRiwayat,
-                                                style: GoogleFonts.inter(
-                                                    fontSize: 10)),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(5))),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8, vertical: 5),
+                                              child: Text(
+                                                  items[index]
+                                                      .jenis_kostRiwayat,
+                                                  style: GoogleFonts.inter(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 10)),
+                                            ),
                                           ),
+                                          SizedBox(height: 5.h),
+                                          Text(items[index].nama_riwayat,
+                                              style: GoogleFonts.inter(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 11)),
+                                          SizedBox(height: 5.h),
+                                          Text(
+                                              "Tanggal: " +
+                                                  items[index].tanggal_riwayat,
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 11)),
                                           SizedBox(height: 5.h),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(items[index].nama_riwayat,
-                                                  style: GoogleFonts.inter(
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                              Text(
+                                                  "Pukul: " +
+                                                      items[index]
+                                                          .waktu_riwayat,
+                                                  style: GoogleFonts.roboto(
                                                       fontSize: 11)),
                                               Row(
                                                 crossAxisAlignment:
@@ -279,18 +308,6 @@ class _HistoryPageState extends State<HistoryPage> {
                                               ),
                                             ],
                                           ),
-                                          SizedBox(height: 5.h),
-                                          Text(
-                                              "Tanggal: " +
-                                                  items[index].tanggal_riwayat,
-                                              style: GoogleFonts.roboto(
-                                                  fontSize: 11)),
-                                          SizedBox(height: 5.h),
-                                          Text(
-                                              "Pukul: " +
-                                                  items[index].waktu_riwayat,
-                                              style: GoogleFonts.roboto(
-                                                  fontSize: 11)),
                                         ],
                                       ),
                                     ),
@@ -359,7 +376,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     child: Container(
                         width: 100.w,
                         height: 125.h,
-                        child: Image.asset("assets/dummykos/kost_2.png",
+                        child: Image.asset("assets/dummykos/kost_4.png",
                             fit: BoxFit.fill)),
                   ),
                   Expanded(
@@ -385,16 +402,9 @@ class _HistoryPageState extends State<HistoryPage> {
                             ),
                           ),
                           SizedBox(height: 7.h),
-                          Text("Kost Duniawi",
+                          Text("Kost Subadi",
                               style: GoogleFonts.inter(
                                   fontWeight: FontWeight.bold, fontSize: 11)),
-                          SizedBox(height: 7.h),
-                          DottedBorder(
-                            color: Colors.black,
-                            strokeWidth: 1,
-                            child: Text("Campuran",
-                                style: GoogleFonts.inter(fontSize: 10)),
-                          ),
                           SizedBox(height: 7.h),
                           Text("Total : Rp. 568.400",
                               style: GoogleFonts.roboto(fontSize: 11)),

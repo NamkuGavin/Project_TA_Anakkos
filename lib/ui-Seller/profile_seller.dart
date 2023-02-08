@@ -11,12 +11,14 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-Seller/edit_profileSeller.dart';
+import 'package:project_anakkos_app/ui-Seller/login_seller.dart';
 import 'package:project_anakkos_app/ui-User/bookmark_page.dart';
 import 'package:project_anakkos_app/ui-User/edit_profile.dart';
 import 'package:project_anakkos_app/ui-User/login_user.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/ui-User/terms_privacy_page.dart';
 import 'package:project_anakkos_app/widget/google_signIn_provider.dart';
+import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,141 +31,188 @@ class ProfileSeller extends StatefulWidget {
 }
 
 class _ProfileSellerState extends State<ProfileSeller> {
-  String username = "UserProfile";
-  String email = "Userprofile@gmail.com";
-  String noHp = "+62-800-0000-0000";
-  bool _isloading = false;
+  bool _isLoad = false;
+  String full_name = "";
+  String email = "";
+
+  Future getProfileSeller() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    try {
+      setState(() {
+        _isLoad = true;
+      });
+      LoginModel result = await ApiService().getLogin(
+          email: pref.getString("email").toString(),
+          password: pref.getString("pass").toString());
+      full_name = result.data.name;
+      email = result.data.email;
+      setState(() {
+        _isLoad = false;
+      });
+    } catch (error) {
+      print('no internet ' + error.toString());
+    }
+  }
+
+  @override
+  void initState() {
+    getProfileSeller();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-      padding: EdgeInsets.all(12),
-      child: _isloading
-          ? Center()
-          : username.isEmpty || email.isEmpty
-              ? Center(child: Text("No Data Available"))
+        backgroundColor: Color(0XFFF9F9F9),
+        body: SafeArea(
+          child: _isLoad
+              ? LoadingAnimation()
               : Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 50.h),
-                    headerProfileApps(),
-                    SizedBox(height: 50.h),
-                    akunOptionApps(),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(28, 75, 28, 0),
+                      child: Column(
+                        children: [
+                          headerProfileApps(full_name, email),
+                          SizedBox(
+                            height: 16.h,
+                          ),
+                          Divider(
+                            color: Color(0XFFECEEF2),
+                            thickness: 1,
+                          ),
+                          SizedBox(
+                            height: 32.h,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        width: double.infinity,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 28, vertical: 30),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(50),
+                            topRight: Radius.circular(50),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            _button(
+                              onPress: () {
+                                SharedCode.navigatorPush(
+                                    context, EditProfileSeller());
+                              },
+                              icon: 'PersonalInfo',
+                              title: 'Edit Profil',
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            _button(
+                              onPress: () {
+                                SharedCode.navigatorPushAndRemove(
+                                    context, LoginSeller());
+                              },
+                              icon: 'Logout',
+                              title: 'Keluar',
+                              isLogout: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-    ));
+        ));
   }
 
-  headerProfileApps() {
-    return Row(
-      children: [
-        SizedBox(width: 25.w),
-        SvgPicture.asset("assets/icon/profile.svg", width: 100.w),
-        SizedBox(width: 25.w),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(username,
-                style: GoogleFonts.roboto(
-                    fontSize: 15, fontWeight: FontWeight.w600)),
-            SizedBox(height: 7.h),
-            Text(noHp,
-                style: GoogleFonts.roboto(
-                    fontSize: 15, fontWeight: FontWeight.w600)),
-            SizedBox(height: 7.h),
-            Text(email,
-                style: GoogleFonts.roboto(
-                    fontSize: 15, fontWeight: FontWeight.w600)),
-          ],
-        )
-      ],
-    );
-  }
-
-  akunOptionApps() {
+  headerProfileApps(String user, String email) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Akun",
-            style:
-                GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () {
-            SharedCode.navigatorPush(context, EditProfileSeller());
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                    child: Icon(Icons.person_pin,
-                        color: Colors.black, size: 20.w)),
-                Expanded(
-                  flex: 5,
-                  child: Text("Edit Akun",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: Colors.black)),
-                ),
-                Expanded(
-                  child: Icon(Icons.arrow_forward_ios_rounded,
-                      color: Colors.black, size: 20.w),
-                )
-              ],
+        CircleAvatar(
+          backgroundColor: Color(0XFFE7E7E7),
+          radius: 50,
+          backgroundImage: null,
+          child: Text(
+            getInitials(user),
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: 22,
             ),
           ),
         ),
-        SizedBox(height: 25.h),
-        ElevatedButton(
-          onPressed: () {
-            logout();
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: ColorValues.primaryBlue,
-            shadowColor: Colors.black,
-            elevation: 4.0,
+        SizedBox(
+          height: 24.h,
+        ),
+        Text(
+          user,
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
           ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                    child: Icon(Icons.logout_rounded,
-                        color: Colors.black, size: 20.w)),
-                Expanded(
-                  flex: 5,
-                  child: Text("Logout",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: Colors.black)),
-                ),
-                Expanded(
-                  child: Icon(Icons.arrow_forward_ios_rounded,
-                      color: Colors.black, size: 20.w),
-                )
-              ],
-            ),
-          ),
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          email,
+          style: GoogleFonts.poppins(),
+          textAlign: TextAlign.center,
         ),
       ],
     );
   }
 
-  logout() {
-    SharedCode.navigatorPushAndRemove(context, RolePage());
+  Widget _button({
+    required void Function() onPress,
+    required String icon,
+    required String title,
+    bool isLogout = false,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPress,
+        splashColor: Colors.white,
+        borderRadius: BorderRadius.circular(12.5),
+        child: Row(
+          children: [
+            Container(
+              height: 45,
+              width: 45,
+              decoration: BoxDecoration(
+                color: Color(0XFFF9F9F9),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12.5),
+                ),
+              ),
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/icon/$icon.svg',
+                  fit: BoxFit.fill,
+                  color: isLogout ? Colors.red : Colors.black,
+                ),
+              ),
+            ),
+            SizedBox(width: 15),
+            Text(
+              title,
+              style: GoogleFonts.poppins(
+                color: isLogout ? Colors.red : Colors.black,
+              ),
+            ),
+            Spacer(),
+            Icon(Icons.navigate_next_sharp)
+          ],
+        ),
+      ),
+    );
   }
+
+  String getInitials(String name) => name.isNotEmpty
+      ? name.trim().split(RegExp(' +')).map((s) => s[0]).take(2).join()
+      : '';
 }

@@ -14,58 +14,54 @@ class RegisterModel {
   RegisterModel({
     required this.message,
     required this.data,
-    required this.token,
   });
 
   String message;
-  RegisterData data;
-  String token;
+  Data data;
 
   factory RegisterModel.fromJson(Map<String, dynamic> json) => RegisterModel(
         message: json["message"],
-        data: RegisterData.fromJson(json["data"]),
-        token: json["token"],
+        data: Data.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
         "message": message,
         "data": data.toJson(),
-        "token": token,
       };
 }
 
-class RegisterData {
-  RegisterData({
-    required this.id,
+class Data {
+  Data({
     required this.name,
     required this.email,
-    required this.rememberToken,
-    required this.createdAt,
+    required this.role,
     required this.updatedAt,
+    required this.createdAt,
+    required this.id,
   });
 
-  int id;
   String name;
   String email;
-  dynamic rememberToken;
-  String createdAt;
-  String updatedAt;
+  String role;
+  DateTime updatedAt;
+  DateTime createdAt;
+  int id;
 
-  factory RegisterData.fromJson(Map<String, dynamic> json) => RegisterData(
-        id: json["id"],
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
         name: json["name"],
         email: json["email"],
-        rememberToken: json["remember_token"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
+        role: json["role"],
+        updatedAt: DateTime.parse(json["updated_at"]),
+        createdAt: DateTime.parse(json["created_at"]),
+        id: json["id"],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
         "name": name,
         "email": email,
-        "remember_token": rememberToken,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
+        "role": role,
+        "updated_at": updatedAt.toIso8601String(),
+        "created_at": createdAt.toIso8601String(),
+        "id": id,
       };
 }

@@ -26,49 +26,43 @@ class _NavigationWidgetBarUserState extends State<NavigationWidgetBarUser> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       body: Center(
         child: _pages.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-          boxShadow: [
-            BoxShadow(color: Colors.black38, spreadRadius: 3, blurRadius: 10),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(30.0),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: ColorValues.primaryPurple,
+        unselectedItemColor: Color(0XFF9B9B9B),
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        selectedLabelStyle: textTheme.bodyText2,
+        unselectedLabelStyle: textTheme.bodyText2,
+        showUnselectedLabels: true,
+        showSelectedLabels: true,
+        elevation: 5,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.home, size: 25),
+            label: 'Beranda',
           ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            showSelectedLabels: true,
-            showUnselectedLabels: false,
-            selectedIconTheme: IconThemeData(color: ColorValues.primaryPurple),
-            selectedItemColor: ColorValues.primaryPurple,
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.home, size: 30),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.chat_bubble_text_fill, size: 30),
-                label: 'Chat',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.history, size: 30),
-                label: 'History',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.profile_circled, size: 30),
-                label: 'Profile',
-              ),
-            ],
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.chat_bubble_text_fill, size: 25),
+            label: 'Chat',
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history, size: 25),
+            label: 'Riwayat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.profile_circled, size: 25),
+            label: 'Profil',
+          ),
+        ],
       ),
     );
   }

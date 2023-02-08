@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
-import 'package:project_anakkos_app/common/theme_data.dart';
+import 'package:project_anakkos_app/common/size_config.dart';
+import 'package:project_anakkos_app/ui-User/login_user.dart';
 import 'package:project_anakkos_app/widget/bottomNavigation_user.dart';
+import 'package:project_anakkos_app/widget/on_boarding_content.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
@@ -16,72 +16,181 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+  final _controller = PageController();
+  int _currentPage = 0;
+  List colors = [Colors.white, Colors.white, Colors.white];
+
+  AnimatedContainer _buildDots({int? index}) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 200),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8),
+        ),
+        color: _currentPage == index
+            ? ColorValues.primaryBlue
+            : ColorValues.primaryBlue.withOpacity(0.5),
+      ),
+      margin: EdgeInsets.only(right: 5),
+      height: 10,
+      curve: Curves.easeIn,
+      width: 10,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    double height = SizeConfig.screenH!;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      backgroundColor: ColorValues.primaryBlue,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Anda sedang mencari kost?",
-                  style: GoogleFonts.roboto(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w500)),
-              SizedBox(height: 75.h),
-              SvgPicture.asset("assets/logo/anakkos_logo2.svg", width: 200.w),
-              SizedBox(height: 50.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50),
-                child: Text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    style: GoogleFonts.roboto(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.center),
-              ),
-              SizedBox(height: 50.h),
-              Padding(
-                padding: EdgeInsets.only(left: 200.w, right: 20.w),
-                child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          onPrimary: Colors.black,
-                          shadowColor: Colors.black,
-                          elevation: 4.0,
-                          textStyle: GoogleFonts.roboto(),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(
+              height: (height * 0.9) - MediaQuery.of(context).padding.top,
+              child: PageView.builder(
+                controller: _controller,
+                onPageChanged: (value) => setState(() => _currentPage = value),
+                itemCount: contents.length,
+                itemBuilder: (context, i) {
+                  return Padding(
+                    padding: EdgeInsets.only(left: 40, right: 40),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Anakkos",
+                          style: textTheme.headline1!.copyWith(
+                            color: ColorValues.primaryBlue,
+                            letterSpacing: 5,
+                          ),
                         ),
-                        onPressed: () {
-                          SharedCode.navigatorReplacement(
-                              context, NavigationWidgetBarUser());
-                        },
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: Text('Selanjutnya',
-                                  style: GoogleFonts.roboto(
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                            Expanded(
-                              child: Icon(
-                                Icons.arrow_right_alt_rounded,
-                                size: 30,
+                        SizedBox(
+                          height: 100.h,
+                        ),
+                        SvgPicture.asset(
+                          contents[i].image,
+                          height: SizeConfig.blockV! * 20,
+                        ),
+                        SizedBox(
+                          height: 100.h,
+                        ),
+                        Text(
+                          contents[i].title,
+                          style: textTheme.headline5!
+                              .copyWith(fontWeight: FontWeight.w700),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 16.h,
+                        ),
+                        Text(
+                          contents[i].desc,
+                          textAlign: TextAlign.center,
+                          style: textTheme.bodyText1!.copyWith(
+                            color: Color(0xff9B9B9B),
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        Container(
+                          height: 72.h,
+                          decoration: BoxDecoration(color: Colors.transparent),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(
+              height: (height * 0.13) - MediaQuery.of(context).padding.top,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _currentPage + 1 == contents.length
+                      ? Padding(
+                          padding: EdgeInsets.only(right: 30, left: 30),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  _controller.jumpToPage(0);
+                                },
+                                style: TextButton.styleFrom(
+                                    elevation: 0,
+                                    textStyle: textTheme.headline6),
+                                child: Text("Kembali"),
                               ),
-                            )
-                          ],
-                        ))),
-              )
-            ],
-          ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(
+                                  contents.length,
+                                  (int index) => _buildDots(index: index),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  SharedCode.navigatorReplacement(
+                                      context, NavigationWidgetBarUser());
+                                },
+                                style: TextButton.styleFrom(
+                                  elevation: 0,
+                                  textStyle: textTheme.headline6!
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                child: Text("Mulai"),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Padding(
+                          padding: EdgeInsets.only(right: 30, left: 30),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  _controller.jumpToPage(2);
+                                },
+                                style: TextButton.styleFrom(
+                                  elevation: 0,
+                                  textStyle: textTheme.headline6!
+                                      .copyWith(color: Colors.red),
+                                ),
+                                child: Text("Lewati"),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(
+                                  contents.length,
+                                  (int index) => _buildDots(index: index),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  _controller.nextPage(
+                                    duration: Duration(milliseconds: 200),
+                                    curve: Curves.easeIn,
+                                  );
+                                },
+                                style: TextButton.styleFrom(
+                                  elevation: 0,
+                                  textStyle: textTheme.headline6!
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                child: Text("Lanjut"),
+                              ),
+                            ],
+                          ),
+                        ),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
