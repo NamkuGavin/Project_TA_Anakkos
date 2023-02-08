@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/ui-User/landing_page.dart';
+import 'package:project_anakkos_app/widget/bottomNavigation_seller.dart';
 import 'package:project_anakkos_app/widget/bottomNavigation_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,10 +21,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     Future.delayed(Duration(seconds: 3), () async {
       final prefs = await SharedPreferences.getInstance();
-      if (prefs.getString('token') == null && user == null) {
+      if (prefs.getString('token_user') == null &&
+          prefs.getString('token_owner') == null &&
+          user == null) {
         SharedCode.navigatorReplacement(context, LandingPage());
       } else if (user != null) {
         SharedCode.navigatorReplacement(context, NavigationWidgetBarUser());
+      } else if (prefs.getString('token_owner') != null) {
+        SharedCode.navigatorReplacement(context, NavigationWidgetBarSeller());
       } else {
         SharedCode.navigatorReplacement(context, NavigationWidgetBarUser());
       }

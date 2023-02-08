@@ -8,6 +8,7 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/ui-Seller/addkost_seller2.dart';
 import 'package:project_anakkos_app/ui-Seller/addkost_seller3.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddKostPage1 extends StatefulWidget {
   @override
@@ -15,6 +16,14 @@ class AddKostPage1 extends StatefulWidget {
 }
 
 class _AddKostPage1State extends State<AddKostPage1> {
+  TextEditingController _kostName = TextEditingController();
+  TextEditingController _totalKamar = TextEditingController();
+  TextEditingController _lokasiAlamat = TextEditingController();
+  TextEditingController _lokasiKota = TextEditingController();
+  TextEditingController _lokasiProvinsi = TextEditingController();
+  TextEditingController _lokasiKodePos = TextEditingController();
+  TextEditingController _lokasiGoogleMaps = TextEditingController();
+  String category = "";
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -50,6 +59,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
                         fontWeight: FontWeight.w600, color: Colors.black45)),
                 SizedBox(height: 4.h),
                 TextFormField(
+                  controller: _kostName,
                   validator: (value) => SharedCode().emptyValidator(value),
                   decoration: InputDecoration(
                       hintText: 'Masukkan Nama Kost',
@@ -75,7 +85,9 @@ class _AddKostPage1State extends State<AddKostPage1> {
                 Text('Preview',
                     style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600, color: Colors.black45)),
-                //TODO: WIDGET FOTO
+                SizedBox(height: 15.h),
+                Image.asset("assets/dummykos/foto_kos1.png"),
+                SizedBox(height: 15.h),
                 Divider(color: Colors.black),
                 SizedBox(height: 10.h),
                 Text('Category',
@@ -95,25 +107,37 @@ class _AddKostPage1State extends State<AddKostPage1> {
                     'Perempuan',
                   ],
                   buttonValues: [
-                    "MALE",
-                    "MIX",
-                    "WOMAN",
+                    "Cowok",
+                    "Campur",
+                    "Cewek",
                   ],
                   buttonTextStyle: ButtonTextStyle(
                       selectedColor: ColorValues.primaryPurple,
                       unSelectedColor: Colors.black,
                       textStyle: TextStyle(fontSize: 12)),
                   radioButtonValue: (value) {
-                    print(value);
+                    setState(() {
+                      category = value;
+                    });
+                    print(category);
                   },
                   selectedColor: Colors.white,
                 ),
+                category == ""
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 9.w, top: 5.h),
+                        child: Text("Pilih salah satu kategori di atas*",
+                            style: TextStyle(
+                                color: Colors.red.shade700, fontSize: 12)),
+                      )
+                    : Container(),
                 SizedBox(height: 25.h),
                 Text('Banyak kamar',
                     style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600, color: Colors.black45)),
                 SizedBox(height: 4.h),
                 TextFormField(
+                  controller: _totalKamar,
                   validator: (value) => SharedCode().emptyValidator(value),
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
@@ -144,6 +168,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
                         fontWeight: FontWeight.w600, color: Colors.black45)),
                 SizedBox(height: 4.h),
                 TextFormField(
+                  controller: _lokasiAlamat,
                   validator: (value) => SharedCode().emptyValidator(value),
                   decoration: InputDecoration(
                       hintText: "Masukkan Alamat Lengkap",
@@ -167,6 +192,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
                 ),
                 SizedBox(height: 15.h),
                 TextFormField(
+                  controller: _lokasiKota,
                   validator: (value) => SharedCode().emptyValidator(value),
                   decoration: InputDecoration(
                       hintText: "Masukkan Kota",
@@ -190,6 +216,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
                 ),
                 SizedBox(height: 15.h),
                 TextFormField(
+                  controller: _lokasiProvinsi,
                   validator: (value) => SharedCode().emptyValidator(value),
                   decoration: InputDecoration(
                       hintText: "Masukkan Provinsi",
@@ -213,10 +240,35 @@ class _AddKostPage1State extends State<AddKostPage1> {
                 ),
                 SizedBox(height: 15.h),
                 TextFormField(
+                  controller: _lokasiKodePos,
                   validator: (value) => SharedCode().emptyValidator(value),
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       hintText: "Masukkan Kode Pos",
+                      hintStyle: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color: Colors.black26,
+                          fontWeight: FontWeight.w500),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xffD6D6D6)),
+                          borderRadius: BorderRadius.circular(8)),
+                      errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                          borderRadius: BorderRadius.circular(8)),
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                          borderRadius: BorderRadius.circular(8)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: ColorValues.primaryBlue),
+                          borderRadius: BorderRadius.circular(8))),
+                ),
+                SizedBox(height: 15.h),
+                TextFormField(
+                  controller: _lokasiGoogleMaps,
+                  validator: (value) => SharedCode().emptyValidator(value),
+                  decoration: InputDecoration(
+                      hintText: "Masukkan Link Google Maps",
                       hintStyle: GoogleFonts.poppins(
                           fontSize: 14,
                           color: Colors.black26,
@@ -271,10 +323,24 @@ class _AddKostPage1State extends State<AddKostPage1> {
                               borderRadius: BorderRadius.circular(10)),
                         ),
                         onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
+                          if (_formKey.currentState!.validate() &&
+                              category != "") {
                             // await getLogin();
                             await SharedCode.navigatorPush(
-                                context, AddKostPage2());
+                                context,
+                                AddKostPage2(
+                                  kost_name: _kostName.text,
+                                  kost_type: category,
+                                  total_unit: _totalKamar.text,
+                                  location: _lokasiAlamat.text +
+                                      " " +
+                                      _lokasiKota.text +
+                                      " " +
+                                      _lokasiProvinsi.text +
+                                      " " +
+                                      _lokasiKodePos.text,
+                                  location_url: _lokasiGoogleMaps.text,
+                                ));
                           }
                         },
                         child: Padding(

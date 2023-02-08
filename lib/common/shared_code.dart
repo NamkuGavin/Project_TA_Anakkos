@@ -29,7 +29,7 @@ class SharedCode {
 
   String? emptyValidator(value) {
     return value.toString().trim().isEmpty
-        ? 'field ini tidak boleh kosong'
+        ? 'field ini tidak boleh kosong*'
         : null;
   }
 
