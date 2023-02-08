@@ -15,6 +15,19 @@ import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/ui-Seller/addkost_seller3.dart';
 
 class AddKostPage2 extends StatefulWidget {
+  final String kost_name;
+  final String kost_type;
+  final String total_unit;
+  final String location;
+  final String location_url;
+
+  AddKostPage2(
+      {super.key,
+      required this.kost_name,
+      required this.kost_type,
+      required this.total_unit,
+      required this.location,
+      required this.location_url});
   @override
   _AddKostPage2State createState() => _AddKostPage2State();
 }
@@ -365,7 +378,16 @@ class _AddKostPage2State extends State<AddKostPage2> {
                         if (_formKey.currentState!.validate()) {
                           // await getLogin();
                           await SharedCode.navigatorPush(
-                              context, AddKostPage3());
+                              context,
+                              AddKostPage3(
+                                panjang: panjang.text,
+                                lebar: lebar.text,
+                                kost_name: widget.kost_name,
+                                kost_type: widget.kost_type,
+                                total_unit: widget.total_unit,
+                                location: widget.location,
+                                location_url: widget.location_url,
+                              ));
                         }
                       },
                       child: Padding(

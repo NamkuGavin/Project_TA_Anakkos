@@ -50,9 +50,9 @@ class _LoginSellerState extends State<LoginSeller> {
       });
       LoginModel model = await ApiService().getLogin(
           email: _emailController.text, password: _passwordController.text);
-      pref.setString('pass', _passwordController.text);
-      pref.setString('email', _emailController.text);
-      pref.setString('token', model.token);
+      pref.setString('pass_owner', _passwordController.text);
+      pref.setString('email_owner', _emailController.text);
+      pref.setString('token_owner', model.token);
       setState(() {
         _isLoad = false;
       });

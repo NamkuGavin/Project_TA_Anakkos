@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
+import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/riwayat_model.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/seller_model.dart';
+import 'package:project_anakkos_app/model/kost_seller_model.dart';
+import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-Seller/addkost_seller1.dart';
+import 'package:project_anakkos_app/widget/loadingWidget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeSeller extends StatefulWidget {
   const HomeSeller({Key? key}) : super(key: key);
@@ -17,40 +23,67 @@ class HomeSeller extends StatefulWidget {
 }
 
 class _HomeSellerState extends State<HomeSeller> {
-  List<SellerDummyModel> items = [
-    SellerDummyModel("assets/dummykos/kost_4.png", "Kost Subadi", "Disewakan",
-        "4.9 rating", "10 tenant"),
-    SellerDummyModel("assets/dummykos/kost_2.png", "Kost Skywalker",
-        "Ditolak", "0 rating", "15 tenant"),
-    SellerDummyModel("assets/dummykos/kost_3.png", "Kost Hokage", "Disewakan",
-        "4.0 rating", "5 tenant"),
-  ];
+  List<KostSellerData> items = [];
+  bool _isLoad = false;
+
+  Future getKostSeller() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    try {
+      setState(() {
+        _isLoad = true;
+      });
+      LoginModel result = await ApiService().getLogin(
+          email: pref.getString("email_owner").toString(),
+          password: pref.getString("pass_owner").toString());
+      KostSellerModel res = await ApiService()
+          .getKostSeller(id_seller: result.data.id, token: result.token);
+      setState(() {
+        items = res.data;
+      });
+      setState(() {
+        _isLoad = false;
+      });
+    } catch (error) {
+      print('no internet ' + error.toString());
+    }
+  }
+
+  @override
+  void initState() {
+    getKostSeller();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appbarWidget(),
-      body: kostSeller(),
+      body: _isLoad ? LoadingAnimation() : kostSeller(),
       floatingActionButton: buttonAdd(),
     );
   }
 
   kostSeller() {
     return items.isEmpty
-        ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                  child: SvgPicture.asset("assets/icon/empty_list.svg",
-                      width: 125.w)),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Center(
-                    child: Text("Belum ada Kost yang di Sewakan",
-                        style: GoogleFonts.roboto(
-                            fontWeight: FontWeight.bold, fontSize: 15))),
-              )
-            ],
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lottie.asset(
+                  'assets/lottie/not_found.json',
+                  width: 225.w,
+                  repeat: false,
+                ),
+                Text(
+                  'Belum ada Kost yang di Sewakan',
+                  style: Theme.of(context).textTheme.headline3!.copyWith(
+                        fontSize: 17,
+                        color: Color(0XFF9B9B9B),
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+              ],
+            ),
           )
         : ListView.builder(
             itemCount: items.length,
@@ -72,9 +105,10 @@ class _HomeSellerState extends State<HomeSeller> {
                               left: Radius.circular(10)),
                           child: Container(
                               width: 100.w,
-                              child: Image.asset(
-                                  items[index].picture_kost_seller,
-                                  fit: BoxFit.fill)),
+                              child: items[index].kostImg != "kosong"
+                                  ? Image.network(items[index].kostImg,
+                                      fit: BoxFit.fill)
+                                  : Text(items[index].kostImg)),
                         ),
                         Expanded(
                           child: Padding(
@@ -83,15 +117,14 @@ class _HomeSellerState extends State<HomeSeller> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(items[index].nama_kost_seller,
+                                Text(items[index].kostName,
                                     style: GoogleFonts.inter(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 11)),
                                 SizedBox(height: 7.h),
                                 Container(
                                   decoration: BoxDecoration(
-                                      color: items[index].status_kost_seller ==
-                                              "Ditolak"
+                                      color: items[index].status == "Rejected"
                                           ? Colors.red
                                           : Colors.green,
                                       borderRadius:
@@ -99,7 +132,7 @@ class _HomeSellerState extends State<HomeSeller> {
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 5),
-                                    child: Text(items[index].status_kost_seller,
+                                    child: Text(items[index].status,
                                         style: GoogleFonts.inter(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -113,7 +146,7 @@ class _HomeSellerState extends State<HomeSeller> {
                                     Icon(Icons.star,
                                         size: 15, color: Colors.black),
                                     SizedBox(width: 4.w),
-                                    Text(items[index].rating_kost_seller,
+                                    Text(items[index].avgRating,
                                         style: GoogleFonts.inter(fontSize: 11))
                                   ],
                                 ),
@@ -124,7 +157,7 @@ class _HomeSellerState extends State<HomeSeller> {
                                     Icon(Icons.person,
                                         size: 15, color: Colors.black),
                                     SizedBox(width: 4.w),
-                                    Text(items[index].tenant_kost_seller,
+                                    Text(items[index].unitRented.toString(),
                                         style: GoogleFonts.inter(fontSize: 11))
                                   ],
                                 ),

@@ -5,23 +5,25 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-GetKostModel getKostModelFromJson(String str) =>
-    GetKostModel.fromJson(json.decode(str));
+KostSellerModel getKostModelFromJson(String str) =>
+    KostSellerModel.fromJson(json.decode(str));
 
-String getKostModelToJson(GetKostModel data) => json.encode(data.toJson());
+String getKostModelToJson(KostSellerModel data) => json.encode(data.toJson());
 
-class GetKostModel {
-  GetKostModel({
+class KostSellerModel {
+  KostSellerModel({
     required this.message,
     required this.data,
   });
 
   String message;
-  List<Datum> data;
+  List<KostSellerData> data;
 
-  factory GetKostModel.fromJson(Map<String, dynamic> json) => GetKostModel(
+  factory KostSellerModel.fromJson(Map<String, dynamic> json) =>
+      KostSellerModel(
         message: json["message"],
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: List<KostSellerData>.from(
+            json["data"].map((x) => KostSellerData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -30,10 +32,10 @@ class GetKostModel {
       };
 }
 
-class Datum {
-  Datum({
+class KostSellerData {
+  KostSellerData({
     required this.id,
-    required this.userId,
+    required this.sellerId,
     required this.kostId,
     required this.profit,
     required this.avgRating,
@@ -48,7 +50,7 @@ class Datum {
   });
 
   int id;
-  int userId;
+  int sellerId;
   int kostId;
   int profit;
   String avgRating;
@@ -61,9 +63,9 @@ class Datum {
   DateTime createdAt;
   DateTime updatedAt;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory KostSellerData.fromJson(Map<String, dynamic> json) => KostSellerData(
         id: json["id"],
-        userId: json["user_id"],
+        sellerId: json["seller_id"],
         kostId: json["kost_id"],
         profit: json["profit"],
         avgRating: json["avg_rating"],
@@ -79,7 +81,7 @@ class Datum {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "user_id": userId,
+        "seller_id": sellerId,
         "kost_id": kostId,
         "profit": profit,
         "avg_rating": avgRating,

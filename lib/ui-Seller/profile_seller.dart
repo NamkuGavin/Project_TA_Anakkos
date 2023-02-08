@@ -42,8 +42,8 @@ class _ProfileSellerState extends State<ProfileSeller> {
         _isLoad = true;
       });
       LoginModel result = await ApiService().getLogin(
-          email: pref.getString("email").toString(),
-          password: pref.getString("pass").toString());
+          email: pref.getString("email_owner").toString(),
+          password: pref.getString("pass_owner").toString());
       full_name = result.data.name;
       email = result.data.email;
       setState(() {
@@ -115,9 +115,17 @@ class _ProfileSellerState extends State<ProfileSeller> {
                               height: 16,
                             ),
                             _button(
-                              onPress: () {
-                                SharedCode.navigatorPushAndRemove(
-                                    context, LoginSeller());
+                              onPress: () async {
+                                setState(() {
+                                  _isLoad = true;
+                                });
+                                SharedPreferences pref =
+                                    await SharedPreferences.getInstance();
+                                await ApiService().logout(
+                                    pref.getString('token_owner').toString());
+                                await pref.clear();
+                                await SharedCode.navigatorPushAndRemove(
+                                    context, RolePage());
                               },
                               icon: 'Logout',
                               title: 'Keluar',

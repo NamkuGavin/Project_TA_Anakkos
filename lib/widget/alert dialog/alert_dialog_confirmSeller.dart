@@ -62,7 +62,8 @@ class _AlertDialogConfirmSellerState extends State<AlertDialogConfirmSeller> {
                         borderRadius: BorderRadius.circular(10)),
                   ),
                   onPressed: () {
-                    SharedCode.navigatorReplacement(context, NavigationWidgetBarSeller());
+                    SharedCode.navigatorReplacement(
+                        context, NavigationWidgetBarSeller());
                   },
                   child: Padding(
                     padding: EdgeInsets.all(8),

@@ -196,13 +196,17 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             _button(
                               onPress: () async {
+                                setState(() {
+                                  _isloading = true;
+                                  _widget = LoadingAnimation();
+                                });
                                 SharedPreferences pref =
                                     await SharedPreferences.getInstance();
-                                await ApiService()
-                                    .logout(pref.getString('token').toString());
+                                await ApiService().logout(
+                                    pref.getString('token_user').toString());
                                 await pref.clear();
                                 await SharedCode.navigatorPushAndRemove(
-                                    context, LoginUser());
+                                    context, RolePage());
                               },
                               icon: 'Logout',
                               title: 'Keluar',
