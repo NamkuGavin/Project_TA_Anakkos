@@ -13,7 +13,7 @@ import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-Seller/edit_profileSeller.dart';
 import 'package:project_anakkos_app/ui-Seller/login_seller.dart';
 import 'package:project_anakkos_app/ui-User/bookmark_page.dart';
-import 'package:project_anakkos_app/ui-User/edit_profile.dart';
+import 'package:project_anakkos_app/ui-User/Edit%20Profile/edit_profile_google.dart';
 import 'package:project_anakkos_app/ui-User/login_user.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/ui-User/terms_privacy_page.dart';

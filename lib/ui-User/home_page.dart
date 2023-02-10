@@ -12,6 +12,7 @@ import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/chat_model.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/fliter_model.dart';
 import 'package:project_anakkos_app/dummy/dummywidget.dart';
+import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_filter.dart';
 import 'package:project_anakkos_app/widget/chatWidget.dart';
 import 'package:project_anakkos_app/widget/nearby_kost.dart';
 import 'package:project_anakkos_app/widget/populer_kost.dart';
@@ -95,8 +96,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // filterWidget(),
-            SizedBox(height: 10.h),
+            filterWidget(),
             ongoingKost(),
             SizedBox(height: 20.h),
             popularKost(),
@@ -142,11 +142,24 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Popular kost",
-              style: GoogleFonts.inter(
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-              )),
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Text("Popular Kost",
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    )),
+              ),
+              Expanded(
+                child: Divider(
+                  color: Colors.grey,
+                  thickness: 0.5,
+                ),
+              ),
+            ],
+          ),
           SizedBox(height: 10.h),
           GridView.builder(
             shrinkWrap: true,
@@ -212,11 +225,24 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Near by kost",
-              style: GoogleFonts.inter(
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-              )),
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Text("Kost Terdekat",
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    )),
+              ),
+              Expanded(
+                child: Divider(
+                  color: Colors.grey,
+                  thickness: 0.5,
+                ),
+              ),
+            ],
+          ),
           SizedBox(height: 10.h),
           GridView.builder(
             shrinkWrap: true,
@@ -262,41 +288,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  filterWidget() {
-    return MultiSelectDialogField<FilterModel?>(
-      items: _items,
-      title: Text("Select Filter"),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        border: Border.all(
-          color: Colors.black,
-          width: 2.w,
-        ),
-      ),
-      buttonIcon: Icon(
-        Icons.filter_alt_rounded,
-        color: Colors.black,
-      ),
-      buttonText: Text("Filter",
-          style: GoogleFonts.roboto(
-            color: Colors.black,
-            fontSize: 15,
-          )),
-      listType: MultiSelectListType.CHIP,
-      searchable: true,
-      onConfirm: (List<FilterModel?> values) {
-        _selectedAnimals2 = values;
-      },
-      chipDisplay: MultiSelectChipDisplay(
-        onTap: (value) {
-          setState(() {
-            _selectedAnimals2.remove(value);
-          });
-        },
-      ),
-    );
-  }
-
   ongoingKost() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15),
@@ -304,11 +295,24 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text("Ongoing kost",
-              style: GoogleFonts.inter(
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-              )),
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Text("Sedang Berjalan",
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    )),
+              ),
+              Expanded(
+                child: Divider(
+                  color: Colors.grey,
+                  thickness: 0.5,
+                ),
+              ),
+            ],
+          ),
           SizedBox(height: 10.h),
           Container(
             decoration: BoxDecoration(
@@ -415,6 +419,43 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+    );
+  }
+
+  filterWidget() {
+    return Padding(
+      padding: EdgeInsets.only(right: 12, top: 5),
+      child: Align(
+        alignment: Alignment.topRight,
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ColorValues.primaryBlue,
+              foregroundColor: Colors.white,
+              minimumSize: Size(0.w, 30.h),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            onPressed: () {
+              _showDialog(context);
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Filter', style: GoogleFonts.inter(fontSize: 13)),
+                SizedBox(width: 25.w),
+                Icon(Icons.filter_alt_rounded)
+              ],
+            )),
+      ),
+    );
+  }
+
+  Future _showDialog(context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialogFilter();
+      },
     );
   }
 }

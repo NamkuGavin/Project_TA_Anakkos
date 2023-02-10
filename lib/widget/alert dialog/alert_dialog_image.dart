@@ -15,17 +15,13 @@ class AlertDialogImage extends StatefulWidget {
 class _AlertDialogImageState extends State<AlertDialogImage> {
   int activeIndex = 0;
   final assetImage = [
-    "assets/dummykos/kost_1.png",
-    "assets/dummykos/kost_2.png",
-    "assets/dummykos/kost_3.png",
-    "assets/dummykos/kost_4.png",
-    "assets/dummykos/kost_4.png",
-    "assets/dummykos/kost_4.png",
-    "assets/dummykos/kost_4.png",
-    "assets/dummykos/kost_4.png",
-    "assets/dummykos/kost_4.png",
-    "assets/dummykos/kost_4.png",
-    "assets/dummykos/kost_4.png",
+    "assets/dummykos/room1.png",
+    "assets/dummykos/room3.png",
+    "assets/dummykos/room2.png",
+    "assets/dummykos/room2.png",
+    "assets/dummykos/room1.png",
+    "assets/dummykos/room2.png",
+    "assets/dummykos/room3.png",
   ];
   @override
   Widget build(BuildContext context) {

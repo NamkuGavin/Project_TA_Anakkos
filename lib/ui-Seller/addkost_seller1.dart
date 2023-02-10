@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cupertino_stepper/cupertino_stepper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/ui-Seller/addkost_seller2.dart';
@@ -25,6 +28,35 @@ class _AddKostPage1State extends State<AddKostPage1> {
   TextEditingController _lokasiGoogleMaps = TextEditingController();
   String category = "";
   final _formKey = GlobalKey<FormState>();
+  List<String> kostImg = [];
+
+  Future _takePicture(BuildContext context) async {
+    final ImagePicker picker = ImagePicker();
+    XFile? pickedImage;
+
+    try {
+      pickedImage = await picker.pickImage(
+          source: ImageSource.gallery,
+          preferredCameraDevice: CameraDevice.front);
+
+      if (pickedImage != null) {
+        setState(() {
+          kostImg.add(pickedImage!.path);
+          print(kostImg);
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("No image was selected"),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+      print("error");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,8 +117,47 @@ class _AddKostPage1State extends State<AddKostPage1> {
                 Text('Preview',
                     style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600, color: Colors.black45)),
-                SizedBox(height: 15.h),
-                Image.asset("assets/dummykos/foto_kos1.png"),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        _takePicture(context);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.8),
+                              spreadRadius: 2,
+                              blurRadius: 5, // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.add, size: 50.w),
+                        ),
+                      ),
+                    ),
+                    kostImg.isNotEmpty
+                        ? SizedBox(
+                            height: 100,
+                            width: 200.w,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: kostImg.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Image.file(File(kostImg[index]),
+                                    fit: BoxFit.cover);
+                              },
+                            ),
+                          )
+                        : Container(),
+                  ],
+                ),
                 SizedBox(height: 15.h),
                 Divider(color: Colors.black),
                 SizedBox(height: 10.h),

@@ -12,14 +12,14 @@ import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:project_anakkos_app/widget/snackbar_widget.dart';
 import 'package:provider/provider.dart';
 
-class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key}) : super(key: key);
+class EditProfileGoogle extends StatefulWidget {
+  const EditProfileGoogle({Key? key}) : super(key: key);
 
   @override
-  State<EditProfile> createState() => _EditProfileState();
+  State<EditProfileGoogle> createState() => _EditProfileGoogleState();
 }
 
-class _EditProfileState extends State<EditProfile> {
+class _EditProfileGoogleState extends State<EditProfileGoogle> {
   final _document = FirebaseFirestore.instance
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid);
