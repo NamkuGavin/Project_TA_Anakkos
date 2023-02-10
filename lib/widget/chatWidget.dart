@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/chat_model.dart';
+import 'package:project_anakkos_app/widget/custom_text_form.dart';
 
 class ChatWidget extends StatefulWidget {
   final String title;
@@ -24,7 +25,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       appBar: AppBar(
         title:
             Text(widget.title, style: GoogleFonts.roboto(color: Colors.white)),
-        backgroundColor: ColorValues.primaryBlue,
+        backgroundColor: Color(0XFF006BB8),
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
@@ -49,13 +50,13 @@ class _ChatWidgetState extends State<ChatWidget> {
                 child: Center(
                   child: Card(
                     color:
-                    // Color(0xFFF8ECEC),
-                    ColorValues.primaryPurple,
+                        // Color(0xFFF8ECEC),
+                        Color(0xFFF8ECEC),
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Text(
                         DateFormat.yMMMd().format(chat.date),
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                   ),
@@ -64,39 +65,31 @@ class _ChatWidgetState extends State<ChatWidget> {
             },
             itemBuilder: (context, ChatModel chat) {
               return Align(
-                alignment: chat.SentByMe
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: SizedBox(
-                    width: 175.w,
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  child: Align(
+                    alignment: (chat.SentByMe)
+                        ? Alignment.topRight
+                        : Alignment.topLeft,
                     child: Container(
+                      margin: (chat.SentByMe)
+                          ? const EdgeInsets.only(left: 50)
+                          : const EdgeInsets.only(right: 50),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: chat.SentByMe
-                            ? ColorValues.primaryBlue
-                            : Color(0XFF455A64),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            topRight: Radius.circular(25),
-                            bottomLeft: chat.SentByMe == true
-                                ? Radius.circular(25)
-                                : Radius.circular(0),
-                            bottomRight: chat.SentByMe == false
-                                ? Radius.circular(25)
-                                : Radius.circular(0)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.8),
-                            spreadRadius: 2,
-                            blurRadius: 5, // changes position of shadow
-                          ),
-                        ],
+                        borderRadius: BorderRadius.circular(20),
+                        color: (chat.SentByMe)
+                            ? Colors.blue[200]
+                            : Colors.grey.shade200,
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Text(chat.text,
-                            style: GoogleFonts.roboto(color: Colors.white)),
+                      child: Text(
+                        chat.text,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -110,102 +103,94 @@ class _ChatWidgetState extends State<ChatWidget> {
                 padding: EdgeInsets.all(12),
                 width: 300.w,
                 height: 75.h,
-                child: TextField(
+                child: CustomTextFormField(
+                  label: 'Ketikkan seusatu',
                   controller: chatController,
-                  decoration: InputDecoration(
-                      hintText: 'Tulis Pesanmu...',
-                      hintStyle: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black38,
-                          fontWeight: FontWeight.w500),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Color(0xffD6D6D6), width: 2),
-                          borderRadius: BorderRadius.circular(25)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: ColorValues.primaryBlue),
-                          borderRadius: BorderRadius.circular(25))),
+                  borderRadius: 30,
                 ),
               ),
-              RawMaterialButton(
-                constraints: BoxConstraints(minWidth: 0),
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                onPressed: () {
-                  final byUserSeller =
-                      ChatModel(chatController.text, DateTime.now(), true);
-                  final bySeller = ChatModel("Halo", DateTime.now(), false);
-                  final bySeller1 = ChatModel(
-                      "Dengan Pemilik Kost disini. Ada yang bisa saya bantu?",
-                      DateTime.now(),
-                      false);
-                  final byUserSellerMuslim =
-                      ChatModel("Waalaikumsalam", DateTime.now(), false);
-                  final byUser = ChatModel("iya?", DateTime.now(), false);
-                  final byUser1 = ChatModel("gimana?", DateTime.now(), false);
-                  if (chatController.text == "Hai" ||
-                      chatController.text == "hai") {
-                    Future.delayed(Duration(seconds: 2), () {
-                      setState(() {
-                        List.generate(1, (index) {
-                          return widget.chats.add(bySeller);
-                        });
-                      });
-                      Future.delayed(Duration(seconds: 3), () {
-                        setState(() {
-                          List.generate(1, (index) {
-                            return widget.chats.add(bySeller1);
-                          });
-                        });
-                      });
-                    });
-                  } else if (chatController.text == "Assalamualaikum" ||
-                      chatController.text == "assalamualaikum") {
-                    Future.delayed(Duration(seconds: 2), () {
-                      setState(() {
-                        List.generate(1, (index) {
-                          return widget.chats.add(byUserSellerMuslim);
-                        });
-                      });
-                      Future.delayed(Duration(seconds: 3), () {
-                        setState(() {
-                          List.generate(1, (index) {
-                            return widget.chats.add(bySeller1);
-                          });
-                        });
-                      });
-                    });
-                  } else if (chatController.text == "Permisi" ||
-                      chatController.text == "permisi") {
-                    Future.delayed(Duration(seconds: 2), () {
-                      setState(() {
-                        List.generate(1, (index) {
-                          return widget.chats.add(byUser);
-                        });
-                      });
+              Expanded(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(
+                      const CircleBorder(),
+                    ),
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.all(10),
+                    ),
+                    backgroundColor: MaterialStateProperty.all(
+                      ColorValues.primaryBlue,
+                    ),
+                  ),
+                  onPressed: () {
+                    final byUserSeller =
+                        ChatModel(chatController.text, DateTime.now(), true);
+                    final bySeller = ChatModel("Halo", DateTime.now(), false);
+                    final bySeller1 = ChatModel(
+                        "Dengan Pemilik Kost disini. Ada yang bisa saya bantu?",
+                        DateTime.now(),
+                        false);
+                    final byUserSellerMuslim =
+                        ChatModel("Waalaikumsalam", DateTime.now(), false);
+                    final byUser = ChatModel("iya?", DateTime.now(), false);
+                    final byUser1 = ChatModel("gimana?", DateTime.now(), false);
+                    if (chatController.text == "Hai" ||
+                        chatController.text == "hai") {
                       Future.delayed(Duration(seconds: 2), () {
                         setState(() {
                           List.generate(1, (index) {
-                            return widget.chats.add(byUser1);
+                            return widget.chats.add(bySeller);
+                          });
+                        });
+                        Future.delayed(Duration(seconds: 3), () {
+                          setState(() {
+                            List.generate(1, (index) {
+                              return widget.chats.add(bySeller1);
+                            });
                           });
                         });
                       });
+                    } else if (chatController.text == "Assalamualaikum" ||
+                        chatController.text == "assalamualaikum") {
+                      Future.delayed(Duration(seconds: 2), () {
+                        setState(() {
+                          List.generate(1, (index) {
+                            return widget.chats.add(byUserSellerMuslim);
+                          });
+                        });
+                        Future.delayed(Duration(seconds: 3), () {
+                          setState(() {
+                            List.generate(1, (index) {
+                              return widget.chats.add(bySeller1);
+                            });
+                          });
+                        });
+                      });
+                    } else if (chatController.text == "Permisi" ||
+                        chatController.text == "permisi") {
+                      Future.delayed(Duration(seconds: 2), () {
+                        setState(() {
+                          List.generate(1, (index) {
+                            return widget.chats.add(byUser);
+                          });
+                        });
+                        Future.delayed(Duration(seconds: 2), () {
+                          setState(() {
+                            List.generate(1, (index) {
+                              return widget.chats.add(byUser1);
+                            });
+                          });
+                        });
+                      });
+                    }
+                    setState(() {
+                      widget.chats.add(byUserSeller);
+                      chatController.clear();
                     });
-                  }
-                  setState(() {
-                    widget.chats.add(byUserSeller);
-                    chatController.clear();
-                  });
-                },
-                elevation: 2.0,
-                fillColor: ColorValues.primaryBlue,
-                child: Icon(
-                  Icons.send,
-                  color: Colors.white,
+                  },
+                  child: const Icon(Icons.send, size: 20),
                 ),
-                padding: EdgeInsets.all(12),
-                shape: CircleBorder(),
-              )
+              ),
             ],
           )
         ],

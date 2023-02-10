@@ -16,6 +16,7 @@ import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/riwayat_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
+import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -29,8 +30,6 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget _widget = Container();
   final user = FirebaseAuth.instance.currentUser;
   CollectionReference _users = FirebaseFirestore.instance.collection('users');
-  Timer? _timer;
-  bool _isloading = false;
   List<RiwayatDummyModel> items = [
     RiwayatDummyModel("assets/dummykos/kost_4.png", "Completed", "Kost Subadi",
         "Kudus, Bastio", "01 Sep", "17:16", "Transaksi gagal", "10, Oct 2021"),
@@ -62,7 +61,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   _checkLogin() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    if (pref.getString("token") == null && user == null) {
+    if (pref.getString("token_user") == null && user == null) {
       setState(() {
         _widget = belumLogin();
       });
@@ -74,30 +73,24 @@ class _HistoryPageState extends State<HistoryPage> {
     } else {
       print("APPS LOGIN");
       await getLoginApps();
-      setState(() {
-        _widget = sudahLoginApps();
-      });
     }
   }
 
   getLoginApps() async {
-    setState(() {
-      _isloading = true;
-      _timer?.cancel();
-      EasyLoading.show(
-        status: 'loading...',
-        maskType: EasyLoadingMaskType.black,
-      );
-    });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    LoginModel result = await ApiService().getLogin(
-        email: prefs.getString("email").toString(),
-        password: prefs.getString("password").toString());
-    setState(() {
-      _isloading = false;
-      _timer?.cancel();
-      EasyLoading.dismiss();
-    });
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    try {
+      setState(() {
+        _widget = LoadingAnimation();
+      });
+      LoginModel result = await ApiService().getLogin(
+          email: pref.getString("email_user").toString(),
+          password: pref.getString("pass_user").toString());
+      setState(() {
+        _widget = sudahLoginApps();
+      });
+    } catch (error) {
+      print('no internet ' + error.toString());
+    }
   }
 
   @override
@@ -151,14 +144,14 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   sudahLoginApps() {
-    _timer?.cancel();
-    EasyLoading.dismiss();
     return Scaffold(
-        body: _isloading
-            ? Center()
-            : Center(
-                child: Text("Sudah login Apps"),
-              ));
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        title: Text('History', style: TextStyle(color: Colors.black)),
+      ),
+      body: riwayat(),
+    );
   }
 
   sudahLoginGoogle() {

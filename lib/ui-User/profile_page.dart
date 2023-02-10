@@ -11,8 +11,9 @@ import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
+import 'package:project_anakkos_app/ui-User/Edit%20Profile/edit_profile_apps.dart';
 import 'package:project_anakkos_app/ui-User/bookmark_page.dart';
-import 'package:project_anakkos_app/ui-User/edit_profile.dart';
+import 'package:project_anakkos_app/ui-User/Edit%20Profile/edit_profile_google.dart';
 import 'package:project_anakkos_app/ui-User/login_user.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/ui-User/terms_privacy_page.dart';
@@ -34,7 +35,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _widget = Container();
   String username = "";
   String email = "";
-  bool _isloading = false;
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _checkLogin() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    if (pref.getString("token") == null && user == null) {
+    if (pref.getString("token_user") == null && user == null) {
       setState(() {
         _widget = belumLogin();
       });
@@ -63,16 +63,14 @@ class _ProfilePageState extends State<ProfilePage> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     try {
       setState(() {
-        _isloading = true;
         _widget = LoadingAnimation();
       });
       LoginModel result = await ApiService().getLogin(
-          email: pref.getString("email").toString(),
-          password: pref.getString("pass").toString());
+          email: pref.getString("email_user").toString(),
+          password: pref.getString("pass_user").toString());
       username = result.data.name;
       email = result.data.email;
       setState(() {
-        _isloading = false;
         _widget = sudahLoginApps();
       });
     } catch (error) {
@@ -184,9 +182,14 @@ class _ProfilePageState extends State<ProfilePage> {
                               height: 16.h,
                             ),
                             _button(
-                              onPress: () {
-                                SharedCode.navigatorPush(
-                                    context, EditProfile());
+                              onPress: () async {
+                                final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => EditProfileApps(
+                                            email: email, name: username)));
+                                print('result: ' + result);
+                                await getProfileApps();
                               },
                               icon: 'PersonalInfo',
                               title: 'Edit Profil',
@@ -197,7 +200,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             _button(
                               onPress: () async {
                                 setState(() {
-                                  _isloading = true;
                                   _widget = LoadingAnimation();
                                 });
                                 SharedPreferences pref =
@@ -291,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             _button(
                               onPress: () {
                                 SharedCode.navigatorPush(
-                                    context, EditProfile());
+                                    context, EditProfileGoogle());
                               },
                               icon: 'PersonalInfo',
                               title: 'Edit Profil',

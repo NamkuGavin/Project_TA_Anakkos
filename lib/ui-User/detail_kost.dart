@@ -19,6 +19,7 @@ import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_dates.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_image.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailKost extends StatefulWidget {
   final KostDummyModel model;
@@ -34,6 +35,7 @@ class _DetailKostState extends State<DetailKost> {
   String jumlahUlasan = "143";
   final user = FirebaseAuth.instance.currentUser;
   CollectionReference _users = FirebaseFirestore.instance.collection('users');
+  Uri _url = Uri.parse('https://maps.app.goo.gl/BEx6Yyowr6YSuKnp7');
 
   List<UlasanDummyModel> items = [
     UlasanDummyModel(
@@ -556,6 +558,44 @@ class _DetailKostState extends State<DetailKost> {
                           }),
                     ),
                   ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        width: 275.w,
+                        height: 75.h,
+                        child: TextField(
+                          decoration: InputDecoration(
+                              hintText: 'Tulis Komenmu...',
+                              hintStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black38,
+                                  fontWeight: FontWeight.w500),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xffD6D6D6), width: 2),
+                                  borderRadius: BorderRadius.circular(25)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ColorValues.primaryBlue),
+                                  borderRadius: BorderRadius.circular(25))),
+                        ),
+                      ),
+                      RawMaterialButton(
+                        constraints: BoxConstraints(minWidth: 0),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onPressed: () {},
+                        elevation: 2.0,
+                        fillColor: ColorValues.primaryBlue,
+                        child: Icon(
+                          Icons.send,
+                          color: Colors.white,
+                        ),
+                        padding: EdgeInsets.all(12),
+                        shape: CircleBorder(),
+                      )
+                    ],
+                  )
                 ],
               ),
             );
@@ -1031,7 +1071,9 @@ class _DetailKostState extends State<DetailKost> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       minimumSize: Size(double.infinity, 40.h)),
-                  onPressed: () {},
+                  onPressed: () {
+                    _launchUrl();
+                  },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -1088,5 +1130,11 @@ class _DetailKostState extends State<DetailKost> {
         return AlertDialogImage();
       },
     );
+  }
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $_url');
+    }
   }
 }

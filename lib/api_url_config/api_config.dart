@@ -136,6 +136,7 @@ class ApiService {
       "desc": desc,
       "elec_price": elec_price,
       "room_price": room_price,
+      "rating": 0,
     };
     print("RAW CREATE KOST: " + body.toString());
     print("URL CREATE KOST: " + ServerConfig.baseURL + ServerConfig.createKost);
@@ -167,6 +168,7 @@ class ApiService {
       "kost_id": kost_id,
       "status": status,
     };
+    print("RAW CREATE DETAIL KOST: " + body.toString());
     print("URL CREATE DETAIL KOST: " +
         ServerConfig.baseURL +
         ServerConfig.createDetailKost);
@@ -176,6 +178,35 @@ class ApiService {
         body: jsonEncode(body));
     print("STATUS CODE(CREATE DETAIL KOST): " + res.statusCode.toString());
     print("RES CREATE DETAIL KOST: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body);
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future editProfile(
+      {required int id_user,
+      required String token,
+      required String name}) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = {"name": name};
+    print("RAW EDIT PROFILE: " + body.toString());
+    print("URL EDIT PROFILE: " +
+        ServerConfig.baseURL +
+        ServerConfig.editProfile +
+        "/$id_user");
+    final res = await http.put(
+        Uri.parse(
+            ServerConfig.baseURL + ServerConfig.editProfile + "/$id_user"),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(EDIT PROFILE): " + res.statusCode.toString());
+    print("RES EDIT PROFILE: " + res.body.toString());
     if (res.statusCode == 200) {
       return jsonDecode(res.body);
     } else {
