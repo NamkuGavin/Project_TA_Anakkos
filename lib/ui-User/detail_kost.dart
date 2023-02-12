@@ -34,7 +34,6 @@ class _DetailKostState extends State<DetailKost> {
   String pemilikkost = "Julia";
   String jumlahUlasan = "143";
   final user = FirebaseAuth.instance.currentUser;
-  CollectionReference _users = FirebaseFirestore.instance.collection('users');
   Uri _url = Uri.parse('https://maps.app.goo.gl/BEx6Yyowr6YSuKnp7');
 
   List<UlasanDummyModel> items = [
