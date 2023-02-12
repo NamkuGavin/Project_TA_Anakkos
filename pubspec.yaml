@@ -73,6 +73,7 @@ dependencies:
   carousel_slider:
   smooth_page_indicator:
   url_launcher:
+  flutter_neumorphic:
 
 #firebase
   firebase_auth:

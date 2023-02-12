@@ -50,12 +50,12 @@ class KostSellerData {
   });
 
   int id;
-  int sellerId;
-  int kostId;
-  int profit;
+  String sellerId;
+  String kostId;
+  String profit;
   String avgRating;
-  int unitRented;
-  int unitOpen;
+  String unitRented;
+  String unitOpen;
   String kostName;
   String status;
   String kostImg;

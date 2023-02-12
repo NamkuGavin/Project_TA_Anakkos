@@ -56,11 +56,11 @@ class _AddKostPage3State extends State<AddKostPage3> {
     setState(() {
       _isLoad = true;
     });
-    LoginModel result = await ApiService().getLogin(
+    LoginModel res_login = await ApiService().getLogin(
         email: pref.getString("email_owner").toString(),
         password: pref.getString("pass_owner").toString());
-    CreateKostModel res = await ApiService().createKost(
-        token: result.token,
+    CreateKostModel res_createKost = await ApiService().createKost(
+        token: res_login.token,
         kost_name: widget.kost_name,
         kost_type: widget.kost_type,
         total_unit: widget.total_unit,
@@ -74,9 +74,9 @@ class _AddKostPage3State extends State<AddKostPage3> {
         elec_price: electPrice.text.isEmpty ? "0" : electPrice.text,
         room_price: roomPrice.text);
     await ApiService().createDetailKost(
-        token: result.token,
-        seller_id: result.data.id.toString(),
-        kost_id: res.data.id.toString(),
+        token: res_login.token,
+        seller_id: res_login.data.id.toString(),
+        kost_id: res_createKost.data.id.toString(),
         status: 'pending');
     setState(() {
       _isLoad = false;

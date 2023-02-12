@@ -303,7 +303,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             _button(
                               onPress: () async {
+                                SharedPreferences pref =
+                                    await SharedPreferences.getInstance();
                                 await FirebaseAuth.instance.signOut();
+                                await pref.clear();
                                 await GoogleSignIn().signOut();
                                 if (!mounted) return;
                                 SharedCode.navigatorPushAndRemove(

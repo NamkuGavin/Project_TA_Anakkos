@@ -37,7 +37,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
     try {
       pickedImage = await picker.pickImage(
           source: ImageSource.gallery,
-          preferredCameraDevice: CameraDevice.front);
+          preferredCameraDevice: CameraDevice.rear);
 
       if (pickedImage != null) {
         setState(() {
@@ -117,42 +117,52 @@ class _AddKostPage1State extends State<AddKostPage1> {
                 Text('Preview',
                     style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600, color: Colors.black45)),
+                SizedBox(height: 15.h),
                 Row(
                   children: [
-                    InkWell(
-                      onTap: () {
-                        _takePicture(context);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.8),
-                              spreadRadius: 2,
-                              blurRadius: 5, // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(Icons.add, size: 50.w),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: InkWell(
+                        onTap: () {
+                          _takePicture(context);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.8),
+                                spreadRadius: 2,
+                                blurRadius: 5, // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.add, size: 50.w),
+                          ),
                         ),
                       ),
                     ),
                     kostImg.isNotEmpty
                         ? SizedBox(
-                            height: 100,
-                            width: 200.w,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemCount: kostImg.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Image.file(File(kostImg[index]),
-                                    fit: BoxFit.cover);
-                              },
+                            height: 200.h,
+                            width: 225.w,
+                            child: Scrollbar(
+                              thumbVisibility: true,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount: kostImg.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    child: Image.file(File(kostImg[index])),
+                                  );
+                                },
+                              ),
                             ),
                           )
                         : Container(),
