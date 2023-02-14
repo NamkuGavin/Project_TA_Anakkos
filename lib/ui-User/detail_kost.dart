@@ -30,7 +30,7 @@ class DetailKost extends StatefulWidget {
 }
 
 class _DetailKostState extends State<DetailKost> {
-  Color _iconColor = Colors.grey.shade300;
+  Color _iconColor = Colors.grey;
   String pemilikkost = "Julia";
   String jumlahUlasan = "143";
   final user = FirebaseAuth.instance.currentUser;

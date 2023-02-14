@@ -74,6 +74,7 @@ dependencies:
   smooth_page_indicator:
   url_launcher:
   flutter_neumorphic:
+  syncfusion_flutter_charts:
 
 #firebase
   firebase_auth:

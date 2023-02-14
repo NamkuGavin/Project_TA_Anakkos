@@ -14,23 +14,6 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
-  configLoading();
-}
-
-void configLoading() {
-  EasyLoading.instance
-    ..displayDuration = const Duration(milliseconds: 2000)
-    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
-    ..loadingStyle = EasyLoadingStyle.dark
-    ..indicatorSize = 45.0
-    ..radius = 10.0
-    ..progressColor = Colors.yellow
-    ..backgroundColor = Colors.green
-    ..indicatorColor = Colors.yellow
-    ..textColor = Colors.yellow
-    ..maskColor = Colors.blue.withOpacity(0.5)
-    ..userInteractions = true
-    ..dismissOnTap = false;
 }
 
 class MyApp extends StatelessWidget {
@@ -42,25 +25,23 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return NeumorphicApp(
-      home: ScreenUtilInit(
-        designSize: Size(360, 800),
-        minTextAdapt: true,
-        splitScreenMode: false,
-        builder: (_, child) {
-          return ChangeNotifierProvider(
-            create: (context) => GoogleProvider(),
-            child: MaterialApp(
-              title: 'Anakkos App',
-              theme: AppThemeData.getTheme(),
-              debugShowCheckedModeBanner: false,
-              home: child,
-              builder: EasyLoading.init(),
-            ),
-          );
-        },
-        child: SplashScreen(),
-      ),
+    return ScreenUtilInit(
+      designSize: Size(360, 800),
+      minTextAdapt: true,
+      splitScreenMode: false,
+      builder: (_, child) {
+        return ChangeNotifierProvider(
+          create: (context) => GoogleProvider(),
+          child: MaterialApp(
+            title: 'Anakkos App',
+            theme: AppThemeData.getTheme(),
+            debugShowCheckedModeBanner: false,
+            home: child,
+            builder: EasyLoading.init(),
+          ),
+        );
+      },
+      child: SplashScreen(),
     );
   }
 }

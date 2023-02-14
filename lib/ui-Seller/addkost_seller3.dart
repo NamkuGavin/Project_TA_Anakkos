@@ -26,6 +26,7 @@ class AddKostPage3 extends StatefulWidget {
   final String total_unit;
   final String location;
   final String location_url;
+  final List<int> idFacility;
 
   AddKostPage3(
       {super.key,
@@ -35,7 +36,8 @@ class AddKostPage3 extends StatefulWidget {
       required this.kost_type,
       required this.total_unit,
       required this.location,
-      required this.location_url});
+      required this.location_url,
+      required this.idFacility});
   @override
   _AddKostPage3State createState() => _AddKostPage3State();
 }
@@ -72,12 +74,17 @@ class _AddKostPage3State extends State<AddKostPage3> {
         room_rules: roomRule.text,
         desc: descKost.text,
         elec_price: electPrice.text.isEmpty ? "0" : electPrice.text,
-        room_price: roomPrice.text);
+        room_price: roomPrice.text,
+        seller_id: res_login.data.id);
     await ApiService().createDetailKost(
         token: res_login.token,
         seller_id: res_login.data.id.toString(),
         kost_id: res_createKost.data.id.toString(),
         status: 'pending');
+    await ApiService().createFacilityKost(
+        token: res_login.token,
+        kost_id: res_createKost.data.id,
+        facilityId: widget.idFacility);
     setState(() {
       _isLoad = false;
     });
