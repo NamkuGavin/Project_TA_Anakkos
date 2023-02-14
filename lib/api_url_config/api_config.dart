@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:project_anakkos_app/api_url_config/server_config.dart';
 import 'package:project_anakkos_app/model/create_kost_model.dart';
+import 'package:project_anakkos_app/model/kost_by_facility_model.dart';
 import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/model/kost_by_popu_model.dart';
 import 'package:project_anakkos_app/model/kost_seller_model.dart';
@@ -284,6 +285,30 @@ class ApiService {
     print("RES CREATE FACILITY KOST: " + res.body.toString());
     if (res.statusCode == 200) {
       return jsonDecode(res.body);
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<KostbyFacilityModel> getKostbyFacility(
+      {required List<int> facilityId}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    final body = {"data": facilityId};
+    print("RAW GET KOST BY FACILITY: " + body.toString());
+    print("URL GET KOST BY FACILITY: " +
+        ServerConfig.baseURL +
+        ServerConfig.getKostbyFacility);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.getKostbyFacility),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(GET KOST BY FACILITY): " + res.statusCode.toString());
+    print("RES GET KOST BY FACILITY: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return KostbyFacilityModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

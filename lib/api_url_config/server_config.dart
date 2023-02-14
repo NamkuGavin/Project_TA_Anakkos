@@ -10,4 +10,5 @@ class ServerConfig {
   static String getKostbyLoc = "/get-kost-bylocation";
   static String getKostbyPopu = "/get-kost-bypopular";
   static String createKostFacility = "/create-kostfacilities";
+  static String getKostbyFacility = "/search-kost";
 }
