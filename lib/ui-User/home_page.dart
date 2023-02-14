@@ -14,9 +14,10 @@ import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/chat_model.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/fliter_model.dart';
 import 'package:project_anakkos_app/dummy/dummywidget.dart';
+import 'package:project_anakkos_app/helper/check_status.dart';
+import 'package:project_anakkos_app/model/kost_by_facility_model.dart';
 import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/model/kost_by_popu_model.dart';
-import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_filter.dart';
 import 'package:project_anakkos_app/widget/chatWidget.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:project_anakkos_app/widget/nearby_kost.dart';
@@ -37,6 +38,9 @@ class _HomePageState extends State<HomePage> {
   String location = "jakarta";
   List<KostbyLocationData>? dataKostbyLoc;
   List<KostbyPopularData>? dataKostbyPopular;
+  List<int> idFacilityConfirm = [];
+  List<List<KostbyFacilityData>>? dataKostbyFacility;
+
   List<KostDummyModel> items = [
     KostDummyModel("assets/dummykos/kost_1.png", "Laki-laki", "Kost Skywalker",
         "Besito, Gebog", "Rp. 750.000 / bulan", 4.0, 232),
@@ -116,6 +120,20 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future getKostbyFacility() async {
+    setState(() {
+      _isLoad = true;
+    });
+    KostbyFacilityModel _model =
+        await ApiService().getKostbyFacility(facilityId: idFacilityConfirm);
+    setState(() {
+      dataKostbyFacility = _model.data;
+      print(dataKostbyFacility);
+      _isLoad = false;
+    });
+    Navigator.pop(context);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -129,19 +147,21 @@ class _HomePageState extends State<HomePage> {
       appBar: appBarWidget(),
       body: _isLoad
           ? LoadingAnimation()
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  filterWidget(),
-                  ongoingKost(),
-                  SizedBox(height: 20.h),
-                  popularKost(),
-                  nearbyKost(),
-                ],
-              ),
-            ),
+          : idFacilityConfirm.isEmpty
+              ? SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      filterWidget(),
+                      ongoingKost(),
+                      SizedBox(height: 20.h),
+                      popularKost(),
+                      nearbyKost(),
+                    ],
+                  ),
+                )
+              : kostByFacility(),
     );
   }
 
@@ -665,8 +685,440 @@ class _HomePageState extends State<HomePage> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialogFilter();
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            insetPadding: EdgeInsets.all(0),
+            content: Builder(builder: (context) {
+              return SizedBox(
+                height: 425.h,
+                // height: 525.h,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text("Filter Fasilitas",
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                            fontSize: 16)),
+                    SizedBox(height: 25.h),
+                    IntrinsicHeight(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 12),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Tempat Tidur',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black45,
+                                        fontSize: 14)),
+                                SizedBox(height: 4.h),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: CheckStatus.bantal,
+                                      onChanged: (bool? value) {
+                                        int id = 1;
+                                        setState(() {
+                                          CheckStatus.bantal = value!;
+                                          if (value != false) {
+                                            idFacilityConfirm.add(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          } else {
+                                            idFacilityConfirm.remove(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    Text("Bantal",
+                                        style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: CheckStatus.kasur,
+                                      onChanged: (bool? value) {
+                                        int id = 2;
+                                        setState(() {
+                                          CheckStatus.kasur = value!;
+                                          if (value != false) {
+                                            idFacilityConfirm.add(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          } else {
+                                            idFacilityConfirm.remove(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    Text("Kasur",
+                                        style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          VerticalDivider(color: Colors.black),
+                          Padding(
+                            padding: EdgeInsets.only(left: 12),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Kamar mandi',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black45,
+                                        fontSize: 14)),
+                                SizedBox(height: 4.h),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: CheckStatus.kamarMandi,
+                                      onChanged: (bool? value) {
+                                        int id = 3;
+                                        setState(() {
+                                          CheckStatus.kamarMandi = value!;
+                                          if (value != false) {
+                                            idFacilityConfirm.add(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          } else {
+                                            idFacilityConfirm.remove(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    Text("Luar",
+                                        style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: CheckStatus.laundry,
+                                      onChanged: (bool? value) {
+                                        int id = 4;
+                                        setState(() {
+                                          CheckStatus.laundry = value!;
+                                          if (value != false) {
+                                            idFacilityConfirm.add(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          } else {
+                                            idFacilityConfirm.remove(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    Text("Dalam",
+                                        style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 7.h),
+                    Divider(color: Colors.black),
+                    SizedBox(height: 7.h),
+                    IntrinsicHeight(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 12),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Lain - lain',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black45,
+                                        fontSize: 14)),
+                                SizedBox(height: 4.h),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: CheckStatus.lemari,
+                                      onChanged: (bool? value) {
+                                        int id = 5;
+                                        setState(() {
+                                          CheckStatus.lemari = value!;
+                                          if (value != false) {
+                                            idFacilityConfirm.add(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          } else {
+                                            idFacilityConfirm.remove(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    Text("Lemari",
+                                        style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: CheckStatus.meja,
+                                      onChanged: (bool? value) {
+                                        int id = 6;
+                                        setState(() {
+                                          CheckStatus.meja = value!;
+                                          if (value != false) {
+                                            idFacilityConfirm.add(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          } else {
+                                            idFacilityConfirm.remove(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    Text("Meja",
+                                        style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: CheckStatus.kursi,
+                                      onChanged: (bool? value) {
+                                        int id = 7;
+                                        setState(() {
+                                          CheckStatus.kursi = value!;
+                                          if (value != false) {
+                                            idFacilityConfirm.add(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          } else {
+                                            idFacilityConfirm.remove(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    Text("Kursi",
+                                        style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          VerticalDivider(color: Colors.black),
+                          Padding(
+                            padding: EdgeInsets.only(left: 12),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Sirkulasi Udara',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black45,
+                                        fontSize: 14)),
+                                SizedBox(height: 4.h),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: CheckStatus.kipas,
+                                      onChanged: (bool? value) {
+                                        int id = 9;
+                                        setState(() {
+                                          CheckStatus.kipas = value!;
+                                          if (value != false) {
+                                            idFacilityConfirm.add(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          } else {
+                                            idFacilityConfirm.remove(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    Text("Kipas",
+                                        style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: CheckStatus.ac,
+                                      onChanged: (bool? value) {
+                                        int id = 8;
+                                        setState(() {
+                                          CheckStatus.ac = value!;
+                                          if (value != false) {
+                                            idFacilityConfirm.add(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          } else {
+                                            idFacilityConfirm.remove(id);
+                                            print("LIST ID: " +
+                                                idFacilityConfirm.toString());
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    Text("AC", style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(child: Container()),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorValues.primaryPurple,
+                            foregroundColor: Colors.white,
+                            minimumSize: Size(0.w, 0.h),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                          onPressed: () {
+                            getKostbyFacility();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Tampilkan Hasil',
+                                    style: GoogleFonts.inter(fontSize: 14)),
+                                SizedBox(width: 10.w),
+                                Icon(Icons.save)
+                              ],
+                            ),
+                          )),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          );
+        });
       },
+    );
+  }
+
+  kostByFacility() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        filterWidget(),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 0.6,
+                crossAxisCount: 2,
+                crossAxisSpacing: 10.0,
+                mainAxisSpacing: 10.0,
+              ),
+              itemCount: dataKostbyFacility!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {
+                    // SharedCode.navigatorPush(context, DetailKost(model: widget.model));
+                  },
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 5,
+                    shadowColor: Colors.black,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                            borderRadius: BorderRadius.vertical(
+                                bottom: Radius.circular(10)),
+                            child: Image.asset("assets/dummykos/kost_1.png",
+                                fit: BoxFit.cover)),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 15.h),
+                              DottedBorder(
+                                color: Colors.black,
+                                strokeWidth: 1,
+                                child: Text(
+                                    dataKostbyFacility![index][0].kostType,
+                                    style: GoogleFonts.inter(fontSize: 11)),
+                              ),
+                              SizedBox(height: 7.h),
+                              Text(dataKostbyFacility![index][0].kostName,
+                                  style: GoogleFonts.inter(fontSize: 11)),
+                              SizedBox(height: 7.h),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Icon(Icons.location_on_rounded, size: 13),
+                                  Expanded(
+                                    child: Text(
+                                        dataKostbyFacility![index][0].location,
+                                        style: GoogleFonts.inter(fontSize: 11)),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 8.h),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Text(
+                                    "Rp. " +
+                                        dataKostbyFacility![index][0]
+                                            .roomPrice
+                                            .toString() +
+                                        " / Bulan",
+                                    style: GoogleFonts.inter(fontSize: 11)),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
