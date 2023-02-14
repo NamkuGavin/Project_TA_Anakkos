@@ -120,10 +120,14 @@ class _BookmarkPageState extends State<BookmarkPage> {
                                 ),
                                 Align(
                                   alignment: AlignmentDirectional.bottomEnd,
-                                  child: Text(
-                                      BookmarkList
-                                          .bookmarkItems[index].price_kost,
-                                      style: GoogleFonts.inter(fontSize: 10)),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 12),
+                                    child: Text(
+                                        BookmarkList
+                                            .bookmarkItems[index].price_kost,
+                                        style: GoogleFonts.inter(fontSize: 10)),
+                                  ),
                                 )
                               ],
                             ),

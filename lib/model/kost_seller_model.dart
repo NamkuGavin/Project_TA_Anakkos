@@ -1,14 +1,15 @@
 // To parse this JSON data, do
 //
-//     final getKostModel = getKostModelFromJson(jsonString);
+//     final kostSellerModel = kostSellerModelFromJson(jsonString);
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-KostSellerModel getKostModelFromJson(String str) =>
+KostSellerModel kostSellerModelFromJson(String str) =>
     KostSellerModel.fromJson(json.decode(str));
 
-String getKostModelToJson(KostSellerModel data) => json.encode(data.toJson());
+String kostSellerModelToJson(KostSellerModel data) =>
+    json.encode(data.toJson());
 
 class KostSellerModel {
   KostSellerModel({
@@ -50,12 +51,12 @@ class KostSellerData {
   });
 
   int id;
-  String sellerId;
-  String kostId;
-  String profit;
+  int sellerId;
+  int kostId;
+  int profit;
   String avgRating;
-  String unitRented;
-  String unitOpen;
+  int unitRented;
+  int unitOpen;
   String kostName;
   String status;
   String kostImg;

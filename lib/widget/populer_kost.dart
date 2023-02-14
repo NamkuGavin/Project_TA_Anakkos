@@ -1,8 +1,13 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
 import 'package:project_anakkos_app/dummy/dummywidget.dart';
+import 'package:project_anakkos_app/model/kost_by_popu_model.dart';
+import 'package:project_anakkos_app/widget/loadingWidget.dart';
 
 class PopulerKost extends StatefulWidget {
   const PopulerKost({Key? key}) : super(key: key);
@@ -12,6 +17,9 @@ class PopulerKost extends StatefulWidget {
 }
 
 class _PopulerKostState extends State<PopulerKost> {
+  bool _isLoad = false;
+  String location = "jakarta";
+  List<KostbyPopularData>? dataKostbyPopular;
   List<KostDummyModel> popular = [
     KostDummyModel("assets/dummykos/kost_1.png", "Laki-laki", "Kost Skywalker",
         "Besito, Gebog", "Rp. 750.000 / bulan", 3.0, 243),
@@ -31,28 +39,104 @@ class _PopulerKostState extends State<PopulerKost> {
         "Besito, Gebog", "Rp. 600.000 / bulan", 5.0, 123),
   ];
 
+  Future getKostbyPopular() async {
+    setState(() {
+      _isLoad = true;
+    });
+    KostbyPopularModel _model =
+        await ApiService().getKostbyPopu(location: location);
+    setState(() {
+      dataKostbyPopular = _model.data;
+      _isLoad = false;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getKostbyPopular();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget(),
-      body: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: 0.7,
-            crossAxisCount: 2,
-            crossAxisSpacing: 10.0,
-            mainAxisSpacing: 10.0,
-          ),
-          itemCount: popular.length,
-          itemBuilder: (BuildContext context, int index) {
-            return DummyItems(
-              model: popular[index],
-              index: index,
-            );
-          },
-        ),
-      ),
+      body: _isLoad
+          ? LoadingAnimation()
+          : Padding(
+              padding: EdgeInsets.all(8.0),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 0.7,
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10.0,
+                  mainAxisSpacing: 10.0,
+                ),
+                itemCount: dataKostbyPopular!.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                    onTap: () {
+                      // SharedCode.navigatorPush(context, DetailKost(model: widget.model));
+                    },
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 5,
+                      shadowColor: Colors.black,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                              borderRadius: BorderRadius.vertical(
+                                  bottom: Radius.circular(10)),
+                              child: Image.asset("assets/dummykos/kost_1.png",
+                                  fit: BoxFit.cover)),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 4),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 12.h),
+                                DottedBorder(
+                                  color: Colors.black,
+                                  strokeWidth: 1,
+                                  child: Text(
+                                      dataKostbyPopular![index].kostType,
+                                      style: GoogleFonts.inter(fontSize: 11)),
+                                ),
+                                SizedBox(height: 4.h),
+                                Text(dataKostbyPopular![index].kostName,
+                                    style: GoogleFonts.inter(fontSize: 11)),
+                                SizedBox(height: 4.h),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(Icons.location_on_rounded, size: 13),
+                                    Text(dataKostbyPopular![index].location,
+                                        style: GoogleFonts.inter(fontSize: 11))
+                                  ],
+                                ),
+                                SizedBox(height: 6.h),
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Text(
+                                      "Rp. " +
+                                          dataKostbyPopular![index]
+                                              .roomPrice
+                                              .toString() +
+                                          " / Bulan",
+                                      style: GoogleFonts.inter(fontSize: 11)),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
     );
   }
 

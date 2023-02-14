@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:project_anakkos_app/api_url_config/server_config.dart';
 import 'package:project_anakkos_app/model/create_kost_model.dart';
+import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
+import 'package:project_anakkos_app/model/kost_by_popu_model.dart';
 import 'package:project_anakkos_app/model/kost_seller_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/model/register_model.dart';
@@ -118,7 +120,8 @@ class ApiService {
       required String room_rules,
       required String desc,
       required String elec_price,
-      required String room_price}) async {
+      required String room_price,
+      required int seller_id}) async {
     Map<String, String> headers = {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
@@ -137,6 +140,7 @@ class ApiService {
       "elec_price": elec_price,
       "room_price": room_price,
       "rating": 0,
+      "seller_id": seller_id
     };
     print("RAW CREATE KOST: " + body.toString());
     print("URL CREATE KOST: " + ServerConfig.baseURL + ServerConfig.createKost);
@@ -207,6 +211,77 @@ class ApiService {
         body: jsonEncode(body));
     print("STATUS CODE(EDIT PROFILE): " + res.statusCode.toString());
     print("RES EDIT PROFILE: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body);
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<KostbyLocationModel> getKostbyLoc({required String location}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    print("URL KOST BY LOC: " +
+        ServerConfig.baseURL +
+        ServerConfig.getKostbyLoc +
+        "/$location");
+    final res = await http.get(
+        Uri.parse(
+            ServerConfig.baseURL + ServerConfig.getKostbyLoc + "/$location"),
+        headers: headers);
+    print("STATUS CODE(KOST BY LOC): " + res.statusCode.toString());
+    print("RES KOST BY LOC: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return KostbyLocationModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<KostbyPopularModel> getKostbyPopu({required String location}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    print("URL KOST BY POPULARITY: " +
+        ServerConfig.baseURL +
+        ServerConfig.getKostbyPopu +
+        "/$location");
+    final res = await http.get(
+        Uri.parse(
+            ServerConfig.baseURL + ServerConfig.getKostbyPopu + "/$location"),
+        headers: headers);
+    print("STATUS CODE(KOST BY POPULARITY): " + res.statusCode.toString());
+    print("RES KOST BY POPULARITY: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return KostbyPopularModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future createFacilityKost(
+      {required String token,
+      required int kost_id,
+      required List<int> facilityId}) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = {"kost_id": kost_id, "facilities_id": facilityId};
+    print("RAW CREATE FACILITY KOST: " + body.toString());
+    print("URL CREATE FACILITY KOST: " +
+        ServerConfig.baseURL +
+        ServerConfig.createKostFacility);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.createKostFacility),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(CREATE FACILITY KOST): " + res.statusCode.toString());
+    print("RES CREATE FACILITY KOST: " + res.body.toString());
     if (res.statusCode == 200) {
       return jsonDecode(res.body);
     } else {

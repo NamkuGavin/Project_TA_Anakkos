@@ -28,7 +28,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
   TextEditingController _lokasiGoogleMaps = TextEditingController();
   String category = "";
   final _formKey = GlobalKey<FormState>();
-  List<String> kostImg = [];
+  List<File> kostImg = [];
 
   Future _takePicture(BuildContext context) async {
     final ImagePicker picker = ImagePicker();
@@ -41,7 +41,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
 
       if (pickedImage != null) {
         setState(() {
-          kostImg.add(pickedImage!.path);
+          kostImg.add(File(pickedImage!.path));
           print(kostImg);
         });
       } else {
@@ -159,7 +159,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
                                   return Padding(
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 8),
-                                    child: Image.file(File(kostImg[index])),
+                                    child: Image.file(kostImg[index]),
                                   );
                                 },
                               ),
@@ -414,11 +414,11 @@ class _AddKostPage1State extends State<AddKostPage1> {
                                   kost_type: category,
                                   total_unit: _totalKamar.text,
                                   location: _lokasiAlamat.text +
-                                      " " +
+                                      ", " +
                                       _lokasiKota.text +
-                                      " " +
+                                      ", " +
                                       _lokasiProvinsi.text +
-                                      " " +
+                                      ", " +
                                       _lokasiKodePos.text,
                                   location_url: _lokasiGoogleMaps.text,
                                 ));

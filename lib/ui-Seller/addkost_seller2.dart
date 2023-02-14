@@ -35,6 +35,7 @@ class AddKostPage2 extends StatefulWidget {
 class _AddKostPage2State extends State<AddKostPage2> {
   TextEditingController panjang = TextEditingController();
   TextEditingController lebar = TextEditingController();
+  List<int> idFacility = [];
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -171,8 +172,18 @@ class _AddKostPage2State extends State<AddKostPage2> {
                               Checkbox(
                                 value: CheckStatus.bantal,
                                 onChanged: (bool? value) {
+                                  int id = 1;
                                   setState(() {
                                     CheckStatus.bantal = value!;
+                                    if (value != false) {
+                                      idFacility.add(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    } else {
+                                      idFacility.remove(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    }
                                   });
                                 },
                               ),
@@ -184,8 +195,18 @@ class _AddKostPage2State extends State<AddKostPage2> {
                               Checkbox(
                                 value: CheckStatus.kasur,
                                 onChanged: (bool? value) {
+                                  int id = 2;
                                   setState(() {
                                     CheckStatus.kasur = value!;
+                                    if (value != false) {
+                                      idFacility.add(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    } else {
+                                      idFacility.remove(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    }
                                   });
                                 },
                               ),
@@ -212,8 +233,18 @@ class _AddKostPage2State extends State<AddKostPage2> {
                               Checkbox(
                                 value: CheckStatus.kamarMandi,
                                 onChanged: (bool? value) {
+                                  int id = 3;
                                   setState(() {
                                     CheckStatus.kamarMandi = value!;
+                                    if (value != false) {
+                                      idFacility.add(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    } else {
+                                      idFacility.remove(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    }
                                   });
                                 },
                               ),
@@ -225,8 +256,18 @@ class _AddKostPage2State extends State<AddKostPage2> {
                               Checkbox(
                                 value: CheckStatus.laundry,
                                 onChanged: (bool? value) {
+                                  int id = 4;
                                   setState(() {
                                     CheckStatus.laundry = value!;
+                                    if (value != false) {
+                                      idFacility.add(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    } else {
+                                      idFacility.remove(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    }
                                   });
                                 },
                               ),
@@ -261,8 +302,18 @@ class _AddKostPage2State extends State<AddKostPage2> {
                               Checkbox(
                                 value: CheckStatus.lemari,
                                 onChanged: (bool? value) {
+                                  int id = 5;
                                   setState(() {
                                     CheckStatus.lemari = value!;
+                                    if (value != false) {
+                                      idFacility.add(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    } else {
+                                      idFacility.remove(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    }
                                   });
                                 },
                               ),
@@ -274,8 +325,18 @@ class _AddKostPage2State extends State<AddKostPage2> {
                               Checkbox(
                                 value: CheckStatus.meja,
                                 onChanged: (bool? value) {
+                                  int id = 6;
                                   setState(() {
                                     CheckStatus.meja = value!;
+                                    if (value != false) {
+                                      idFacility.add(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    } else {
+                                      idFacility.remove(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    }
                                   });
                                 },
                               ),
@@ -287,8 +348,18 @@ class _AddKostPage2State extends State<AddKostPage2> {
                               Checkbox(
                                 value: CheckStatus.kursi,
                                 onChanged: (bool? value) {
+                                  int id = 7;
                                   setState(() {
                                     CheckStatus.kursi = value!;
+                                    if (value != false) {
+                                      idFacility.add(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    } else {
+                                      idFacility.remove(id);
+                                      print(
+                                          "LIST ID: " + idFacility.toString());
+                                    }
                                   });
                                 },
                               ),
@@ -313,8 +384,16 @@ class _AddKostPage2State extends State<AddKostPage2> {
                             Checkbox(
                               value: CheckStatus.kipas,
                               onChanged: (bool? value) {
+                                int id = 9;
                                 setState(() {
                                   CheckStatus.kipas = value!;
+                                  if (value != false) {
+                                    idFacility.add(id);
+                                    print("LIST ID: " + idFacility.toString());
+                                  } else {
+                                    idFacility.remove(id);
+                                    print("LIST ID: " + idFacility.toString());
+                                  }
                                 });
                               },
                             ),
@@ -326,8 +405,16 @@ class _AddKostPage2State extends State<AddKostPage2> {
                             Checkbox(
                               value: CheckStatus.ac,
                               onChanged: (bool? value) {
+                                int id = 8;
                                 setState(() {
                                   CheckStatus.ac = value!;
+                                  if (value != false) {
+                                    idFacility.add(id);
+                                    print("LIST ID: " + idFacility.toString());
+                                  } else {
+                                    idFacility.remove(id);
+                                    print("LIST ID: " + idFacility.toString());
+                                  }
                                 });
                               },
                             ),
@@ -387,6 +474,7 @@ class _AddKostPage2State extends State<AddKostPage2> {
                                 total_unit: widget.total_unit,
                                 location: widget.location,
                                 location_url: widget.location_url,
+                                idFacility: idFacility,
                               ));
                         }
                       },
