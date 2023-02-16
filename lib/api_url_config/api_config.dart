@@ -3,7 +3,10 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:project_anakkos_app/api_url_config/server_config.dart';
+import 'package:project_anakkos_app/model/comment_model.dart';
 import 'package:project_anakkos_app/model/create_kost_model.dart';
+import 'package:project_anakkos_app/model/detail_kost_user_model.dart';
+import 'package:project_anakkos_app/model/history_model.dart';
 import 'package:project_anakkos_app/model/kost_by_facility_model.dart';
 import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/model/kost_by_popu_model.dart';
@@ -309,6 +312,106 @@ class ApiService {
     print("RES GET KOST BY FACILITY: " + res.body.toString());
     if (res.statusCode == 200) {
       return KostbyFacilityModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<DetailKostUserModel> getKostDetailUser({required idKost}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    print("URL KOST DETAIL USER: " +
+        ServerConfig.baseURL +
+        ServerConfig.getKostDetailUser +
+        "/$idKost");
+    final res = await http.get(
+        Uri.parse(
+            ServerConfig.baseURL + ServerConfig.getKostDetailUser + "/$idKost"),
+        headers: headers);
+    print("STATUS CODE(KOST DETAIL USER): " + res.statusCode.toString());
+    print("RES KOST DETAIL USER: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return DetailKostUserModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<CommentModel> getComment({required idKost}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    print("URL COMMENT: " +
+        ServerConfig.baseURL +
+        ServerConfig.getComment +
+        "/$idKost");
+    final res = await http.get(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.getComment + "/$idKost"),
+        headers: headers);
+    print("STATUS CODE(COMMENT): " + res.statusCode.toString());
+    print("RES COMMENT: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return CommentModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future createComment(
+      {required String token,
+      required String kost_id,
+      required String user_id,
+      required String comment_body,
+      required String rating}) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = {
+      "kost_id": kost_id,
+      "user_id": user_id,
+      "comment_body": comment_body,
+      "rating": rating,
+    };
+    print("RAW CREATE COMMENT: " + body.toString());
+    print("URL CREATE COMMENT: " +
+        ServerConfig.baseURL +
+        ServerConfig.createComment);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.createComment),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(CREATE COMMENT): " + res.statusCode.toString());
+    print("RES CREATE COMMENT: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body);
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<HistoryModel> getHistory(
+      {required String token, required String user_id}) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    print("URL GET HISTORY: " +
+        ServerConfig.baseURL +
+        ServerConfig.getHistory +
+        "/$user_id");
+    final res = await http.get(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.getHistory + "/$user_id"),
+        headers: headers);
+    print("STATUS CODE(GET HISTORY): " + res.statusCode.toString());
+    print("RES GET HISTORY: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return HistoryModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

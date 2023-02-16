@@ -54,22 +54,22 @@ class KostbyFacilityData {
   });
 
   int id;
-  int sellerId;
+  String sellerId;
   String kostName;
   String location;
   String locationUrl;
   String kostType;
-  int rating;
+  String rating;
   String width;
   String weight;
   String roomRules;
   String kostRules;
   String desc;
-  int unitOpen;
-  int totalUnit;
-  int roomPrice;
-  int elecPrice;
-  int totalPrice;
+  String unitOpen;
+  String totalUnit;
+  String roomPrice;
+  String elecPrice;
+  String totalPrice;
   DateTime createdAt;
   DateTime updatedAt;
 

@@ -9,11 +9,13 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/riwayat_model.dart';
+import 'package:project_anakkos_app/model/history_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
@@ -30,28 +32,29 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget _widget = Container();
   final user = FirebaseAuth.instance.currentUser;
   CollectionReference _users = FirebaseFirestore.instance.collection('users');
-  List<RiwayatDummyModel> items = [
-    RiwayatDummyModel("assets/dummykos/kost_4.png", "Completed", "Kost Subadi",
-        "Kudus, Bastio", "01 Sep", "17:16", "Transaksi gagal", "10, Oct 2021"),
-    RiwayatDummyModel(
-        "assets/dummykos/kost_4.png",
-        "Completed",
-        "Kost Subadi",
-        "Kudus, Bastio",
-        "01 Sep",
-        "17:16",
-        "Transaksi Selesai",
-        "10, Nov 2021"),
-    RiwayatDummyModel(
-        "assets/dummykos/kost_4.png",
-        "Completed",
-        "Kost Subadi",
-        "Kudus, Bastio",
-        "01 Sep",
-        "17:16",
-        "Transaksi Selesai",
-        "10, Des 2021"),
-  ];
+  List<HistoryData>? dataHistory;
+  // List<RiwayatDummyModel> items = [
+  //   RiwayatDummyModel("assets/dummykos/kost_4.png", "Completed", "Kost Subadi",
+  //       "Kudus, Bastio", "01 Sep", "17:16", "Transaksi gagal", "10, Oct 2021"),
+  //   RiwayatDummyModel(
+  //       "assets/dummykos/kost_4.png",
+  //       "Completed",
+  //       "Kost Subadi",
+  //       "Kudus, Bastio",
+  //       "01 Sep",
+  //       "17:16",
+  //       "Transaksi Selesai",
+  //       "10, Nov 2021"),
+  //   RiwayatDummyModel(
+  //       "assets/dummykos/kost_4.png",
+  //       "Completed",
+  //       "Kost Subadi",
+  //       "Kudus, Bastio",
+  //       "01 Sep",
+  //       "17:16",
+  //       "Transaksi Selesai",
+  //       "10, Des 2021"),
+  // ];
 
   @override
   void initState() {
@@ -85,12 +88,21 @@ class _HistoryPageState extends State<HistoryPage> {
       LoginModel result = await ApiService().getLogin(
           email: pref.getString("email_user").toString(),
           password: pref.getString("pass_user").toString());
+      await getHistory(result.token, result.data.id.toString());
       setState(() {
         _widget = sudahLoginApps();
       });
     } catch (error) {
       print('no internet ' + error.toString());
     }
+  }
+
+  Future getHistory(String token, String user_id) async {
+    HistoryModel _model =
+        await ApiService().getHistory(token: token, user_id: user_id);
+    setState(() {
+      dataHistory = _model.data;
+    });
   }
 
   @override
@@ -183,136 +195,154 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   riwayat() {
+    List<HistoryData> dataPending =
+        dataHistory!.where((element) => element.status == "pending").toList();
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _ongoingKost(),
-          SizedBox(height: 10.h),
+          dataPending.isNotEmpty ? _ongoingKost(dataPending) : Container(),
           Expanded(
             child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: items.length,
+                itemCount: dataHistory!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    height: 150.h,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 20, bottom: 5),
-                          child: Row(
+                  return dataHistory![index].status != "pending"
+                      ? SizedBox(
+                          height: 170.h,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Text(items[index].kapan_sewa,
-                                    style: GoogleFonts.inter(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12,
-                                    )),
+                                padding: EdgeInsets.only(top: 20, bottom: 5),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 10),
+                                      child: Text(
+                                          DateFormat('dd, MMM yyyy').format(
+                                              dataHistory![index].createdAt),
+                                          style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 12,
+                                          )),
+                                    ),
+                                    Expanded(
+                                      child: Divider(
+                                        color: Colors.grey,
+                                        thickness: 0.5,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                               Expanded(
-                                child: Divider(
-                                  color: Colors.grey,
-                                  thickness: 0.5,
+                                child: Card(
+                                  color: Colors.white,
+                                  elevation: 4,
+                                  shadowColor: Colors.black,
+                                  child: IntrinsicHeight(
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                            width: 100,
+                                            child: Image.asset(
+                                                "assets/dummykos/kost_4.png",
+                                                fit: BoxFit.fill)),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.green,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  5))),
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 8,
+                                                            vertical: 5),
+                                                    child: Text(
+                                                        dataHistory![index]
+                                                            .status,
+                                                        style:
+                                                            GoogleFonts.inter(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 10)),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 5.h),
+                                                Text(
+                                                    dataHistory![index]
+                                                        .kost
+                                                        .kostName,
+                                                    style: GoogleFonts.inter(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 11)),
+                                                SizedBox(height: 5.h),
+                                                Text(
+                                                    "Pukul: " +
+                                                        DateFormat('HH:mm')
+                                                            .format(
+                                                                dataHistory![
+                                                                        index]
+                                                                    .createdAt),
+                                                    style: GoogleFonts.roboto(
+                                                        fontSize: 11)),
+                                                SizedBox(height: 7.h),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Icon(
+                                                        Icons
+                                                            .location_on_rounded,
+                                                        size: 13),
+                                                    SizedBox(width: 5.w),
+                                                    Expanded(
+                                                      child: Text(
+                                                          dataHistory![index]
+                                                              .kost
+                                                              .location,
+                                                          style:
+                                                              GoogleFonts.inter(
+                                                                  fontSize:
+                                                                      10)),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        Expanded(
-                          child: Card(
-                            color: Colors.white,
-                            elevation: 4,
-                            shadowColor: Colors.black,
-                            child: IntrinsicHeight(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                      width: 100,
-                                      child: Image.asset(
-                                          items[index].picture_riwayat,
-                                          fit: BoxFit.fill)),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.green,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5))),
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 8, vertical: 5),
-                                              child: Text(
-                                                  items[index]
-                                                      .jenis_kostRiwayat,
-                                                  style: GoogleFonts.inter(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 10)),
-                                            ),
-                                          ),
-                                          SizedBox(height: 5.h),
-                                          Text(items[index].nama_riwayat,
-                                              style: GoogleFonts.inter(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 11)),
-                                          SizedBox(height: 5.h),
-                                          Text(
-                                              "Tanggal: " +
-                                                  items[index].tanggal_riwayat,
-                                              style: GoogleFonts.roboto(
-                                                  fontSize: 11)),
-                                          SizedBox(height: 5.h),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                  "Pukul: " +
-                                                      items[index]
-                                                          .waktu_riwayat,
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 11)),
-                                              Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Icon(
-                                                      Icons.location_on_rounded,
-                                                      size: 13),
-                                                  Text(
-                                                      items[index]
-                                                          .lokasi_riwayat,
-                                                      style: GoogleFonts.inter(
-                                                          fontSize: 10))
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
+                        )
+                      : Container();
                 }),
           ),
         ],
@@ -320,7 +350,7 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  _ongoingKost() {
+  _ongoingKost(List<HistoryData> pendingKost) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 4),
       child: Column(
@@ -387,7 +417,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             child: Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 5),
-                              child: Text("Pay Due",
+                              child: Text(pendingKost[0].status,
                                   style: GoogleFonts.inter(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -395,14 +425,14 @@ class _HistoryPageState extends State<HistoryPage> {
                             ),
                           ),
                           SizedBox(height: 7.h),
-                          Text("Kost Subadi",
+                          Text(pendingKost[0].kost.kostName,
                               style: GoogleFonts.inter(
                                   fontWeight: FontWeight.bold, fontSize: 11)),
                           SizedBox(height: 7.h),
-                          Text("Total : Rp. 568.400",
+                          Text("Total : Rp. " + pendingKost[0].kost.totalPrice,
                               style: GoogleFonts.roboto(fontSize: 11)),
                           SizedBox(height: 7.h),
-                          Text("Stay duration: 27 Aug - 27 Sep",
+                          Text("Stay duration: " + pendingKost[0].stayDuration,
                               style: GoogleFonts.roboto(fontSize: 11)),
                         ],
                       ),
@@ -412,6 +442,7 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
             ),
           ),
+          SizedBox(height: 10.h),
         ],
       ),
     );

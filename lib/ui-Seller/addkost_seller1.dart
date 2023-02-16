@@ -30,7 +30,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
   final _formKey = GlobalKey<FormState>();
   List<File> kostImg = [];
 
-  Future _takePicture(BuildContext context) async {
+  Future _takePictureGallery(BuildContext context) async {
     final ImagePicker picker = ImagePicker();
     XFile? pickedImage;
 
@@ -45,7 +45,36 @@ class _AddKostPage1State extends State<AddKostPage1> {
           print(kostImg);
         });
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
+        await SharedCode.navigatorPop(context);
+        await ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("No image was selected"),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+      print("error");
+    }
+  }
+
+  Future _takePictureCamera(BuildContext context) async {
+    final ImagePicker picker = ImagePicker();
+    XFile? pickedImage;
+
+    try {
+      pickedImage = await picker.pickImage(
+          source: ImageSource.camera,
+          preferredCameraDevice: CameraDevice.rear);
+
+      if (pickedImage != null) {
+        setState(() {
+          kostImg.add(File(pickedImage!.path));
+          print(kostImg);
+        });
+      } else {
+        await SharedCode.navigatorPop(context);
+        await ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("No image was selected"),
           ),
@@ -124,7 +153,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
                       padding: EdgeInsets.symmetric(horizontal: 12),
                       child: InkWell(
                         onTap: () {
-                          _takePicture(context);
+                          showModalBottom();
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -444,5 +473,33 @@ class _AddKostPage1State extends State<AddKostPage1> {
         ),
       ),
     );
+  }
+
+  showModalBottom() {
+    return showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.folder),
+                title: Text('Galeri'),
+                onTap: () {
+                  _takePictureGallery(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.camera_alt),
+                title: Text('Camera'),
+                onTap: () {
+                  _takePictureCamera(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 }
