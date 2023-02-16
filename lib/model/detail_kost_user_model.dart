@@ -1,40 +1,39 @@
 // To parse this JSON data, do
 //
-//     final kostbyLocationModel = kostbyLocationModelFromJson(jsonString);
+//     final detailKostUserModel = detailKostUserModelFromJson(jsonString);
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-KostbyLocationModel kostbyLocationModelFromJson(String str) =>
-    KostbyLocationModel.fromJson(json.decode(str));
+DetailKostUserModel detailKostUserModelFromJson(String str) =>
+    DetailKostUserModel.fromJson(json.decode(str));
 
-String kostbyLocationModelToJson(KostbyLocationModel data) =>
+String detailKostUserModelToJson(DetailKostUserModel data) =>
     json.encode(data.toJson());
 
-class KostbyLocationModel {
-  KostbyLocationModel({
+class DetailKostUserModel {
+  DetailKostUserModel({
     required this.message,
     required this.data,
   });
 
   String message;
-  List<KostbyLocationData> data;
+  DetailKostUserData data;
 
-  factory KostbyLocationModel.fromJson(Map<String, dynamic> json) =>
-      KostbyLocationModel(
+  factory DetailKostUserModel.fromJson(Map<String, dynamic> json) =>
+      DetailKostUserModel(
         message: json["message"],
-        data: List<KostbyLocationData>.from(
-            json["data"].map((x) => KostbyLocationData.fromJson(x))),
+        data: DetailKostUserData.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
         "message": message,
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "data": data.toJson(),
       };
 }
 
-class KostbyLocationData {
-  KostbyLocationData({
+class DetailKostUserData {
+  DetailKostUserData({
     required this.id,
     required this.sellerId,
     required this.kostName,
@@ -54,6 +53,7 @@ class KostbyLocationData {
     required this.totalPrice,
     required this.createdAt,
     required this.updatedAt,
+    required this.user,
   });
 
   int id;
@@ -75,9 +75,10 @@ class KostbyLocationData {
   String totalPrice;
   DateTime createdAt;
   DateTime updatedAt;
+  User user;
 
-  factory KostbyLocationData.fromJson(Map<String, dynamic> json) =>
-      KostbyLocationData(
+  factory DetailKostUserData.fromJson(Map<String, dynamic> json) =>
+      DetailKostUserData(
         id: json["id"],
         sellerId: json["seller_id"],
         kostName: json["kost_name"],
@@ -97,6 +98,7 @@ class KostbyLocationData {
         totalPrice: json["total_price"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
+        user: User.fromJson(json["user"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -117,6 +119,51 @@ class KostbyLocationData {
         "room_price": roomPrice,
         "elec_price": elecPrice,
         "total_price": totalPrice,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
+        "user": user.toJson(),
+      };
+}
+
+class User {
+  User({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.rentStatus,
+    required this.role,
+    required this.rememberToken,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  int id;
+  String name;
+  String email;
+  dynamic rentStatus;
+  String role;
+  dynamic rememberToken;
+  DateTime createdAt;
+  DateTime updatedAt;
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+        id: json["id"],
+        name: json["name"],
+        email: json["email"],
+        rentStatus: json["rent_status"],
+        role: json["role"],
+        rememberToken: json["remember_token"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "email": email,
+        "rent_status": rentStatus,
+        "role": role,
+        "remember_token": rememberToken,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
       };

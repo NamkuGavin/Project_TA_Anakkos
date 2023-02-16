@@ -1,30 +1,28 @@
 // To parse this JSON data, do
 //
-//     final kostbyLocationModel = kostbyLocationModelFromJson(jsonString);
+//     final historyModel = historyModelFromJson(jsonString);
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-KostbyLocationModel kostbyLocationModelFromJson(String str) =>
-    KostbyLocationModel.fromJson(json.decode(str));
+HistoryModel historyModelFromJson(String str) =>
+    HistoryModel.fromJson(json.decode(str));
 
-String kostbyLocationModelToJson(KostbyLocationModel data) =>
-    json.encode(data.toJson());
+String historyModelToJson(HistoryModel data) => json.encode(data.toJson());
 
-class KostbyLocationModel {
-  KostbyLocationModel({
+class HistoryModel {
+  HistoryModel({
     required this.message,
     required this.data,
   });
 
   String message;
-  List<KostbyLocationData> data;
+  List<HistoryData> data;
 
-  factory KostbyLocationModel.fromJson(Map<String, dynamic> json) =>
-      KostbyLocationModel(
+  factory HistoryModel.fromJson(Map<String, dynamic> json) => HistoryModel(
         message: json["message"],
-        data: List<KostbyLocationData>.from(
-            json["data"].map((x) => KostbyLocationData.fromJson(x))),
+        data: List<HistoryData>.from(
+            json["data"].map((x) => HistoryData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -33,8 +31,72 @@ class KostbyLocationModel {
       };
 }
 
-class KostbyLocationData {
-  KostbyLocationData({
+class HistoryData {
+  HistoryData({
+    required this.id,
+    required this.kostId,
+    required this.userId,
+    required this.status,
+    required this.proofImg,
+    required this.stayDuration,
+    required this.totalPrice,
+    required this.electricity,
+    required this.otherFees,
+    required this.dueDate,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.kost,
+  });
+
+  int id;
+  String kostId;
+  String userId;
+  String status;
+  String proofImg;
+  String stayDuration;
+  String totalPrice;
+  String electricity;
+  String otherFees;
+  String dueDate;
+  DateTime createdAt;
+  DateTime updatedAt;
+  Kost kost;
+
+  factory HistoryData.fromJson(Map<String, dynamic> json) => HistoryData(
+        id: json["id"],
+        kostId: json["kost_id"],
+        userId: json["user_id"],
+        status: json["status"],
+        proofImg: json["proof_img"],
+        stayDuration: json["stay_duration"],
+        totalPrice: json["total_price"],
+        electricity: json["electricity"],
+        otherFees: json["other_fees"],
+        dueDate: json["due_date"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+        kost: Kost.fromJson(json["kost"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "kost_id": kostId,
+        "user_id": userId,
+        "status": status,
+        "proof_img": proofImg,
+        "stay_duration": stayDuration,
+        "total_price": totalPrice,
+        "electricity": electricity,
+        "other_fees": otherFees,
+        "due_date": dueDate,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
+        "kost": kost.toJson(),
+      };
+}
+
+class Kost {
+  Kost({
     required this.id,
     required this.sellerId,
     required this.kostName,
@@ -76,8 +138,7 @@ class KostbyLocationData {
   DateTime createdAt;
   DateTime updatedAt;
 
-  factory KostbyLocationData.fromJson(Map<String, dynamic> json) =>
-      KostbyLocationData(
+  factory Kost.fromJson(Map<String, dynamic> json) => Kost(
         id: json["id"],
         sellerId: json["seller_id"],
         kostName: json["kost_name"],

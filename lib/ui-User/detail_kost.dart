@@ -9,32 +9,42 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
+import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/ulasan_model.dart';
 import 'package:project_anakkos_app/dummy/dummy_bookmark.dart';
+import 'package:project_anakkos_app/model/comment_model.dart';
+import 'package:project_anakkos_app/model/detail_kost_user_model.dart';
+import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-User/booking_page.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_dates.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_image.dart';
+import 'package:project_anakkos_app/widget/custom_text_form.dart';
+import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailKost extends StatefulWidget {
-  final KostDummyModel model;
-  DetailKost({Key? key, required this.model}) : super(key: key);
+  final String idKost;
+  DetailKost({Key? key, required this.idKost}) : super(key: key);
 
   @override
   State<DetailKost> createState() => _DetailKostState();
 }
 
 class _DetailKostState extends State<DetailKost> {
+  TextEditingController commentController = TextEditingController();
   Color _iconColor = Colors.grey;
   String pemilikkost = "Julia";
-  String jumlahUlasan = "143";
   final user = FirebaseAuth.instance.currentUser;
-  Uri _url = Uri.parse('https://maps.app.goo.gl/BEx6Yyowr6YSuKnp7');
+  DetailKostUserData? dataDetailKost;
+  List<CommentData>? dataComment;
+  bool _isLoad = false;
+  bool _isRefresh = false;
 
   List<UlasanDummyModel> items = [
     UlasanDummyModel(
@@ -102,50 +112,74 @@ class _DetailKostState extends State<DetailKost> {
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
   ];
 
+  Future getDetailKost() async {
+    setState(() {
+      _isLoad = true;
+    });
+    DetailKostUserModel _model =
+        await ApiService().getKostDetailUser(idKost: widget.idKost);
+    await getComment();
+    setState(() {
+      dataDetailKost = _model.data;
+      _isLoad = false;
+    });
+  }
+
+  Future getComment() async {
+    CommentModel _model = await ApiService().getComment(idKost: widget.idKost);
+    setState(() {
+      dataComment = _model.data;
+    });
+  }
+
   @override
   void initState() {
-    if (BookmarkList.bookmarkItems.contains(widget.model) == true) {
-      setState(() {
-        _iconColor = ColorValues.primaryPurple;
-      });
-    }
+    // if (BookmarkList.bookmarkItems.contains(widget.model) == true) {
+    //   setState(() {
+    //     _iconColor = ColorValues.primaryPurple;
+    //   });
+    // }
     super.initState();
+    getDetailKost();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (context, scrolling) {
-            return <Widget>[
-              SliverOverlapAbsorber(
-                handle:
-                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                sliver: SliverAppBar(
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.transparent,
-                  expandedHeight: 250.h,
-                  forceElevated: scrolling,
-                  flexibleSpace: FlexibleSpaceBar(background: detailAppbar()),
+        body: _isLoad
+            ? LoadingAnimation()
+            : NestedScrollView(
+                headerSliverBuilder: (context, scrolling) {
+                  return <Widget>[
+                    SliverOverlapAbsorber(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                          context),
+                      sliver: SliverAppBar(
+                        automaticallyImplyLeading: false,
+                        backgroundColor: Colors.transparent,
+                        expandedHeight: 250.h,
+                        forceElevated: scrolling,
+                        flexibleSpace:
+                            FlexibleSpaceBar(background: detailAppbar()),
+                      ),
+                    ),
+                  ];
+                },
+                body: ListView(
+                  children: [
+                    detailHeader(),
+                    detailFasilitas(),
+                    detailPeraturan(),
+                    fotoKostWidget(),
+                    mapKost(),
+                    pemilikKost(),
+                    commentUser(),
+                    SizedBox(height: 25.h),
+                    sewaButton(),
+                  ],
                 ),
               ),
-            ];
-          },
-          body: ListView(
-            children: [
-              detailHeader(),
-              detailFasilitas(),
-              detailPeraturan(),
-              fotoKostWidget(),
-              mapKost(),
-              pemilikKost(),
-              commentUser(),
-              SizedBox(height: 25.h),
-              sewaButton(),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -153,7 +187,7 @@ class _DetailKostState extends State<DetailKost> {
   detailAppbar() {
     return Stack(
       children: [
-        Image.asset(widget.model.picture_kost,
+        Image.asset("assets/dummykos/kost_1.png",
             fit: BoxFit.cover, width: double.infinity, height: double.infinity),
         Positioned(
             top: 25,
@@ -304,9 +338,9 @@ class _DetailKostState extends State<DetailKost> {
                             fontWeight: FontWeight.bold, fontSize: 20)),
                   ),
                   Text(
-                      widget.model.name_kost +
+                      dataDetailKost!.kostName +
                           ", " +
-                          widget.model.location_kost,
+                          dataDetailKost!.location,
                       style: GoogleFonts.roboto()),
                   Padding(
                     padding: EdgeInsets.only(top: 25),
@@ -430,175 +464,254 @@ class _DetailKostState extends State<DetailKost> {
 
   buildUlasan() {
     return makeDismissible(
-      child: DraggableScrollableSheet(
-          initialChildSize: 0.8,
-          minChildSize: 0.3,
-          maxChildSize: 0.8,
-          builder: (_, controller) {
-            return Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    spreadRadius: 5,
-                    blurRadius: 10,
+      child: StatefulBuilder(
+        builder: (context, setState) {
+          Future createComment() async {
+            SharedPreferences pref = await SharedPreferences.getInstance();
+            setState(() {
+              _isRefresh = true;
+            });
+            LoginModel result_log = await ApiService().getLogin(
+                email: pref.getString("email_user").toString(),
+                password: pref.getString("pass_user").toString());
+            await ApiService().createComment(
+                token: result_log.token,
+                kost_id: widget.idKost,
+                user_id: result_log.data.id.toString(),
+                comment_body: commentController.text,
+                rating: "0");
+            await getComment();
+            setState(() {
+              _isRefresh = false;
+            });
+          }
+
+          return DraggableScrollableSheet(
+              initialChildSize: 0.8,
+              minChildSize: 0.3,
+              maxChildSize: 0.8,
+              builder: (_, controller) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey,
+                        spreadRadius: 5,
+                        blurRadius: 10,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Ulasan Penyewa",
-                      style: GoogleFonts.roboto(
-                          fontSize: 20, fontWeight: FontWeight.bold)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5),
-                    child: Row(
-                      children: [
-                        Icon(Icons.star,
-                            color: ColorValues.primaryPurple, size: 12),
-                        SizedBox(width: 3),
-                        Text(widget.model.rating_kost.toString(),
-                            style: GoogleFonts.roboto(fontSize: 12)),
-                        SizedBox(width: 3),
-                        Icon(Icons.circle, size: 6, color: Colors.grey[400]),
-                        SizedBox(width: 3),
-                        Text(
-                          "(" + jumlahUlasan + " Ulasan)",
-                          style: GoogleFonts.roboto(
-                              fontSize: 12, color: Colors.grey[600]),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(widget.model.location_kost,
-                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold)),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 15),
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: items.length,
-                          controller: controller,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                  child: _isRefresh
+                      ? LoadingAnimation()
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Ulasan Penyewa",
+                                style: GoogleFonts.roboto(
+                                    fontSize: 20, fontWeight: FontWeight.bold)),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 5),
                               child: Row(
                                 children: [
-                                  Image.asset(items[index].picture_ulasan,
-                                      width: 50.w),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(items[index].nama_ulasan,
-                                            style: GoogleFonts.roboto(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold)),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Icon(Icons.star,
-                                                color:
-                                                    ColorValues.primaryPurple,
-                                                size: 11),
-                                            SizedBox(width: 3),
-                                            Text(
-                                                items[index]
-                                                    .rating_ulasan
-                                                    .toString(),
-                                                style: GoogleFonts.roboto(
-                                                    fontSize: 12)),
-                                            SizedBox(width: 3),
-                                            Padding(
-                                              padding: EdgeInsets.only(top: 3),
-                                              child: Icon(Icons.circle,
-                                                  size: 6,
-                                                  color: Colors.grey[400]),
-                                            ),
-                                            SizedBox(width: 3),
-                                            Text(items[index].tanggal_ulasan,
-                                                style: GoogleFonts.roboto(
-                                                    fontSize: 11)),
-                                            SizedBox(width: 3),
-                                            Padding(
-                                              padding: EdgeInsets.only(top: 3),
-                                              child: Icon(Icons.circle,
-                                                  size: 6,
-                                                  color: Colors.grey[400]),
-                                            ),
-                                            SizedBox(width: 3),
-                                            Text(items[index].lamasewa_ulasan,
-                                                style: GoogleFonts.roboto(
-                                                    fontSize: 11)),
-                                          ],
-                                        ),
-                                        Text(items[index].isi_ulasan,
-                                            style: GoogleFonts.roboto(
-                                                fontSize: 12)),
-                                      ],
-                                    ),
-                                  ),
+                                  Icon(Icons.star,
+                                      color: ColorValues.primaryPurple,
+                                      size: 12),
+                                  SizedBox(width: 3),
+                                  Text(dataDetailKost!.rating.toString(),
+                                      style: GoogleFonts.roboto(fontSize: 12)),
+                                  SizedBox(width: 3),
+                                  Icon(Icons.circle,
+                                      size: 6, color: Colors.grey[400]),
+                                  // SizedBox(width: 3),
+                                  // Text(
+                                  //   "(" + "143" + " Ulasan)",
+                                  //   style: GoogleFonts.roboto(
+                                  //       fontSize: 12, color: Colors.grey[600]),
+                                  // ),
                                 ],
                               ),
-                            );
-                          }),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(12),
-                        width: 275.w,
-                        height: 75.h,
-                        child: TextField(
-                          decoration: InputDecoration(
-                              hintText: 'Tulis Komenmu...',
-                              hintStyle: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black38,
-                                  fontWeight: FontWeight.w500),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0xffD6D6D6), width: 2),
-                                  borderRadius: BorderRadius.circular(25)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: ColorValues.primaryBlue),
-                                  borderRadius: BorderRadius.circular(25))),
+                            ),
+                            Text(dataDetailKost!.location,
+                                style: GoogleFonts.roboto(
+                                    fontWeight: FontWeight.bold)),
+                            dataComment!.isEmpty
+                                ? Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Center(
+                                          child: Lottie.asset(
+                                            'assets/lottie/not_found.json',
+                                            width: 175.w,
+                                            repeat: false,
+                                          ),
+                                        ),
+                                        Center(
+                                          child: Text(
+                                            'Belum ada Komen yang tertulis',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline3!
+                                                .copyWith(
+                                                  fontSize: 15,
+                                                  color: Color(0XFF9B9B9B),
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 15),
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: dataComment!.length,
+                                          controller: controller,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 8),
+                                              child: Row(
+                                                children: [
+                                                  Image.asset(
+                                                      "assets/icon/photo_profile.png",
+                                                      width: 50.w),
+                                                  Expanded(
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                            dataComment![index]
+                                                                .user
+                                                                .name,
+                                                            style: GoogleFonts.roboto(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                        Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Icon(Icons.star,
+                                                                color: ColorValues
+                                                                    .primaryPurple,
+                                                                size: 11),
+                                                            SizedBox(width: 3),
+                                                            Text(
+                                                                dataComment![
+                                                                        index]
+                                                                    .rating
+                                                                    .toString(),
+                                                                style: GoogleFonts
+                                                                    .roboto(
+                                                                        fontSize:
+                                                                            12)),
+                                                            SizedBox(width: 3),
+                                                            Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(top: 3),
+                                                              child: Icon(
+                                                                  Icons.circle,
+                                                                  size: 6,
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      400]),
+                                                            ),
+                                                            SizedBox(width: 3),
+                                                            Text(
+                                                                DateFormat(
+                                                                        'yy/MM/d HH:mm')
+                                                                    .format(dataComment![
+                                                                            index]
+                                                                        .createdAt),
+                                                                style: GoogleFonts
+                                                                    .roboto(
+                                                                        fontSize:
+                                                                            11)),
+                                                          ],
+                                                        ),
+                                                        Text(
+                                                            dataComment![index]
+                                                                .commentBody,
+                                                            style: GoogleFonts
+                                                                .roboto(
+                                                                    fontSize:
+                                                                        12)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }),
+                                    ),
+                                  ),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(12),
+                                  width: 275.w,
+                                  height: 75.h,
+                                  child: CustomTextFormField(
+                                    label: 'Ketikkan seusatu',
+                                    controller: commentController,
+                                    borderRadius: 30,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(
+                                        const CircleBorder(),
+                                      ),
+                                      padding: MaterialStateProperty.all(
+                                        const EdgeInsets.all(10),
+                                      ),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                        ColorValues.primaryBlue,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      await createComment();
+                                      commentController.clear();
+                                    },
+                                    child: const Icon(Icons.send, size: 20),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                      ),
-                      RawMaterialButton(
-                        constraints: BoxConstraints(minWidth: 0),
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        onPressed: () {},
-                        elevation: 2.0,
-                        fillColor: ColorValues.primaryBlue,
-                        child: Icon(
-                          Icons.send,
-                          color: Colors.white,
-                        ),
-                        padding: EdgeInsets.all(12),
-                        shape: CircleBorder(),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            );
-          }),
+                );
+              });
+        },
+      ),
     );
   }
 
@@ -711,7 +824,7 @@ class _DetailKostState extends State<DetailKost> {
       elevation: 4,
       shadowColor: Colors.black,
       child: Padding(
-        padding: EdgeInsets.all(12),
+        padding: EdgeInsets.all(8),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -719,25 +832,25 @@ class _DetailKostState extends State<DetailKost> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(widget.model.name_kost,
+                Text(dataDetailKost!.kostName,
                     style: GoogleFonts.roboto(
                         fontSize: 20, fontWeight: FontWeight.w500)),
                 IconButton(
                     onPressed: () async {
-                      SharedPreferences pref =
-                          await SharedPreferences.getInstance();
-                      if (pref.getString("token") == null && user == null) {
-                        SharedCode.navigatorPush(context, RolePage());
-                      } else if (user != null) {
-                        BookmarkList.bookmarkItems.add(widget.model);
-                        print("BOOKMARK LENGTH: " +
-                            BookmarkList.bookmarkItems.length.toString());
-                        setState(() {
-                          _iconColor = ColorValues.primaryPurple;
-                        });
-                      } else {
-                        print("APPS LOGIN");
-                      }
+                      // SharedPreferences pref =
+                      //     await SharedPreferences.getInstance();
+                      // if (pref.getString("token") == null && user == null) {
+                      //   SharedCode.navigatorPush(context, RolePage());
+                      // } else if (user != null) {
+                      //   BookmarkList.bookmarkItems.add(widget.model);
+                      //   print("BOOKMARK LENGTH: " +
+                      //       BookmarkList.bookmarkItems.length.toString());
+                      //   setState(() {
+                      //     _iconColor = ColorValues.primaryPurple;
+                      //   });
+                      // } else {
+                      //   print("APPS LOGIN");
+                      // }
                     },
                     icon: Icon(Icons.bookmark, color: _iconColor))
               ],
@@ -749,19 +862,16 @@ class _DetailKostState extends State<DetailKost> {
                   strokeWidth: 1,
                   child: Padding(
                     padding: EdgeInsets.all(3),
-                    child: Text(widget.model.type_kost,
+                    child: Text(dataDetailKost!.kostType,
                         style: GoogleFonts.roboto(fontSize: 13)),
                   ),
                 ),
                 SizedBox(width: 15.w),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.location_on_rounded, size: 15),
-                    SizedBox(width: 2.w),
-                    Text(widget.model.location_kost,
-                        style: GoogleFonts.inter(fontSize: 12))
-                  ],
+                Icon(Icons.location_on_rounded, size: 15),
+                SizedBox(width: 7.w),
+                Expanded(
+                  child: Text(dataDetailKost!.location,
+                      style: GoogleFonts.inter(fontSize: 12)),
                 ),
               ],
             ),
@@ -771,10 +881,7 @@ class _DetailKostState extends State<DetailKost> {
                 children: [
                   Icon(Icons.star, color: ColorValues.primaryPurple, size: 20),
                   SizedBox(width: 5.w),
-                  Text(widget.model.rating_kost.toString() +
-                      " (" +
-                      widget.model.jumlahrating_kost.toString() +
-                      ")")
+                  Text(dataDetailKost!.rating.toString() + " (" + "143" + ")")
                 ],
               ),
             )
@@ -820,9 +927,7 @@ class _DetailKostState extends State<DetailKost> {
                 style: GoogleFonts.roboto(
                     fontSize: 14, fontWeight: FontWeight.bold)),
             SizedBox(height: 5.h),
-            Text(
-                "Lagi cari kos campur di daerah Setiabudi? Kost MamiRooms Dian Setiabudi Tipe A Jakarta Selatan 582DS adalah pilihan pas untukmu yang sedang cari kos di kawasan dekat kampus, warung makan, mall, dan halte MRT. Kamu bisa dengan mudah menjangkau tempat-tempat strategis seperti Direktorat Jenderal Imigrasi (1.1 km), DBS Bank Tower (1.2 km), Lippo Kuningan (1.6 km), Gedung Ditjen Administrasi Hukum Umum (1.9 km), Sahid Sudirman Center (1.9 km). Kami menyediakan kos khusus karyawan dengan akses kunci 24 jam, yang dilengkapi balkon, layanan kebersihan harian, dan banyak dilalui angkutan umum.",
-                style: GoogleFonts.roboto(fontSize: 13)),
+            Text(dataDetailKost!.desc, style: GoogleFonts.roboto(fontSize: 13)),
             SizedBox(height: 10.h),
             Align(
               alignment: Alignment.bottomRight,
@@ -868,11 +973,40 @@ class _DetailKostState extends State<DetailKost> {
               "Ulasan Penyewa",
               style: GoogleFonts.roboto(fontSize: 20),
             ),
-            Text(
-              "(" + jumlahUlasan + " Ulasan)",
-              style: GoogleFonts.roboto(fontSize: 12, color: Colors.grey[600]),
-            ),
-            listviewTopUlasan(),
+            dataComment!.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset(
+                          'assets/lottie/not_found.json',
+                          width: 125.w,
+                          repeat: false,
+                        ),
+                        Text(
+                          'Belum ada Komen yang tertulis',
+                          style:
+                              Theme.of(context).textTheme.headline3!.copyWith(
+                                    fontSize: 15,
+                                    color: Color(0XFF9B9B9B),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "(" + dataComment!.length.toString() + " Ulasan)",
+                        style: GoogleFonts.roboto(
+                            fontSize: 12, color: Colors.grey[600]),
+                      ),
+                      listviewTopUlasan(),
+                    ],
+                  ),
             GestureDetector(
               onTap: () {
                 showModalBottomSheet(
@@ -904,65 +1038,61 @@ class _DetailKostState extends State<DetailKost> {
   listviewTopUlasan() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8),
-      child: ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: 2,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  Image.asset(items[index].picture_ulasan, width: 50.w),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(items[index].nama_ulasan,
-                            style: GoogleFonts.roboto(
-                                fontSize: 12, fontWeight: FontWeight.bold)),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(Icons.star,
-                                color: ColorValues.primaryPurple, size: 12),
-                            SizedBox(width: 3),
-                            Text(items[index].rating_ulasan.toString(),
-                                style: GoogleFonts.roboto(fontSize: 11)),
-                            SizedBox(width: 3),
-                            Padding(
-                              padding: EdgeInsets.only(top: 3),
-                              child: Icon(Icons.circle,
-                                  size: 6, color: Colors.grey[400]),
-                            ),
-                            SizedBox(width: 3),
-                            Text(items[index].tanggal_ulasan,
-                                style: GoogleFonts.roboto(fontSize: 11)),
-                            SizedBox(width: 3),
-                            Padding(
-                              padding: EdgeInsets.only(top: 3),
-                              child: Icon(Icons.circle,
-                                  size: 6, color: Colors.grey[400]),
-                            ),
-                            SizedBox(width: 3),
-                            Text(items[index].lamasewa_ulasan,
-                                style: GoogleFonts.roboto(fontSize: 11)),
-                          ],
-                        ),
-                        SizedBox(height: 2.h),
-                        Text(items[index].isi_ulasan,
-                            style: GoogleFonts.roboto(fontSize: 12)),
-                      ],
+      child: Container(
+        height: 125.h,
+        child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: dataComment!.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  children: [
+                    Image.asset(items[index].picture_ulasan, width: 50.w),
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(dataComment![index].user.name,
+                              style: GoogleFonts.roboto(
+                                  fontSize: 12, fontWeight: FontWeight.bold)),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(Icons.star,
+                                  color: ColorValues.primaryPurple, size: 12),
+                              SizedBox(width: 3),
+                              Text(dataComment![index].rating.toString(),
+                                  style: GoogleFonts.roboto(fontSize: 11)),
+                              SizedBox(width: 3),
+                              Padding(
+                                padding: EdgeInsets.only(top: 3),
+                                child: Icon(Icons.circle,
+                                    size: 6, color: Colors.grey[400]),
+                              ),
+                              SizedBox(width: 3),
+                              Text(
+                                  DateFormat('yy/MM/d HH:mm')
+                                      .format(dataComment![index].createdAt),
+                                  style: GoogleFonts.roboto(fontSize: 11)),
+                            ],
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(dataComment![index].commentBody,
+                              style: GoogleFonts.roboto(fontSize: 12)),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }),
+                  ],
+                ),
+              );
+            }),
+      ),
     );
   }
 
@@ -985,7 +1115,7 @@ class _DetailKostState extends State<DetailKost> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(widget.model.price_kost,
+            Text(dataDetailKost!.roomPrice.toString(),
                 style: GoogleFonts.inter(
                     fontSize: 14, fontWeight: FontWeight.bold)),
             Padding(
@@ -999,15 +1129,15 @@ class _DetailKostState extends State<DetailKost> {
                         borderRadius: BorderRadius.circular(10)),
                   ),
                   onPressed: () async {
-                    SharedPreferences pref =
-                        await SharedPreferences.getInstance();
-                    if (pref.getString("token") == null && user == null) {
-                      SharedCode.navigatorPush(context, RolePage());
-                    } else if (user != null) {
-                      _showDialog(context);
-                    } else {
-                      print("APPS LOGIN");
-                    }
+                    // SharedPreferences pref =
+                    //     await SharedPreferences.getInstance();
+                    // if (pref.getString("token") == null && user == null) {
+                    //   SharedCode.navigatorPush(context, RolePage());
+                    // } else if (user != null) {
+                    //   _showDialog(context);
+                    // } else {
+                    //   print("APPS LOGIN");
+                    // }
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -1026,14 +1156,14 @@ class _DetailKostState extends State<DetailKost> {
     );
   }
 
-  Future _showDialog(context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialogDates(model: widget.model);
-      },
-    );
-  }
+  // Future _showDialog(context) {
+  //   return showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialogDates(model: widget.model);
+  //     },
+  //   );
+  // }
 
   mapKost() {
     return Card(
@@ -1056,7 +1186,9 @@ class _DetailKostState extends State<DetailKost> {
               child: Row(
                 children: [
                   Icon(Icons.location_pin),
-                  Text("Kudus, Bashir", style: GoogleFonts.roboto()),
+                  Expanded(
+                      child: Text(dataDetailKost!.location,
+                          style: GoogleFonts.roboto())),
                 ],
               ),
             ),
@@ -1132,6 +1264,7 @@ class _DetailKostState extends State<DetailKost> {
   }
 
   Future<void> _launchUrl() async {
+    Uri _url = Uri.parse(dataDetailKost!.locationUrl);
     if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch $_url');
     }

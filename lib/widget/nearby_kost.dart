@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
-import 'package:project_anakkos_app/dummy/dummywidget.dart';
 import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 
@@ -69,7 +68,7 @@ class _NearByKostState extends State<NearByKost> {
               padding: EdgeInsets.all(8.0),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.6,
                   crossAxisCount: 2,
                   crossAxisSpacing: 10.0,
                   mainAxisSpacing: 10.0,
@@ -112,8 +111,12 @@ class _NearByKostState extends State<NearByKost> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Icon(Icons.location_on_rounded, size: 13),
-                                    Text(dataKostbyLoc![index].location,
-                                        style: GoogleFonts.inter(fontSize: 11))
+                                    Expanded(
+                                      child: Text(
+                                          dataKostbyLoc![index].location,
+                                          style:
+                                              GoogleFonts.inter(fontSize: 11)),
+                                    )
                                   ],
                                 ),
                                 SizedBox(height: 6.h),

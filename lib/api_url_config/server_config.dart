@@ -1,5 +1,5 @@
 class ServerConfig {
-  static String baseURL = "http://192.168.8.110:8000/api";
+  static String baseURL = "http://kostkostan.my.id/api";
   static String login = "/login";
   static String register = "/register";
   static String logout = "/logout";
@@ -11,4 +11,8 @@ class ServerConfig {
   static String getKostbyPopu = "/get-kost-bypopular";
   static String createKostFacility = "/create-kostfacilities";
   static String getKostbyFacility = "/search-kost";
+  static String getKostDetailUser = "/get-kost-details";
+  static String getComment = "/filter-comment-bypost";
+  static String createComment = "/create-comment";
+  static String getHistory = "/get-history";
 }
