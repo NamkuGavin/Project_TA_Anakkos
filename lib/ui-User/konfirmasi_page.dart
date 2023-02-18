@@ -170,7 +170,6 @@ class _KonfirmasiPhotoPageState extends State<KonfirmasiPhotoPage> {
         SharedCode.navigatorPush(
             context,
             InvoicePage(
-              model: widget.model,
               dateDari: widget.dateDari,
               dateSampai: widget.dateSampai,
             ));

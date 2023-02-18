@@ -12,43 +12,34 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/paymentType_model.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
+import 'package:project_anakkos_app/model/history_model.dart';
 import 'package:project_anakkos_app/ui-User/invoice_page.dart';
 import 'package:project_anakkos_app/ui-User/konfirmasi_page.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_help.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
 import 'package:project_anakkos_app/widget/timer.dart';
+import 'package:project_anakkos_app/widget/timer_paymonth.dart';
 
-class BookingPage extends StatefulWidget {
-  final DateTime dateDari;
-  final DateTime dateSampai;
-  BookingPage({Key? key, required this.dateDari, required this.dateSampai})
-      : super(key: key);
+class BookingPayPage extends StatefulWidget {
+  final List<HistoryData> kostPending;
+  BookingPayPage({Key? key, required this.kostPending}) : super(key: key);
 
   @override
-  State<BookingPage> createState() => _BookingPageState();
+  State<BookingPayPage> createState() => _BookingPayPageState();
 }
 
-class _BookingPageState extends State<BookingPage> {
+class _BookingPayPageState extends State<BookingPayPage> {
   List<PaymentTypeModel> paymentList = [
     PaymentTypeModel("Credit atau Debit Card", "assets/logo/card.png", 1),
     PaymentTypeModel("GoPay", "assets/logo/gopay.png", 2),
   ];
   PaymentTypeModel? paymentValue;
   bool showCardField = false;
-  String tanggal_dari = "";
-  String tanggal_sampai = "";
   final DateFormat _dateFormat = DateFormat('dd MMM yyyy');
   int detail1 = 55000;
   int detail2 = 13400;
   int detail3 = 500000;
   int noBank = 0833545234;
-
-  @override
-  void initState() {
-    tanggal_dari = _dateFormat.format(widget.dateDari);
-    tanggal_sampai = _dateFormat.format(widget.dateSampai);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +71,7 @@ class _BookingPageState extends State<BookingPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TimerWidget(),
+              TimerPay(),
               SizedBox(height: 50.h),
               Text('Payment summary',
                   style: GoogleFonts.poppins(
@@ -408,12 +399,12 @@ class _BookingPageState extends State<BookingPage> {
                                 borderRadius: BorderRadius.circular(10)),
                           ),
                           onPressed: () {
-                            SharedCode.navigatorPush(
-                                context,
-                                InvoicePage(
-                                  dateSampai: widget.dateSampai,
-                                  dateDari: widget.dateDari,
-                                ));
+                            // SharedCode.navigatorPush(
+                            //     context,
+                            //     InvoicePage(
+                            //       dateSampai: widget.dateSampai,
+                            //       dateDari: widget.dateDari,
+                            //     ));
                           },
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -448,7 +439,7 @@ class _BookingPageState extends State<BookingPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Stay duration", style: GoogleFonts.roboto()),
-            Text(tanggal_dari + " - " + tanggal_sampai)
+            Text(widget.kostPending[0].stayDuration)
           ],
         ),
         SizedBox(height: 7.h),

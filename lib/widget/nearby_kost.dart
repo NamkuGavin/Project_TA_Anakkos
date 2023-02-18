@@ -6,6 +6,7 @@ import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
 import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
+import 'package:project_anakkos_app/ui-User/detail_kost.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 
 class NearByKost extends StatefulWidget {
@@ -78,6 +79,11 @@ class _NearByKostState extends State<NearByKost> {
                   return InkWell(
                     onTap: () {
                       // SharedCode.navigatorPush(context, DetailKost(model: widget.model));
+                      SharedCode.navigatorPush(
+                          context,
+                          DetailKost(
+                            idKost: dataKostbyLoc![index].id.toString(),
+                          ));
                     },
                     child: Card(
                       color: Colors.white,

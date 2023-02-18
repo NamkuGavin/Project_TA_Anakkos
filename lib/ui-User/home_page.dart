@@ -20,11 +20,13 @@ import 'package:project_anakkos_app/model/kost_by_facility_model.dart';
 import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/model/kost_by_popu_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
+import 'package:project_anakkos_app/ui-User/booking_pay_page.dart';
 import 'package:project_anakkos_app/ui-User/detail_kost.dart';
 import 'package:project_anakkos_app/widget/chatWidget.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:project_anakkos_app/widget/nearby_kost.dart';
 import 'package:project_anakkos_app/widget/populer_kost.dart';
+import 'package:project_anakkos_app/widget/timer_paymonth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../dummy/dummy model/populer_model.dart';
@@ -290,11 +292,11 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.black,
                                     strokeWidth: 1,
                                     child: Text(
-                                        dataKostbyPopular![index].kostType,
+                                        dataKostbyPopular[index].kostType,
                                         style: GoogleFonts.inter(fontSize: 11)),
                                   ),
                                   SizedBox(height: 4.h),
-                                  Text(dataKostbyPopular![index].kostName,
+                                  Text(dataKostbyPopular[index].kostName,
                                       style: GoogleFonts.inter(fontSize: 11)),
                                   SizedBox(height: 4.h),
                                   Row(
@@ -302,7 +304,7 @@ class _HomePageState extends State<HomePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Icon(Icons.location_on_rounded, size: 13),
-                                      Text(dataKostbyPopular![index].location,
+                                      Text(dataKostbyPopular[index].location,
                                           style:
                                               GoogleFonts.inter(fontSize: 11))
                                     ],
@@ -312,7 +314,7 @@ class _HomePageState extends State<HomePage> {
                                     alignment: Alignment.bottomRight,
                                     child: Text(
                                         "Rp. " +
-                                            dataKostbyPopular![index]
+                                            dataKostbyPopular[index]
                                                 .roomPrice
                                                 .toString() +
                                             " / Bulan",
@@ -430,7 +432,7 @@ class _HomePageState extends State<HomePage> {
                         SharedCode.navigatorPush(
                             context,
                             DetailKost(
-                              idKost: dataKostbyLoc![index].id.toString(),
+                              idKost: dataKostbyLoc[index].id.toString(),
                             ));
                       },
                       child: Card(
@@ -454,11 +456,11 @@ class _HomePageState extends State<HomePage> {
                                   DottedBorder(
                                     color: Colors.black,
                                     strokeWidth: 1,
-                                    child: Text(dataKostbyLoc![index].kostType,
+                                    child: Text(dataKostbyLoc[index].kostType,
                                         style: GoogleFonts.inter(fontSize: 11)),
                                   ),
                                   SizedBox(height: 4.h),
-                                  Text(dataKostbyLoc![index].kostName,
+                                  Text(dataKostbyLoc[index].kostName,
                                       style: GoogleFonts.inter(fontSize: 11)),
                                   SizedBox(height: 4.h),
                                   Row(
@@ -468,7 +470,7 @@ class _HomePageState extends State<HomePage> {
                                       Icon(Icons.location_on_rounded, size: 13),
                                       Expanded(
                                         child: Text(
-                                            dataKostbyLoc![index].location,
+                                            dataKostbyLoc[index].location,
                                             style: GoogleFonts.inter(
                                                 fontSize: 11)),
                                       )
@@ -479,7 +481,7 @@ class _HomePageState extends State<HomePage> {
                                     alignment: Alignment.bottomRight,
                                     child: Text(
                                         "Rp. " +
-                                            dataKostbyLoc![index]
+                                            dataKostbyLoc[index]
                                                 .roomPrice
                                                 .toString() +
                                             " / Bulan",
@@ -549,116 +551,121 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 SizedBox(height: 10.h),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.8),
-                        spreadRadius: 2,
-                        blurRadius: 5, // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.horizontal(
-                              left: Radius.circular(10)),
-                          child: Container(
-                              height: 150.h,
-                              width: 100.w,
-                              child: Image.asset("assets/dummykos/kost_2.png",
-                                  fit: BoxFit.fill)),
+                InkWell(
+                  onTap: () {
+                    SharedCode.navigatorPush(
+                        context, BookingPayPage(kostPending: kostPending));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.8),
+                          spreadRadius: 2,
+                          blurRadius: 5, // changes position of shadow
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          color: Color(0XFFFD9900),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5))),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 5),
-                                        child: Text(kostPending[0].status,
-                                            style: GoogleFonts.inter(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 11)),
-                                      ),
-                                    ),
-                                    Text(kostPending[0].dueDate + " ",
-                                        style:
-                                            GoogleFonts.roboto(fontSize: 12)),
-                                  ],
-                                ),
-                                SizedBox(height: 7.h),
-                                Text(kostPending[0].kost.kostName,
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12)),
-                                SizedBox(height: 7.h),
-                                Text("Total : Rp. " + kostPending[0].totalPrice,
-                                    style: GoogleFonts.roboto(fontSize: 12)),
-                                SizedBox(height: 7.h),
-                                Text(
-                                    "Stay duration: " +
-                                        kostPending[0].stayDuration,
-                                    style: GoogleFonts.roboto(fontSize: 12)),
-                                Align(
-                                  alignment: Alignment.bottomLeft,
-                                  child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        side: BorderSide(
-                                            width: 1,
-                                            color: ColorValues.primaryPurple),
-                                        backgroundColor: Colors.white,
-                                        foregroundColor: Colors.black,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        minimumSize: Size(0.w, 25.h),
-                                      ),
-                                      onPressed: () {
-                                        SharedCode.navigatorPush(
-                                            context,
-                                            ChatWidget(
-                                                chats: chat,
-                                                title: 'Seller 1'));
-                                      },
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text('Chat Pemilik Kost',
-                                              style: GoogleFonts.inter(
-                                                  fontSize: 10)),
-                                          SizedBox(width: 5.w),
-                                          Icon(
-                                              CupertinoIcons
-                                                  .chat_bubble_text_fill,
-                                              size: 15)
-                                        ],
-                                      )),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
                       ],
+                    ),
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.horizontal(
+                                left: Radius.circular(10)),
+                            child: Container(
+                                height: 150.h,
+                                width: 100.w,
+                                child: Image.asset("assets/dummykos/kost_2.png",
+                                    fit: BoxFit.fill)),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: Color(0XFFFD9900),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5))),
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 5),
+                                          child: Text(kostPending[0].status,
+                                              style: GoogleFonts.inter(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 11)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 7.h),
+                                  Text(kostPending[0].kost.kostName,
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12)),
+                                  SizedBox(height: 7.h),
+                                  Text(
+                                      "Total : Rp. " +
+                                          kostPending[0].totalPrice,
+                                      style: GoogleFonts.roboto(fontSize: 12)),
+                                  SizedBox(height: 7.h),
+                                  Text(
+                                      "Durasi Sewa: " +
+                                          kostPending[0].stayDuration,
+                                      style: GoogleFonts.roboto(fontSize: 12)),
+                                  Align(
+                                    alignment: Alignment.bottomLeft,
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          side: BorderSide(
+                                              width: 1,
+                                              color: ColorValues.primaryPurple),
+                                          backgroundColor: Colors.white,
+                                          foregroundColor: Colors.black,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          minimumSize: Size(0.w, 25.h),
+                                        ),
+                                        onPressed: () {
+                                          SharedCode.navigatorPush(
+                                              context,
+                                              ChatWidget(
+                                                  chats: chat,
+                                                  title: 'Seller 1'));
+                                        },
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text('Chat Pemilik Kost',
+                                                style: GoogleFonts.inter(
+                                                    fontSize: 10)),
+                                            SizedBox(width: 5.w),
+                                            Icon(
+                                                CupertinoIcons
+                                                    .chat_bubble_text_fill,
+                                                size: 15)
+                                          ],
+                                        )),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

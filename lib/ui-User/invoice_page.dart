@@ -13,14 +13,9 @@ import 'package:project_anakkos_app/main.dart';
 import 'package:project_anakkos_app/widget/bottomNavigation_user.dart';
 
 class InvoicePage extends StatefulWidget {
-  final KostDummyModel model;
   final DateTime dateDari;
   final DateTime dateSampai;
-  InvoicePage(
-      {Key? key,
-      required this.model,
-      required this.dateDari,
-      required this.dateSampai})
+  InvoicePage({Key? key, required this.dateDari, required this.dateSampai})
       : super(key: key);
 
   @override
@@ -226,8 +221,8 @@ class _InvoicePageState extends State<InvoicePage> {
               Container(
                   width: 100.w,
                   height: 120.h,
-                  child:
-                      Image.asset(widget.model.picture_kost, fit: BoxFit.fill)),
+                  child: Image.asset("assets/dummykos/kost_1.png",
+                      fit: BoxFit.fill)),
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
@@ -235,14 +230,14 @@ class _InvoicePageState extends State<InvoicePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.model.name_kost,
+                      Text("Kost Subadi",
                           style: GoogleFonts.inter(
                               fontWeight: FontWeight.bold, fontSize: 12)),
                       SizedBox(height: 7.h),
                       DottedBorder(
                         color: Colors.black,
                         strokeWidth: 1,
-                        child: Text(widget.model.type_kost,
+                        child: Text("Cowok",
                             style: GoogleFonts.inter(fontSize: 11)),
                       ),
                       SizedBox(height: 7.h),
@@ -250,7 +245,7 @@ class _InvoicePageState extends State<InvoicePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Icon(Icons.location_on_rounded, size: 14),
-                          Text(widget.model.location_kost,
+                          Text("Kudus, Besito",
                               style: GoogleFonts.inter(fontSize: 11))
                         ],
                       ),

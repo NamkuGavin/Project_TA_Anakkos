@@ -39,7 +39,7 @@ class DetailKost extends StatefulWidget {
 class _DetailKostState extends State<DetailKost> {
   TextEditingController commentController = TextEditingController();
   Color _iconColor = Colors.grey;
-  String pemilikkost = "Julia";
+  String pemilikkost = "";
   final user = FirebaseAuth.instance.currentUser;
   DetailKostUserData? dataDetailKost;
   List<CommentData>? dataComment;
@@ -121,6 +121,7 @@ class _DetailKostState extends State<DetailKost> {
     await getComment();
     setState(() {
       dataDetailKost = _model.data;
+      pemilikkost = _model.data.user.name;
       _isLoad = false;
     });
   }
@@ -1115,7 +1116,7 @@ class _DetailKostState extends State<DetailKost> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(dataDetailKost!.roomPrice.toString(),
+            Text("Rp. " + dataDetailKost!.roomPrice.toString() + " / Bulan",
                 style: GoogleFonts.inter(
                     fontSize: 14, fontWeight: FontWeight.bold)),
             Padding(
@@ -1129,15 +1130,16 @@ class _DetailKostState extends State<DetailKost> {
                         borderRadius: BorderRadius.circular(10)),
                   ),
                   onPressed: () async {
-                    // SharedPreferences pref =
-                    //     await SharedPreferences.getInstance();
-                    // if (pref.getString("token") == null && user == null) {
-                    //   SharedCode.navigatorPush(context, RolePage());
-                    // } else if (user != null) {
-                    //   _showDialog(context);
-                    // } else {
-                    //   print("APPS LOGIN");
-                    // }
+                    SharedPreferences pref =
+                        await SharedPreferences.getInstance();
+                    if (pref.getString("token_user") == null && user == null) {
+                      SharedCode.navigatorPush(context, RolePage());
+                    } else if (user != null) {
+                      _showDialog(context);
+                    } else {
+                      _showDialog(context);
+                      print("APPS LOGIN");
+                    }
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -1156,14 +1158,14 @@ class _DetailKostState extends State<DetailKost> {
     );
   }
 
-  // Future _showDialog(context) {
-  //   return showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialogDates(model: widget.model);
-  //     },
-  //   );
-  // }
+  Future _showDialog(context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialogDates(idKost: widget.idKost);
+      },
+    );
+  }
 
   mapKost() {
     return Card(
