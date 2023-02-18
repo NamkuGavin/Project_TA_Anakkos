@@ -15,4 +15,5 @@ class ServerConfig {
   static String getComment = "/filter-comment-bypost";
   static String createComment = "/create-comment";
   static String getHistory = "/get-history";
+  static String startTrans = "/start-transaction";
 }
