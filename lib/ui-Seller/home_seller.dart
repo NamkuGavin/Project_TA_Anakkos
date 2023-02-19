@@ -82,124 +82,127 @@ class _HomeSellerState extends State<HomeSeller> {
               ],
             ),
           )
-        : InkWell(
-            onTap: () {
-              SharedCode.navigatorPush(context, DetailSellerKost());
-            },
-            child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(width: 0.5)),
-                      child: IntrinsicHeight(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.horizontal(
-                                  left: Radius.circular(10)),
-                              child: Container(
-                                  width: 100.w,
-                                  child: items[index].kostImg != "kosong"
-                                      ? Image.network(items[index].kostImg,
-                                          fit: BoxFit.fill)
-                                      : Text(items[index].kostImg)),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(items[index].kostName,
-                                        style: GoogleFonts.inter(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 11)),
-                                    SizedBox(height: 7.h),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          color:
-                                              items[index].status == "Rejected"
-                                                  ? Colors.red
-                                                  : Colors.green,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5))),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 5),
-                                        child: Text(items[index].status,
-                                            style: GoogleFonts.inter(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 10)),
+        : ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (BuildContext context, int index) {
+              return InkWell(
+                onTap: () {
+                  SharedCode.navigatorPush(
+                      context,
+                      DetailSellerKost(
+                        dataDetail: items[index],
+                        idKost: items[index].kostId,
+                      ));
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(width: 0.5)),
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.horizontal(
+                                left: Radius.circular(10)),
+                            child: Container(
+                                width: 100.w,
+                                child: items[index].kostImg != "kosong"
+                                    ? Image.network(items[index].kostImg,
+                                        fit: BoxFit.fill)
+                                    : Text(items[index].kostImg)),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(items[index].kostName,
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 11)),
+                                  SizedBox(height: 7.h),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: items[index].status == "Rejected"
+                                            ? Colors.red
+                                            : Colors.green,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5))),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 5),
+                                      child: Text(items[index].status,
+                                          style: GoogleFonts.inter(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 10)),
+                                    ),
+                                  ),
+                                  SizedBox(height: 7.h),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Icon(Icons.star,
+                                          size: 15, color: Colors.black),
+                                      SizedBox(width: 4.w),
+                                      Text(items[index].avgRating.toString(),
+                                          style:
+                                              GoogleFonts.inter(fontSize: 11))
+                                    ],
+                                  ),
+                                  SizedBox(height: 7.h),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Icon(Icons.person,
+                                          size: 15, color: Colors.black),
+                                      SizedBox(width: 4.w),
+                                      Text(items[index].unitRented.toString(),
+                                          style:
+                                              GoogleFonts.inter(fontSize: 11))
+                                    ],
+                                  ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 35.h,
+                                        width: 40.w,
+                                        child: IconButton(
+                                            onPressed: () {},
+                                            icon: Icon(CupertinoIcons.pencil)),
                                       ),
-                                    ),
-                                    SizedBox(height: 7.h),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Icon(Icons.star,
-                                            size: 15, color: Colors.black),
-                                        SizedBox(width: 4.w),
-                                        Text(items[index].avgRating,
-                                            style:
-                                                GoogleFonts.inter(fontSize: 11))
-                                      ],
-                                    ),
-                                    SizedBox(height: 7.h),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Icon(Icons.person,
-                                            size: 15, color: Colors.black),
-                                        SizedBox(width: 4.w),
-                                        Text(items[index].unitRented.toString(),
-                                            style:
-                                                GoogleFonts.inter(fontSize: 11))
-                                      ],
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          height: 35.h,
-                                          width: 40.w,
-                                          child: IconButton(
-                                              onPressed: () {},
-                                              icon:
-                                                  Icon(CupertinoIcons.pencil)),
-                                        ),
-                                        SizedBox(width: 4.w),
-                                        SizedBox(
-                                          height: 35.h,
-                                          width: 40.w,
-                                          child: IconButton(
-                                              onPressed: () {},
-                                              icon: Icon(CupertinoIcons.trash)),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                      SizedBox(width: 4.w),
+                                      SizedBox(
+                                        height: 35.h,
+                                        width: 40.w,
+                                        child: IconButton(
+                                            onPressed: () {},
+                                            icon: Icon(CupertinoIcons.trash)),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  );
-                }),
-          );
+                  ),
+                ),
+              );
+            });
   }
 
   appbarWidget() {

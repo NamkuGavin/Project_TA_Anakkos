@@ -65,7 +65,7 @@ class KostbyPopularData {
   String roomRules;
   String kostRules;
   String desc;
-  String totalUnit;
+  int totalUnit;
   int roomPrice;
   int elecPrice;
   int totalPrice;

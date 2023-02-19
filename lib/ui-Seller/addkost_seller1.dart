@@ -7,8 +7,10 @@ import 'package:cupertino_stepper/cupertino_stepper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-Seller/addkost_seller2.dart';
 import 'package:project_anakkos_app/ui-Seller/addkost_seller3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -64,8 +66,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
 
     try {
       pickedImage = await picker.pickImage(
-          source: ImageSource.camera,
-          preferredCameraDevice: CameraDevice.rear);
+          source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear);
 
       if (pickedImage != null) {
         setState(() {
