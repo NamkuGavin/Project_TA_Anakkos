@@ -159,7 +159,8 @@ class _InvoicePagePayState extends State<InvoicePagePay> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Stay duration", style: GoogleFonts.roboto()),
-            Text(widget.kostPending[0].stayDuration)
+            SizedBox(width: 75.w),
+            Expanded(child: Text(widget.kostPending[0].stayDuration))
           ],
         ),
         SizedBox(height: 7.h),

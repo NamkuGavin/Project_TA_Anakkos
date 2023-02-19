@@ -81,20 +81,16 @@ class _HistoryPageState extends State<HistoryPage> {
 
   getLoginApps() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    try {
-      setState(() {
-        _widget = LoadingAnimation();
-      });
-      LoginModel result = await ApiService().getLogin(
-          email: pref.getString("email_user").toString(),
-          password: pref.getString("pass_user").toString());
-      await getHistory(result.token, result.data.id.toString());
-      setState(() {
-        _widget = sudahLoginApps();
-      });
-    } catch (error) {
-      print('no internet ' + error.toString());
-    }
+    setState(() {
+      _widget = LoadingAnimation();
+    });
+    LoginModel result = await ApiService().getLogin(
+        email: pref.getString("email_user").toString(),
+        password: pref.getString("pass_user").toString());
+    await getHistory(result.token, result.data.id.toString());
+    setState(() {
+      _widget = sudahLoginApps();
+    });
   }
 
   Future getHistory(String token, String user_id) async {

@@ -475,7 +475,8 @@ class _BookingPayPageState extends State<BookingPayPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Stay duration", style: GoogleFonts.roboto()),
-            Text(widget.kostPending[0].stayDuration)
+            SizedBox(width: 30.w),
+            Expanded(child: Text(widget.kostPending[0].stayDuration))
           ],
         ),
         SizedBox(height: 7.h),
