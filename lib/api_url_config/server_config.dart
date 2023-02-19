@@ -16,4 +16,5 @@ class ServerConfig {
   static String createComment = "/create-comment";
   static String getHistory = "/get-history";
   static String startTrans = "/start-transaction";
+  static String updateTrans = "/update-transaction-status";
 }

@@ -456,4 +456,37 @@ class ApiService {
       throw HttpException('request error code ${res.statusCode}');
     }
   }
+
+  Future updateTransaksi({
+    required String token,
+    required String status,
+    required int id,
+    required String kost_id,
+  }) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = {
+      "status": status,
+      "id": id,
+      "kost_id": kost_id,
+    };
+    print("RAW UPDATE TRANSAKSI: " + body.toString());
+    print("URL UPDATE TRANSAKSI: " +
+        ServerConfig.baseURL +
+        ServerConfig.updateTrans);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.updateTrans),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(UPDATE TRANSAKSI): " + res.statusCode.toString());
+    print("RES UPDATE TRANSAKSI: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return res.body;
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
 }

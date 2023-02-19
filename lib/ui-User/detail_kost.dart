@@ -463,7 +463,7 @@ class _DetailKostState extends State<DetailKost> {
     );
   }
 
-  buildUlasan() {
+  buildUlasanComment() {
     return makeDismissible(
       child: StatefulBuilder(
         builder: (context, setState) {
@@ -688,10 +688,10 @@ class _DetailKostState extends State<DetailKost> {
                                   child: ElevatedButton(
                                     style: ButtonStyle(
                                       shape: MaterialStateProperty.all(
-                                        const CircleBorder(),
+                                        CircleBorder(),
                                       ),
                                       padding: MaterialStateProperty.all(
-                                        const EdgeInsets.all(10),
+                                        EdgeInsets.all(10),
                                       ),
                                       backgroundColor:
                                           MaterialStateProperty.all(
@@ -702,13 +702,199 @@ class _DetailKostState extends State<DetailKost> {
                                       await createComment();
                                       commentController.clear();
                                     },
-                                    child: const Icon(Icons.send, size: 20),
+                                    child: Icon(Icons.send, size: 20),
                                   ),
                                 ),
                               ],
                             )
                           ],
                         ),
+                );
+              });
+        },
+      ),
+    );
+  }
+
+  buildUlasan() {
+    return makeDismissible(
+      child: StatefulBuilder(
+        builder: (context, setState) {
+          return DraggableScrollableSheet(
+              initialChildSize: 0.8,
+              minChildSize: 0.3,
+              maxChildSize: 0.8,
+              builder: (_, controller) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey,
+                        spreadRadius: 5,
+                        blurRadius: 10,
+                      ),
+                    ],
+                  ),
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Ulasan Penyewa",
+                          style: GoogleFonts.roboto(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 5),
+                        child: Row(
+                          children: [
+                            Icon(Icons.star,
+                                color: ColorValues.primaryPurple, size: 12),
+                            SizedBox(width: 3),
+                            Text(dataDetailKost!.rating.toString(),
+                                style: GoogleFonts.roboto(fontSize: 12)),
+                            SizedBox(width: 3),
+                            Icon(Icons.circle,
+                                size: 6, color: Colors.grey[400]),
+                            // SizedBox(width: 3),
+                            // Text(
+                            //   "(" + "143" + " Ulasan)",
+                            //   style: GoogleFonts.roboto(
+                            //       fontSize: 12, color: Colors.grey[600]),
+                            // ),
+                          ],
+                        ),
+                      ),
+                      Text(dataDetailKost!.location,
+                          style:
+                              GoogleFonts.roboto(fontWeight: FontWeight.bold)),
+                      dataComment!.isEmpty
+                          ? Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Center(
+                                    child: Lottie.asset(
+                                      'assets/lottie/not_found.json',
+                                      width: 175.w,
+                                      repeat: false,
+                                    ),
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      'Belum ada Komen yang tertulis',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline3!
+                                          .copyWith(
+                                            fontSize: 15,
+                                            color: Color(0XFF9B9B9B),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 15),
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: dataComment!.length,
+                                    controller: controller,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 8),
+                                        child: Row(
+                                          children: [
+                                            Image.asset(
+                                                "assets/icon/photo_profile.png",
+                                                width: 50.w),
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      dataComment![index]
+                                                          .user
+                                                          .name,
+                                                      style: GoogleFonts.roboto(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Icon(Icons.star,
+                                                          color: ColorValues
+                                                              .primaryPurple,
+                                                          size: 11),
+                                                      SizedBox(width: 3),
+                                                      Text(
+                                                          dataComment![index]
+                                                              .rating
+                                                              .toString(),
+                                                          style: GoogleFonts
+                                                              .roboto(
+                                                                  fontSize:
+                                                                      12)),
+                                                      SizedBox(width: 3),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                top: 3),
+                                                        child: Icon(
+                                                            Icons.circle,
+                                                            size: 6,
+                                                            color: Colors
+                                                                .grey[400]),
+                                                      ),
+                                                      SizedBox(width: 3),
+                                                      Text(
+                                                          DateFormat(
+                                                                  'yy/MM/d HH:mm')
+                                                              .format(
+                                                                  dataComment![
+                                                                          index]
+                                                                      .createdAt),
+                                                          style: GoogleFonts
+                                                              .roboto(
+                                                                  fontSize:
+                                                                      11)),
+                                                    ],
+                                                  ),
+                                                  Text(
+                                                      dataComment![index]
+                                                          .commentBody,
+                                                      style: GoogleFonts.roboto(
+                                                          fontSize: 12)),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }),
+                              ),
+                            ),
+                    ],
+                  ),
                 );
               });
         },
@@ -1006,30 +1192,49 @@ class _DetailKostState extends State<DetailKost> {
                             fontSize: 12, color: Colors.grey[600]),
                       ),
                       listviewTopUlasan(),
+                      GestureDetector(
+                        onTap: () async {
+                          SharedPreferences pref =
+                              await SharedPreferences.getInstance();
+                          if (pref.getString("token_user") == null &&
+                              user == null) {
+                            showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) => buildUlasan(),
+                            );
+                          } else if (user != null) {
+                            showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) => buildUlasanComment(),
+                            );
+                          } else {
+                            showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) => buildUlasanComment(),
+                            );
+                          }
+                        },
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Text("Lihat semua ulasan",
+                                  style: GoogleFonts.roboto(fontSize: 12)),
+                              Icon(
+                                Icons.arrow_drop_down_rounded,
+                                color: ColorValues.primaryPurple,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-            GestureDetector(
-              onTap: () {
-                showModalBottomSheet(
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) => buildUlasan(),
-                );
-              },
-              child: Center(
-                child: Column(
-                  children: [
-                    Text("Lihat semua ulasan",
-                        style: GoogleFonts.roboto(fontSize: 12)),
-                    Icon(
-                      Icons.arrow_drop_down_rounded,
-                      color: ColorValues.primaryPurple,
-                    )
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -1050,7 +1255,7 @@ class _DetailKostState extends State<DetailKost> {
                 padding: EdgeInsets.symmetric(vertical: 8),
                 child: Row(
                   children: [
-                    Image.asset(items[index].picture_ulasan, width: 50.w),
+                    Image.asset("assets/icon/photo_profile.png", width: 50.w),
                     Expanded(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
