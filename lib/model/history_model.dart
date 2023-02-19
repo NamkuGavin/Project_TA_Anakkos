@@ -37,11 +37,13 @@ class HistoryData {
     required this.kostId,
     required this.userId,
     required this.status,
-    required this.proofImg,
+    required this.kostName,
+    required this.kostType,
+    required this.location,
     required this.stayDuration,
     required this.totalPrice,
     required this.electricity,
-    required this.otherFees,
+    required this.roomPrice,
     required this.dueDate,
     required this.createdAt,
     required this.updatedAt,
@@ -52,11 +54,13 @@ class HistoryData {
   String kostId;
   String userId;
   String status;
-  String proofImg;
+  String kostName;
+  String kostType;
+  String location;
   String stayDuration;
   String totalPrice;
   String electricity;
-  String otherFees;
+  String roomPrice;
   String dueDate;
   DateTime createdAt;
   DateTime updatedAt;
@@ -67,11 +71,13 @@ class HistoryData {
         kostId: json["kost_id"],
         userId: json["user_id"],
         status: json["status"],
-        proofImg: json["proof_img"],
+        kostName: json["kost_name"],
+        kostType: json["kost_type"],
+        location: json["location"],
         stayDuration: json["stay_duration"],
         totalPrice: json["total_price"],
         electricity: json["electricity"],
-        otherFees: json["other_fees"],
+        roomPrice: json["room_price"],
         dueDate: json["due_date"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
@@ -83,11 +89,13 @@ class HistoryData {
         "kost_id": kostId,
         "user_id": userId,
         "status": status,
-        "proof_img": proofImg,
+        "kost_name": kostName,
+        "kost_type": kostType,
+        "location": location,
         "stay_duration": stayDuration,
         "total_price": totalPrice,
         "electricity": electricity,
-        "other_fees": otherFees,
+        "room_price": roomPrice,
         "due_date": dueDate,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),

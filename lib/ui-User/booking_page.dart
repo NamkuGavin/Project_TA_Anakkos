@@ -12,16 +12,15 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/paymentType_model.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
+import 'package:project_anakkos_app/model/start_trans_model.dart';
 import 'package:project_anakkos_app/ui-User/invoice_page.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_help.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
 import 'package:project_anakkos_app/widget/timer.dart';
 
 class BookingPage extends StatefulWidget {
-  final DateTime dateDari;
-  final DateTime dateSampai;
-  BookingPage({Key? key, required this.dateDari, required this.dateSampai})
-      : super(key: key);
+  final StartTransData dataTrans;
+  BookingPage({Key? key, required this.dataTrans}) : super(key: key);
 
   @override
   State<BookingPage> createState() => _BookingPageState();
@@ -34,20 +33,6 @@ class _BookingPageState extends State<BookingPage> {
   ];
   PaymentTypeModel? paymentValue;
   bool showCardField = false;
-  String tanggal_dari = "";
-  String tanggal_sampai = "";
-  final DateFormat _dateFormat = DateFormat('dd MMM yyyy');
-  int detail1 = 55000;
-  int detail2 = 13400;
-  int detail3 = 500000;
-  int noBank = 0833545234;
-
-  @override
-  void initState() {
-    tanggal_dari = _dateFormat.format(widget.dateDari);
-    tanggal_sampai = _dateFormat.format(widget.dateSampai);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,9 +98,7 @@ class _BookingPageState extends State<BookingPage> {
                             Text("Total payment",
                                 style: GoogleFonts.roboto(
                                     fontWeight: FontWeight.bold)),
-                            Text("Rp. " +
-                                NumberFormat()
-                                    .format(detail1 + detail2 + detail3))
+                            Text("Rp. " + widget.dataTrans.totalPrice)
                           ],
                         ),
                       ],
@@ -389,10 +372,7 @@ class _BookingPageState extends State<BookingPage> {
                           Text("Total: ",
                               style: GoogleFonts.roboto(
                                   fontWeight: FontWeight.bold)),
-                          Text(
-                              "Rp. " +
-                                  NumberFormat()
-                                      .format(detail1 + detail2 + detail3),
+                          Text("Rp. " + widget.dataTrans.totalPrice,
                               style: GoogleFonts.roboto(
                                   fontWeight: FontWeight.bold)),
                         ],
@@ -410,8 +390,7 @@ class _BookingPageState extends State<BookingPage> {
                             SharedCode.navigatorPush(
                                 context,
                                 InvoicePage(
-                                  dateSampai: widget.dateSampai,
-                                  dateDari: widget.dateDari,
+                                  dataTrans: widget.dataTrans,
                                 ));
                           },
                           child: Row(
@@ -447,7 +426,7 @@ class _BookingPageState extends State<BookingPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Stay duration", style: GoogleFonts.roboto()),
-            Text(tanggal_dari + " - " + tanggal_sampai)
+            Text(widget.dataTrans.stayDuration)
           ],
         ),
         SizedBox(height: 7.h),
@@ -455,15 +434,7 @@ class _BookingPageState extends State<BookingPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Electricity", style: GoogleFonts.roboto()),
-            Text("Rp. " + NumberFormat().format(detail1))
-          ],
-        ),
-        SizedBox(height: 7.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Tax 10% & other fees", style: GoogleFonts.roboto()),
-            Text("Rp. " + NumberFormat().format(detail2))
+            Text("Rp. " + widget.dataTrans.electricity)
           ],
         ),
         SizedBox(height: 7.h),
@@ -471,7 +442,7 @@ class _BookingPageState extends State<BookingPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Room fees", style: GoogleFonts.roboto()),
-            Text("Rp. " + NumberFormat().format(detail3))
+            Text("Rp. " + widget.dataTrans.roomPrice)
           ],
         ),
       ],
@@ -499,14 +470,14 @@ class _BookingPageState extends State<BookingPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Kost Subadi",
+                      Text(widget.dataTrans.kostName,
                           style: GoogleFonts.inter(
                               fontWeight: FontWeight.bold, fontSize: 12)),
                       SizedBox(height: 7.h),
                       DottedBorder(
                         color: Colors.black,
                         strokeWidth: 1,
-                        child: Text("Cowok",
+                        child: Text(widget.dataTrans.kostType,
                             style: GoogleFonts.inter(fontSize: 11)),
                       ),
                       SizedBox(height: 7.h),
@@ -514,7 +485,10 @@ class _BookingPageState extends State<BookingPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Icon(Icons.location_on_rounded, size: 14),
-                          Text("Kudus", style: GoogleFonts.inter(fontSize: 11))
+                          Expanded(
+                            child: Text(widget.dataTrans.location,
+                                style: GoogleFonts.inter(fontSize: 11)),
+                          )
                         ],
                       ),
                     ],

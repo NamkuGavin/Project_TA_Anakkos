@@ -13,6 +13,7 @@ import 'package:project_anakkos_app/model/kost_by_popu_model.dart';
 import 'package:project_anakkos_app/model/kost_seller_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/model/register_model.dart';
+import 'package:project_anakkos_app/model/start_trans_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
@@ -418,7 +419,7 @@ class ApiService {
     }
   }
 
-  Future startTransaksi({
+  Future<StartTransModel> startTransaksi({
     required String token,
     required String user_id,
     required String status,
@@ -450,7 +451,7 @@ class ApiService {
     print("STATUS CODE(START TRANSAKSI): " + res.statusCode.toString());
     print("RES START TRANSAKSI: " + res.body.toString());
     if (res.statusCode == 200) {
-      return jsonDecode(res.body);
+      return StartTransModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

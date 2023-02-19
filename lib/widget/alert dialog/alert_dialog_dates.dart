@@ -6,6 +6,7 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
+import 'package:project_anakkos_app/model/start_trans_model.dart';
 import 'package:project_anakkos_app/ui-User/booking_page.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,9 +24,11 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
   DateTime selectedDate_dari = DateTime.now();
   DateTime? selected_dari;
   DateTime? selected_sampai;
+  DateTime? dueDate;
   final DateFormat _dateFormat = DateFormat('dd-MM-yyyy');
   final DateFormat _dateFormatAPI = DateFormat('dd MMM yyyy');
   bool _isLoad = false;
+  StartTransData? dataTrans;
 
   Future startTrans() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -35,7 +38,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
     LoginModel result = await ApiService().getLogin(
         email: pref.getString("email_user").toString(),
         password: pref.getString("pass_user").toString());
-    await ApiService().startTransaksi(
+    StartTransModel start = await ApiService().startTransaksi(
         token: result.token,
         user_id: result.data.id.toString(),
         status: "pending",
@@ -43,9 +46,10 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
         stay_duration: _dateFormatAPI.format(selected_dari!) +
             " - " +
             _dateFormatAPI.format(selected_sampai!),
-        due_date: "qwqw",
+        due_date: _dateFormatAPI.format(dueDate!),
         kost_id: widget.idKost);
     setState(() {
+      dataTrans = start.data;
       _isLoad = false;
     });
   }
@@ -121,9 +125,12 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
                 onPressed: () async {
                   if (selected_dari == null) {
                     setState(() {
-                      selected_dari = DateTime.now();
-                      selected_sampai = DateTime(selected_dari!.day,
-                          selected_dari!.month + 1, selected_dari!.year);
+                      selected_sampai = DateTime(selectedDate_dari.year,
+                              selectedDate_dari.month, selectedDate_dari.day)
+                          .add(Duration(days: 31));
+                      dueDate = DateTime(selected_sampai!.year,
+                              selected_sampai!.month, selected_sampai!.day)
+                          .add(Duration(days: 3));
                     });
                     print("DATES: " +
                         selected_dari.toString() +
@@ -133,14 +140,16 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
                     await SharedCode.navigatorPush(
                         context,
                         BookingPage(
-                          dateSampai: selected_sampai!,
-                          dateDari: selected_dari!,
+                          dataTrans: dataTrans!,
                         ));
                   } else {
                     setState(() {
                       selected_sampai = DateTime(selectedDate_dari.year,
                               selectedDate_dari.month, selectedDate_dari.day)
                           .add(Duration(days: 31));
+                      dueDate = DateTime(selected_sampai!.year,
+                              selected_sampai!.month, selected_sampai!.day)
+                          .add(Duration(days: 3));
                     });
                     print("DATES: " +
                         selected_dari.toString() +
@@ -150,8 +159,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
                     await SharedCode.navigatorPush(
                         context,
                         BookingPage(
-                          dateSampai: selected_sampai!,
-                          dateDari: selected_dari!,
+                          dataTrans: dataTrans!,
                         ));
                   }
                 },
