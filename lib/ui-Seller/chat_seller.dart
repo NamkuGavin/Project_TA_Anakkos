@@ -46,8 +46,8 @@ class _ChatSellerState extends State<ChatSeller> {
         children: [
           InkWell(
             onTap: () {
-              SharedCode.navigatorPush(
-                  context, ChatWidget(chats: chat, title: 'Customer 1'));
+              // SharedCode.navigatorPush(
+              //     context, ChatWidget(chats: chat, title: 'Customer 1'));
             },
             child: Card(
               child: ListTile(

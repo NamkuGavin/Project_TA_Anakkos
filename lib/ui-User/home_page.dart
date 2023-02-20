@@ -640,11 +640,11 @@ class _HomePageState extends State<HomePage> {
                                           minimumSize: Size(0.w, 25.h),
                                         ),
                                         onPressed: () {
-                                          SharedCode.navigatorPush(
-                                              context,
-                                              ChatWidget(
-                                                  chats: chat,
-                                                  title: 'Seller 1'));
+                                          // SharedCode.navigatorPush(
+                                          //     context,
+                                          //     ChatWidget(
+                                          //         chats: chat,
+                                          //         title: 'Seller 1'));
                                         },
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
