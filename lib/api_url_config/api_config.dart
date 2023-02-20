@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:path/path.dart';
+import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:project_anakkos_app/api_url_config/server_config.dart';
 import 'package:project_anakkos_app/model/comment_model.dart';
 import 'package:project_anakkos_app/model/create_kost_model.dart';
@@ -13,6 +16,7 @@ import 'package:project_anakkos_app/model/kost_by_popu_model.dart';
 import 'package:project_anakkos_app/model/kost_seller_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/model/register_model.dart';
+import 'package:project_anakkos_app/model/show_fasilitas_kost_model.dart';
 import 'package:project_anakkos_app/model/start_trans_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -488,6 +492,62 @@ class ApiService {
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<ShowFasilitasKostModel> showFasilitasKos({required String id}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    print("URL SHOW FASILITAS KOS: " +
+        ServerConfig.baseURL +
+        ServerConfig.showFasilitasKos +
+        "/$id");
+    final res = await http.get(
+        Uri.parse(
+            ServerConfig.baseURL + ServerConfig.showFasilitasKos + "/$id"),
+        headers: headers);
+    print("STATUS CODE(SHOW FASILITAS KOS): " + res.statusCode.toString());
+    print("RES SHOW FASILITAS KOS: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return ShowFasilitasKostModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future uploadImage(
+      {required File file,
+      required String kost_id,
+      required String token}) async {
+    var stream = new http.ByteStream(DelegatingStream.typed(file.openRead()));
+    var length = await file.length();
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = {
+      "kost_id": kost_id,
+    };
+    http.MultipartRequest request = new http.MultipartRequest(
+        "POST", Uri.parse(ServerConfig.baseURL + ServerConfig.uploadImage));
+    http.MultipartFile multipartFile = await http.MultipartFile(
+        'img', stream, length,
+        filename: basename(file.path),
+        contentType: new MediaType('img', 'jpg'));
+    request.fields.addAll(body);
+    request.headers.addAll(headers);
+    request.files.add(multipartFile);
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+    print("STATUS CODE(UPLOAD IMAGE): " + response.statusCode.toString());
+    print("RES UPLOAD IMAGE: " + response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      print(response.statusCode);
+      throw HttpException('request error code ${response.statusCode}');
     }
   }
 }

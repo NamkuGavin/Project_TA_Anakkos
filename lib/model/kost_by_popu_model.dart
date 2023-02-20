@@ -59,16 +59,16 @@ class KostbyPopularData {
   String location;
   String locationUrl;
   String kostType;
-  int rating;
+  String rating;
   String width;
   String weight;
   String roomRules;
   String kostRules;
   String desc;
-  int totalUnit;
-  int roomPrice;
-  int elecPrice;
-  int totalPrice;
+  String totalUnit;
+  String roomPrice;
+  String elecPrice;
+  String totalPrice;
   DateTime createdAt;
   DateTime updatedAt;
 

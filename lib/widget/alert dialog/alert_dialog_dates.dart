@@ -125,6 +125,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
                 onPressed: () async {
                   if (selected_dari == null) {
                     setState(() {
+                      selected_dari = DateTime.now();
                       selected_sampai = DateTime(selectedDate_dari.year,
                               selectedDate_dari.month, selectedDate_dari.day)
                           .add(Duration(days: 31));

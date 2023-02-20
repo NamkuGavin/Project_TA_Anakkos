@@ -1,169 +1,214 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
-import 'package:project_anakkos_app/widget/custom_text_field.dart';
-import 'package:project_anakkos_app/widget/google_signIn_provider.dart';
+import 'package:project_anakkos_app/helper/firebase_service.dart';
+import 'package:project_anakkos_app/model/login_model.dart';
+import 'package:project_anakkos_app/widget/loadingWidget.dart';
+import 'package:project_anakkos_app/widget/snackbar_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfileSeller extends StatefulWidget {
-  const EditProfileSeller({Key? key}) : super(key: key);
+  final String email;
+  final String name;
+  EditProfileSeller({Key? key, required this.email, required this.name})
+      : super(key: key);
 
   @override
   State<EditProfileSeller> createState() => _EditProfileSellerState();
 }
 
 class _EditProfileSellerState extends State<EditProfileSeller> {
-  final _usernameController = TextEditingController();
-  final _noHpController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _fullNameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoad = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fullNameController.text = widget.name;
+  }
+
+  editProfile() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    try {
+      setState(() {
+        _isLoad = true;
+      });
+      LoginModel result = await ApiService().getLogin(
+          email: pref.getString("email_owner").toString(),
+          password: pref.getString("pass_owner").toString());
+      await ApiService().editProfile(
+          id_user: result.data.id,
+          token: result.token,
+          name: _fullNameController.text);
+      setState(() {
+        _isLoad = false;
+        Navigator.pop(context, 'update');
+      });
+    } catch (error) {
+      print('no internet ' + error.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      appBar: widgetAppbar(),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 75.h,
-                  ),
-                  inputWidget(),
-                  SizedBox(
-                    height: 50.h,
-                  ),
-                ],
-              ),
-            ),
+      appBar: AppBar(
+        title: Text(
+          'Edit Profil',
+          style: TextStyle(
+            color: Color(0XFF363940),
           ),
-        ],
+        ),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
       ),
-    );
-  }
-
-  inputWidget() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Name',
-          style: GoogleFonts.roboto(
-            fontSize: 13,
-          ),
-        ),
-        SizedBox(
-          height: 7.h,
-        ),
-        CustomTextField(
-          isEnable: true,
-          isreadOnly: false,
-          controller: _usernameController,
-          inputType: TextInputType.name,
-          validator: (value) => SharedCode().usernameValidator(value),
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 25.h,
-        ),
-        Text(
-          'Nomor Telepon',
-          style: GoogleFonts.roboto(
-            fontSize: 13,
-          ),
-        ),
-        SizedBox(
-          height: 7.h,
-        ),
-        CustomTextField(
-          isEnable: true,
-          isreadOnly: false,
-          controller: _noHpController,
-          inputType: TextInputType.emailAddress,
-          validator: (value) => SharedCode().emailValidator(value),
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 25.h,
-        ),
-        Text(
-          'Email',
-          style: GoogleFonts.roboto(
-            fontSize: 13,
-          ),
-        ),
-        SizedBox(
-          height: 7.h,
-        ),
-        CustomTextField(
-          isEnable: true,
-          isreadOnly: false,
-          controller: _emailController,
-          inputType: TextInputType.emailAddress,
-          validator: (value) => SharedCode().emailValidator(value),
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 50.h,
-        ),
-      ],
-    );
-  }
-
-  widgetAppbar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context, 'update');
-          },
-          icon: Icon(Icons.arrow_back_rounded, color: Colors.black)),
-      title:
-          Text("Edit Profile", style: GoogleFonts.roboto(color: Colors.black)),
-      actions: [
-        Padding(
-          padding: EdgeInsets.all(12),
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorValues.primaryBlue,
-                foregroundColor: Colors.white,
-                minimumSize: Size(0.w, 50.h),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+      body: _isLoad
+          ? LoadingAnimation()
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 32.h,
+                    ),
+                    Text(
+                      'Nama Lengkap',
+                      style: textTheme.bodyText1!.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8.h,
+                    ),
+                    _textFormTransaction(
+                      textTheme,
+                      hint: 'Masukkan nama lengkap',
+                      controller: _fullNameController,
+                      validator: (value) => SharedCode().nameValidator(value),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      'Email',
+                      style: textTheme.bodyText1!.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 50,
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        widget.email,
+                        style: textTheme.bodyText1,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 32,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          editProfile();
+                        }
+                      },
+                      child: Text('Edit'),
+                    ),
+                  ],
+                ),
               ),
-              onPressed: () {},
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Save',
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.bold, fontSize: 14)),
-                  SizedBox(width: 5.w),
-                  Icon(Icons.save)
-                ],
-              )),
+            ),
+    );
+  }
+
+  Widget _textFormTransaction(
+    TextTheme textTheme, {
+    required String hint,
+    required TextEditingController controller,
+    TextInputType textInputType = TextInputType.text,
+    String? Function(String?)? validator,
+    bool withIcon = false,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: textInputType,
+      validator: validator,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      style: textTheme.bodyText1!.copyWith(
+        color: Colors.black,
+      ),
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 1,
+            color: Color(0XFFE7E7E7),
+          ),
+          borderRadius: BorderRadius.circular(8),
         ),
-      ],
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 1,
+            color: Color(0XFFE7E7E7),
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 2,
+            color: ColorValues.primaryBlue,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.redAccent,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.redAccent,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        hintText: hint,
+        hintStyle: textTheme.bodyText1,
+        prefixIcon: withIcon
+            ? Icon(
+                Icons.date_range_outlined,
+                color: ColorValues.primaryBlue,
+              )
+            : null,
+        contentPadding: EdgeInsets.symmetric(vertical: 17, horizontal: 16),
+      ),
     );
   }
 }
