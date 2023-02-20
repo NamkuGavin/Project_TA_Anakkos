@@ -24,6 +24,7 @@ import 'package:project_anakkos_app/ui-User/booking_page.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_dates.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_image.dart';
+import 'package:project_anakkos_app/widget/chatWidget.dart';
 import 'package:project_anakkos_app/widget/custom_text_form.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -75,6 +76,24 @@ class _DetailKostState extends State<DetailKost> {
         await ApiService().showFasilitasKos(id: widget.idKost);
     setState(() {
       dataFasilitas = _model.data;
+    });
+  }
+
+  Future createChatRoom() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      _isLoad = true;
+    });
+    LoginModel result = await ApiService().getLogin(
+        email: pref.getString("email_user").toString(),
+        password: pref.getString("pass_user").toString());
+    await ApiService().createChatRoom(
+      token: result.token,
+      user_id: result.data.id.toString(),
+      kost_id: widget.idKost,
+    );
+    setState(() {
+      _isLoad = true;
     });
   }
 
@@ -1038,7 +1057,11 @@ class _DetailKostState extends State<DetailKost> {
                         borderRadius: BorderRadius.circular(10)),
                     minimumSize: Size(0.w, 30.h),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    await createChatRoom();
+                    await SharedCode.navigatorPush(
+                        context, ChatWidget(idRoom: widget.idKost));
+                  },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -1048,7 +1071,7 @@ class _DetailKostState extends State<DetailKost> {
                       Icon(CupertinoIcons.chat_bubble_text_fill, size: 17)
                     ],
                   )),
-            )
+            ),
           ],
         ),
       ),

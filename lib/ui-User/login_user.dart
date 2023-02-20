@@ -41,21 +41,17 @@ class _LoginUserState extends State<LoginUser> {
 
   Future getLogin() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    try {
-      setState(() {
-        _isLoad = true;
-      });
-      LoginModel model = await ApiService().getLogin(
-          email: _emailController.text, password: _passwordController.text);
-      pref.setString('pass_user', _passwordController.text);
-      pref.setString('email_user', _emailController.text);
-      pref.setString('token_user', model.token);
-      setState(() {
-        _isLoad = false;
-      });
-    } catch (error) {
-      print('no internet ' + error.toString());
-    }
+    setState(() {
+      _isLoad = true;
+    });
+    LoginModel model = await ApiService().getLogin(
+        email: _emailController.text, password: _passwordController.text);
+    pref.setString('pass_user', _passwordController.text);
+    pref.setString('email_user', _emailController.text);
+    pref.setString('token_user', model.token);
+    setState(() {
+      _isLoad = false;
+    });
   }
 
   @override

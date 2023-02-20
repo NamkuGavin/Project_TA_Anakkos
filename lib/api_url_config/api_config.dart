@@ -1,12 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:project_anakkos_app/api_url_config/server_config.dart';
+import 'package:project_anakkos_app/model/chat_model.dart';
+import 'package:project_anakkos_app/model/chat_room_model.dart';
 import 'package:project_anakkos_app/model/comment_model.dart';
+import 'package:project_anakkos_app/model/create_chatRoom_model.dart';
 import 'package:project_anakkos_app/model/create_kost_model.dart';
 import 'package:project_anakkos_app/model/detail_kost_user_model.dart';
 import 'package:project_anakkos_app/model/history_model.dart';
@@ -548,6 +552,117 @@ class ApiService {
     } else {
       print(response.statusCode);
       throw HttpException('request error code ${response.statusCode}');
+    }
+  }
+
+  Future<ChatRoomModel> getChatRoomUser(
+      {required String token, required String user_id}) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    print("URL GET CHAT ROOM: " +
+        ServerConfig.baseURL +
+        ServerConfig.chatRoomUser +
+        "/$user_id");
+    final res = await http.get(
+        Uri.parse(
+            ServerConfig.baseURL + ServerConfig.chatRoomUser + "/$user_id"),
+        headers: headers);
+    print("STATUS CODE(GET CHAT ROOM): " + res.statusCode.toString());
+    print("RES GET CHAT ROOM: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return ChatRoomModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<ChatModel> getChat(
+      {required String token, required String room_id}) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    print("URL GET CHAT: " +
+        ServerConfig.baseURL +
+        ServerConfig.chat +
+        "/$room_id");
+    final res = await http.get(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.chat + "/$room_id"),
+        headers: headers);
+    print("STATUS CODE(GET CHAT): " + res.statusCode.toString());
+    print("RES GET CHAT: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return ChatModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<CreatechatRoomModel> createChatRoom({
+    required String token,
+    required String user_id,
+    required String kost_id,
+  }) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = {
+      "kost_id": kost_id,
+      "user_id": user_id,
+    };
+    print("RAW CREATE CHAT ROOM: " + body.toString());
+    print("URL CREATE CHAT ROOM: " +
+        ServerConfig.baseURL +
+        ServerConfig.createChatRoom);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.createChatRoom),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(CREATE CHAT ROOM): " + res.statusCode.toString());
+    print("RES CREATE CHAT ROOM: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return CreatechatRoomModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future createChat({
+    required String token,
+    required String kost_chat_id,
+    required String user_id,
+    required String role,
+    required String msg_content,
+  }) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = {
+      "kost_chat_id": kost_chat_id,
+      "user_id": user_id,
+      "role": role,
+      "msg_content": msg_content,
+    };
+    print("RAW CREATE CHAT: " + body.toString());
+    print("URL CREATE CHAT: " + ServerConfig.baseURL + ServerConfig.createChat);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.createChat),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(CREATE CHAT): " + res.statusCode.toString());
+    print("RES CREATE CHAT: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body);
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
     }
   }
 }

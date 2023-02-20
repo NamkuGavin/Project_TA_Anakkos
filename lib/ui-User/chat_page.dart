@@ -7,11 +7,13 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/chat_model.dart';
+import 'package:project_anakkos_app/model/chat_room_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/widget/chatWidget.dart';
@@ -29,6 +31,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget _widget = Container();
   final user = FirebaseAuth.instance.currentUser;
   CollectionReference _users = FirebaseFirestore.instance.collection('users');
+  List<ChatRoomData> dataChatRoom = [];
   List<ChatModel> chat = [
     ChatModel("Hai, dengan Pemilik Kost disini. Ada yang bisa saya bantu?",
         DateTime.now().subtract(Duration(days: 3)), false),
@@ -88,7 +91,10 @@ class _ChatPageState extends State<ChatPage> {
       LoginModel result = await ApiService().getLogin(
           email: pref.getString("email_user").toString(),
           password: pref.getString("pass_user").toString());
+      ChatRoomModel res = await ApiService().getChatRoomUser(
+          token: result.token, user_id: result.data.id.toString());
       setState(() {
+        dataChatRoom = res.data;
         _widget = sudahLoginApps();
       });
     } catch (error) {
@@ -149,23 +155,27 @@ class _ChatPageState extends State<ChatPage> {
   sudahLoginApps() {
     return Scaffold(
       appBar: appbarWidget(),
-      body: ListView(
-        children: [
-          InkWell(
+      body: ListView.builder(
+        itemCount: dataChatRoom.length,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
             onTap: () {
-              SharedCode.navigatorPush(
-                  context, ChatWidget(chats: chat, title: 'Seller 1'));
+              SharedCode.navigatorPush(context,
+                  ChatWidget(idRoom: dataChatRoom[index].id.toString()));
             },
             child: Card(
               child: ListTile(
                 leading:
                     SvgPicture.asset("assets/icon/profile.svg", width: 30.w),
-                title: Text('Seller 1'),
-                trailing: Text("12:00"),
+                title: Text(dataChatRoom[index].kostName +
+                    " - " +
+                    dataChatRoom[index].sellerName),
+                trailing: Text(
+                    DateFormat("HH:mm").format(dataChatRoom[index].createdAt)),
               ),
             ),
-          ),
-        ],
+          );
+        },
       ),
       // body: ChatWidget(chats: chat),
     );
@@ -192,8 +202,8 @@ class _ChatPageState extends State<ChatPage> {
                     children: [
                       InkWell(
                         onTap: () {
-                          SharedCode.navigatorPush(context,
-                              ChatWidget(chats: chat, title: 'Seller 1'));
+                          // SharedCode.navigatorPush(context,
+                          //     ChatWidget(chats: chat, title: 'Seller 1'));
                         },
                         child: Card(
                           child: ListTile(
