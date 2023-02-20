@@ -223,8 +223,10 @@ class _InvoicePageState extends State<InvoicePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Icon(Icons.location_on_rounded, size: 14),
-                          Text(widget.dataTrans.location,
-                              style: GoogleFonts.inter(fontSize: 11))
+                          Expanded(
+                            child: Text(widget.dataTrans.location,
+                                style: GoogleFonts.inter(fontSize: 11)),
+                          )
                         ],
                       ),
                     ],

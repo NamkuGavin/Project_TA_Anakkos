@@ -17,4 +17,6 @@ class ServerConfig {
   static String getHistory = "/get-history";
   static String startTrans = "/start-transaction";
   static String updateTrans = "/update-transaction-status";
+  static String showFasilitasKos = "/show-facilitiesByKost";
+  static String uploadImage = "/create-images";
 }

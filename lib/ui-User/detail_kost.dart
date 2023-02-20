@@ -19,6 +19,7 @@ import 'package:project_anakkos_app/dummy/dummy_bookmark.dart';
 import 'package:project_anakkos_app/model/comment_model.dart';
 import 'package:project_anakkos_app/model/detail_kost_user_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
+import 'package:project_anakkos_app/model/show_fasilitas_kost_model.dart';
 import 'package:project_anakkos_app/ui-User/booking_page.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_dates.dart';
@@ -45,72 +46,7 @@ class _DetailKostState extends State<DetailKost> {
   List<CommentData>? dataComment;
   bool _isLoad = false;
   bool _isRefresh = false;
-
-  List<UlasanDummyModel> items = [
-    UlasanDummyModel(
-        "assets/icon/photo_profile.png",
-        "Gavin Arasyi",
-        4.5,
-        "10 October",
-        "Menyewa selama 1 bulan",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
-    UlasanDummyModel(
-        "assets/icon/photo_profile1.png",
-        "Kholifatul Maghfirullah",
-        4.0,
-        "5 September",
-        "Menyewa selama 1 tahun",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
-    UlasanDummyModel(
-        "assets/icon/photo_profile1.png",
-        "Sidqi Atallah",
-        4.3,
-        "10 Juni",
-        "Menyewa selama 2 tahun",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
-    UlasanDummyModel(
-        "assets/icon/photo_profile1.png",
-        "Reza Indra",
-        3.9,
-        "1 Januari",
-        "Menyewa selama 365 Hari",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
-    UlasanDummyModel(
-        "assets/icon/photo_profile.png",
-        "Gavin Arasyi",
-        5.0,
-        "31 Desember",
-        "Menyewa selama 1 tahun",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
-    UlasanDummyModel(
-        "assets/icon/photo_profile.png",
-        "Kholifatul Maghfirullah",
-        4.0,
-        "5 September",
-        "Menyewa selama 1 tahun",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
-    UlasanDummyModel(
-        "assets/icon/photo_profile.png",
-        "Iqbal",
-        4.5,
-        "17 Agustus",
-        "Menyewa selama 2 tahun",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
-    UlasanDummyModel(
-        "assets/icon/photo_profile1.png",
-        "Iqbal",
-        4.3,
-        "16 Agustus",
-        "Menyewa selama 12 bulan",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
-    UlasanDummyModel(
-        "assets/icon/photo_profile.png",
-        "Muhammad Gavin",
-        5.0,
-        "17 Agustus",
-        "Menyewa selama 1 bulan",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
-  ];
+  List<List<FasilitasKostData>>? dataFasilitas;
 
   Future getDetailKost() async {
     setState(() {
@@ -119,6 +55,7 @@ class _DetailKostState extends State<DetailKost> {
     DetailKostUserModel _model =
         await ApiService().getKostDetailUser(idKost: widget.idKost);
     await getComment();
+    await getFasilitas();
     setState(() {
       dataDetailKost = _model.data;
       pemilikkost = _model.data.user.name;
@@ -130,6 +67,14 @@ class _DetailKostState extends State<DetailKost> {
     CommentModel _model = await ApiService().getComment(idKost: widget.idKost);
     setState(() {
       dataComment = _model.data;
+    });
+  }
+
+  Future getFasilitas() async {
+    ShowFasilitasKostModel _model =
+        await ApiService().showFasilitasKos(id: widget.idKost);
+    setState(() {
+      dataFasilitas = _model.data;
     });
   }
 
@@ -224,58 +169,48 @@ class _DetailKostState extends State<DetailKost> {
               padding: EdgeInsets.symmetric(vertical: 6),
               child: Text("Fasilitas Kamar"),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(child: SvgPicture.asset("assets/icon/Cube.svg")),
-                  Expanded(flex: 7, child: Text("5x4 meter")),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(child: SvgPicture.asset("assets/icon/Electric.svg")),
-                  Expanded(flex: 7, child: Text("Termasuk Listrik")),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(child: SvgPicture.asset("assets/icon/Bed.svg")),
-                  Expanded(flex: 7, child: Text("Kasur (Spring)")),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(child: SvgPicture.asset("assets/icon/Wind.svg")),
-                  Expanded(flex: 7, child: Text("AC")),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(child: SvgPicture.asset("assets/icon/Table.svg")),
-                  Expanded(flex: 7, child: Text("Meja")),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(child: SvgPicture.asset("assets/icon/Cupboard.svg")),
-                  Expanded(flex: 7, child: Text("Lemari")),
-                ],
+            SizedBox(
+              height: 100.h,
+              child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: 3,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 6),
+                    child: Row(
+                      children: [
+                        if (dataFasilitas![index][0].name == "Bantal")
+                          Expanded(
+                              child: SvgPicture.asset("assets/icon/Pillow.svg"))
+                        else if (dataFasilitas![index][0].name == "Kasur")
+                          Expanded(
+                              child: SvgPicture.asset("assets/icon/Bed.svg"))
+                        else if (dataFasilitas![index][0].name == "Lemari")
+                          Expanded(
+                              child:
+                                  SvgPicture.asset("assets/icon/Cupboard.svg"))
+                        else if (dataFasilitas![index][0].name == "Meja")
+                          Expanded(
+                              child: SvgPicture.asset("assets/icon/Table.svg"))
+                        else if (dataFasilitas![index][0].name == "Kursi")
+                          Expanded(
+                              child: SvgPicture.asset("assets/icon/Chair.svg"))
+                        else if (dataFasilitas![index][0].name == "Kipas" ||
+                            dataFasilitas![index][0].name == "AC")
+                          Expanded(
+                              child: SvgPicture.asset("assets/icon/Fan.svg"))
+                        else if (dataFasilitas![index][0].name == "Dalam" ||
+                            dataFasilitas![index][0].name == "Luar")
+                          Expanded(
+                              child: SvgPicture.asset("assets/icon/Toilet.svg",
+                                  height: 20.h)),
+                        Expanded(
+                            flex: 7,
+                            child: Text(dataFasilitas![index][0].name)),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
             ElevatedButton(
@@ -312,9 +247,9 @@ class _DetailKostState extends State<DetailKost> {
   buildSheet() {
     return makeDismissible(
       child: DraggableScrollableSheet(
-          initialChildSize: 0.75,
+          initialChildSize: 0.7,
           minChildSize: 0.3,
-          maxChildSize: 0.75,
+          maxChildSize: 0.7,
           builder: (_, controller) {
             return Container(
               decoration: BoxDecoration(
@@ -340,7 +275,7 @@ class _DetailKostState extends State<DetailKost> {
                   ),
                   Text(
                       dataDetailKost!.kostName +
-                          ", " +
+                          "\n" +
                           dataDetailKost!.location,
                       style: GoogleFonts.roboto()),
                   Padding(
@@ -354,7 +289,12 @@ class _DetailKostState extends State<DetailKost> {
                       children: [
                         Expanded(
                             child: SvgPicture.asset("assets/icon/Cube.svg")),
-                        Expanded(flex: 7, child: Text("5x4 meter")),
+                        Expanded(
+                            flex: 7,
+                            child: Text(dataDetailKost!.width +
+                                " X " +
+                                dataDetailKost!.weight +
+                                " Meter")),
                       ],
                     ),
                   ),
@@ -365,7 +305,11 @@ class _DetailKostState extends State<DetailKost> {
                         Expanded(
                             child:
                                 SvgPicture.asset("assets/icon/Electric.svg")),
-                        Expanded(flex: 7, child: Text("Termasuk Listrik")),
+                        Expanded(
+                            flex: 7,
+                            child: Text(dataDetailKost!.elecPrice == "0"
+                                ? "Termasuk Listrik"
+                                : "Tidak Termasuk Listrik")),
                       ],
                     ),
                   ),
@@ -373,88 +317,54 @@ class _DetailKostState extends State<DetailKost> {
                     padding: EdgeInsets.symmetric(vertical: 12),
                     child: DottedLine(dashColor: Colors.black),
                   ),
-                  Text("Tempat Tidur", style: GoogleFonts.roboto(fontSize: 17)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SvgPicture.asset("assets/icon/Pillow.svg")),
-                        Expanded(flex: 7, child: Text("Bantal")),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SvgPicture.asset("assets/icon/Bed.svg")),
-                        Expanded(flex: 7, child: Text("Kasur (Spring)")),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: DottedLine(dashColor: Colors.black),
-                  ),
-                  Text("Pendingin / Sirkulasi Udara",
-                      style: GoogleFonts.roboto(fontSize: 17)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SvgPicture.asset("assets/icon/Fan.svg")),
-                        Expanded(flex: 7, child: Text("Kipas Angin")),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SvgPicture.asset("assets/icon/Window.svg")),
-                        Expanded(flex: 7, child: Text("Jendela")),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: DottedLine(dashColor: Colors.black),
-                  ),
-                  Text("Furniture", style: GoogleFonts.roboto(fontSize: 17)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child:
-                                SvgPicture.asset("assets/icon/Cupboard.svg")),
-                        Expanded(flex: 7, child: Text("Lemari")),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SvgPicture.asset("assets/icon/Table.svg")),
-                        Expanded(flex: 7, child: Text("Meja")),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SvgPicture.asset("assets/icon/Chair.svg")),
-                        Expanded(flex: 7, child: Text("Kursi")),
-                      ],
-                    ),
+                  Text("Fasilitas", style: GoogleFonts.roboto(fontSize: 17)),
+                  SizedBox(height: 8.h),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: dataFasilitas!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          children: [
+                            if (dataFasilitas![index][0].name == "Bantal")
+                              Expanded(
+                                  child: SvgPicture.asset(
+                                      "assets/icon/Pillow.svg"))
+                            else if (dataFasilitas![index][0].name == "Kasur")
+                              Expanded(
+                                  child:
+                                      SvgPicture.asset("assets/icon/Bed.svg"))
+                            else if (dataFasilitas![index][0].name == "Lemari")
+                              Expanded(
+                                  child: SvgPicture.asset(
+                                      "assets/icon/Cupboard.svg"))
+                            else if (dataFasilitas![index][0].name == "Meja")
+                              Expanded(
+                                  child:
+                                      SvgPicture.asset("assets/icon/Table.svg"))
+                            else if (dataFasilitas![index][0].name == "Kursi")
+                              Expanded(
+                                  child:
+                                      SvgPicture.asset("assets/icon/Chair.svg"))
+                            else if (dataFasilitas![index][0].name == "Kipas" ||
+                                dataFasilitas![index][0].name == "AC")
+                              Expanded(
+                                  child:
+                                      SvgPicture.asset("assets/icon/Fan.svg"))
+                            else if (dataFasilitas![index][0].name == "Dalam" ||
+                                dataFasilitas![index][0].name == "Luar")
+                              Expanded(
+                                  child: SvgPicture.asset(
+                                      "assets/icon/Toilet.svg",
+                                      height: 20.h)),
+                            Expanded(
+                                flex: 7,
+                                child: Text(dataFasilitas![index][0].name)),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

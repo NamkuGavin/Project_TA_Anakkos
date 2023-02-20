@@ -42,10 +42,12 @@ class _AddKostPage1State extends State<AddKostPage1> {
           preferredCameraDevice: CameraDevice.rear);
 
       if (pickedImage != null) {
-        setState(() {
-          kostImg.add(File(pickedImage!.path));
-          print(kostImg);
-        });
+        print("PATH: " + File(pickedImage.path).toString());
+        await uploadImage(File(pickedImage.path));
+        // setState(() {
+        //   kostImg.add(File(pickedImage!.path));
+        //   print(kostImg);
+        // });
       } else {
         await SharedCode.navigatorPop(context);
         await ScaffoldMessenger.of(context).showSnackBar(
@@ -66,13 +68,16 @@ class _AddKostPage1State extends State<AddKostPage1> {
 
     try {
       pickedImage = await picker.pickImage(
-          source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear);
+          source: ImageSource.camera,
+          preferredCameraDevice: CameraDevice.front);
 
       if (pickedImage != null) {
-        setState(() {
-          kostImg.add(File(pickedImage!.path));
-          print(kostImg);
-        });
+        print("PATH: " + File(pickedImage.path).toString());
+        await uploadImage(File(pickedImage.path));
+        // setState(() {
+        //   kostImg.add(File(pickedImage!.path));
+        //   print(kostImg);
+        // });
       } else {
         await SharedCode.navigatorPop(context);
         await ScaffoldMessenger.of(context).showSnackBar(
@@ -85,6 +90,15 @@ class _AddKostPage1State extends State<AddKostPage1> {
       print(e);
       print("error");
     }
+  }
+
+  Future uploadImage(File file) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    LoginModel result = await ApiService().getLogin(
+        email: pref.getString("email_owner").toString(),
+        password: pref.getString("pass_owner").toString());
+    await ApiService()
+        .uploadImage(file: file, kost_id: "1", token: result.token);
   }
 
   @override

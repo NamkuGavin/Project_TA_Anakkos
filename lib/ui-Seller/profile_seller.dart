@@ -104,9 +104,14 @@ class _ProfileSellerState extends State<ProfileSeller> {
                         child: Column(
                           children: [
                             _button(
-                              onPress: () {
-                                SharedCode.navigatorPush(
-                                    context, EditProfileSeller());
+                              onPress: () async {
+                                final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => EditProfileSeller(
+                                            email: email, name: full_name)));
+                                print('result: ' + result);
+                                await getProfileSeller();
                               },
                               icon: 'PersonalInfo',
                               title: 'Edit Profil',
