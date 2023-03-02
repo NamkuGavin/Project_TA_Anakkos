@@ -45,6 +45,21 @@ class _HomeSellerState extends State<HomeSeller> {
     });
   }
 
+  Future deleteKost(String kost_id) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      _isLoad = true;
+    });
+    LoginModel result = await ApiService().getLogin(
+        email: pref.getString("email_owner").toString(),
+        password: pref.getString("pass_owner").toString());
+    await ApiService().deleteKost(token: result.token, kost_id: kost_id);
+    await getKostSeller();
+    setState(() {
+      _isLoad = false;
+    });
+  }
+
   @override
   void initState() {
     getKostSeller();
@@ -114,7 +129,8 @@ class _HomeSellerState extends State<HomeSeller> {
                                 child: items[index].kostImg != "kosong"
                                     ? Image.network(items[index].kostImg,
                                         fit: BoxFit.fill)
-                                    : Text(items[index].kostImg)),
+                                    : Image.asset("assets/dummykos/kost_1.png",
+                                        fit: BoxFit.fill)),
                           ),
                           Expanded(
                             child: Padding(
@@ -130,9 +146,11 @@ class _HomeSellerState extends State<HomeSeller> {
                                   SizedBox(height: 7.h),
                                   Container(
                                     decoration: BoxDecoration(
-                                        color: items[index].status == "Rejected"
-                                            ? Colors.red
-                                            : Colors.green,
+                                        color: items[index].status == "pending"
+                                            ? Colors.yellow.shade800
+                                            : items[index].status == "rejected"
+                                                ? Colors.red
+                                                : Colors.green,
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(5))),
                                     child: Padding(
@@ -187,7 +205,10 @@ class _HomeSellerState extends State<HomeSeller> {
                                         height: 35.h,
                                         width: 40.w,
                                         child: IconButton(
-                                            onPressed: () {},
+                                            onPressed: () async {
+                                              await deleteKost(
+                                                  items[index].kostId);
+                                            },
                                             icon: Icon(CupertinoIcons.trash)),
                                       ),
                                     ],

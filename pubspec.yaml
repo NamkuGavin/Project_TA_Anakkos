@@ -75,6 +75,8 @@ dependencies:
   url_launcher:
   flutter_neumorphic:
   syncfusion_flutter_charts:
+  flutter_rating_bar:
+  mime:
 
 #firebase
   firebase_auth:

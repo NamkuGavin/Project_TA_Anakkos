@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
@@ -20,6 +21,8 @@ class AddKostPage2 extends StatefulWidget {
   final String total_unit;
   final String location;
   final String location_url;
+  final List<File> roomImg;
+  final File kostImg;
 
   AddKostPage2(
       {super.key,
@@ -27,7 +30,9 @@ class AddKostPage2 extends StatefulWidget {
       required this.kost_type,
       required this.total_unit,
       required this.location,
-      required this.location_url});
+      required this.location_url,
+      required this.roomImg,
+      required this.kostImg});
   @override
   _AddKostPage2State createState() => _AddKostPage2State();
 }
@@ -475,6 +480,8 @@ class _AddKostPage2State extends State<AddKostPage2> {
                                 location: widget.location,
                                 location_url: widget.location_url,
                                 idFacility: idFacility,
+                                roomImg: widget.roomImg,
+                                kostImg: widget.kostImg,
                               ));
                         }
                       },
