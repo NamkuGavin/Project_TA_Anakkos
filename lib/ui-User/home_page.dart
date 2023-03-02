@@ -245,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                         repeat: false,
                       ),
                       Text(
-                        'Belum ada Kost yang di Sewakan',
+                        'Belum ada Kost yang Tersedia',
                         style: Theme.of(context).textTheme.headline3!.copyWith(
                               fontSize: 17,
                               color: Color(0XFF9B9B9B),
@@ -406,7 +406,7 @@ class _HomePageState extends State<HomePage> {
                         repeat: false,
                       ),
                       Text(
-                        'Belum ada Kost yang di Sewakan',
+                        'Belum ada Kost yang Tersedia',
                         style: Theme.of(context).textTheme.headline3!.copyWith(
                               fontSize: 17,
                               color: Color(0XFF9B9B9B),
@@ -425,7 +425,15 @@ class _HomePageState extends State<HomePage> {
                     crossAxisSpacing: 10.0,
                     mainAxisSpacing: 10.0,
                   ),
-                  itemCount: 4,
+                  itemCount: dataKostbyLoc.length == 1
+                      ? 1
+                      : dataKostbyLoc.length == 2
+                          ? 2
+                          : dataKostbyLoc.length == 3
+                              ? 3
+                              : dataKostbyLoc.length == 4
+                                  ? 4
+                                  : dataKostbyLoc.length,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {
@@ -433,6 +441,7 @@ class _HomePageState extends State<HomePage> {
                             context,
                             DetailKost(
                               idKost: dataKostbyLoc[index].id.toString(),
+                              model: dataKostbyLoc[index],
                             ));
                       },
                       child: Card(
@@ -442,11 +451,15 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ClipRRect(
-                                borderRadius: BorderRadius.vertical(
-                                    bottom: Radius.circular(10)),
-                                child: Image.asset("assets/dummykos/kost_1.png",
-                                    fit: BoxFit.cover)),
+                            SizedBox(
+                              height: 125.h,
+                              width: 150 .w,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.vertical(
+                                      bottom: Radius.circular(10)),
+                                  child: Image.network(dataKostbyLoc[index].coverImg,
+                                      fit: BoxFit.fill)),
+                            ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 4),
                               child: Column(

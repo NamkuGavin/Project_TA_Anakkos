@@ -30,24 +30,27 @@ class _AddKostPage1State extends State<AddKostPage1> {
   TextEditingController _lokasiGoogleMaps = TextEditingController();
   String category = "";
   final _formKey = GlobalKey<FormState>();
-  List<File> kostImg = [];
+  List<File> roomImg = [];
+  File? kostImg;
 
-  Future _takePictureGallery(BuildContext context) async {
+  Future _takePictureGalleryRoom(BuildContext context) async {
     final ImagePicker picker = ImagePicker();
     XFile? pickedImage;
 
     try {
       pickedImage = await picker.pickImage(
           source: ImageSource.gallery,
+          imageQuality: 50,
           preferredCameraDevice: CameraDevice.rear);
 
       if (pickedImage != null) {
         print("PATH: " + File(pickedImage.path).toString());
-        await uploadImage(File(pickedImage.path));
-        // setState(() {
-        //   kostImg.add(File(pickedImage!.path));
-        //   print(kostImg);
-        // });
+        print("TYPE: " + File(pickedImage.mimeType.toString()).toString());
+        print("NAME: " + File(pickedImage.name.toString()).toString());
+        setState(() {
+          roomImg.add(File(pickedImage!.path));
+          print(roomImg);
+        });
       } else {
         await SharedCode.navigatorPop(context);
         await ScaffoldMessenger.of(context).showSnackBar(
@@ -62,22 +65,24 @@ class _AddKostPage1State extends State<AddKostPage1> {
     }
   }
 
-  Future _takePictureCamera(BuildContext context) async {
+  Future _takePictureCameraRoom(BuildContext context) async {
     final ImagePicker picker = ImagePicker();
     XFile? pickedImage;
 
     try {
       pickedImage = await picker.pickImage(
           source: ImageSource.camera,
+          imageQuality: 50,
           preferredCameraDevice: CameraDevice.front);
 
       if (pickedImage != null) {
         print("PATH: " + File(pickedImage.path).toString());
-        await uploadImage(File(pickedImage.path));
-        // setState(() {
-        //   kostImg.add(File(pickedImage!.path));
-        //   print(kostImg);
-        // });
+        print("TYPE: " + File(pickedImage.mimeType.toString()).toString());
+        print("NAME: " + File(pickedImage.name.toString()).toString());
+        setState(() {
+          roomImg.add(File(pickedImage!.path));
+          print(roomImg);
+        });
       } else {
         await SharedCode.navigatorPop(context);
         await ScaffoldMessenger.of(context).showSnackBar(
@@ -92,13 +97,68 @@ class _AddKostPage1State extends State<AddKostPage1> {
     }
   }
 
-  Future uploadImage(File file) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    LoginModel result = await ApiService().getLogin(
-        email: pref.getString("email_owner").toString(),
-        password: pref.getString("pass_owner").toString());
-    await ApiService()
-        .uploadImage(file: file, kost_id: "1", token: result.token);
+  Future _takePictureGalleryKost(BuildContext context) async {
+    final ImagePicker picker = ImagePicker();
+    XFile? pickedImage;
+
+    try {
+      pickedImage = await picker.pickImage(
+          source: ImageSource.gallery,
+          imageQuality: 50,
+          preferredCameraDevice: CameraDevice.rear);
+
+      if (pickedImage != null) {
+        print("PATH: " + File(pickedImage.path).toString());
+        print("TYPE: " + File(pickedImage.mimeType.toString()).toString());
+        print("NAME: " + File(pickedImage.name.toString()).toString());
+        setState(() {
+          kostImg = File(pickedImage!.path);
+          print(roomImg);
+        });
+      } else {
+        await SharedCode.navigatorPop(context);
+        await ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("No image was selected"),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+      print("error");
+    }
+  }
+
+  Future _takePictureCameraKost(BuildContext context) async {
+    final ImagePicker picker = ImagePicker();
+    XFile? pickedImage;
+
+    try {
+      pickedImage = await picker.pickImage(
+          source: ImageSource.camera,
+          imageQuality: 50,
+          preferredCameraDevice: CameraDevice.front);
+
+      if (pickedImage != null) {
+        print("PATH: " + File(pickedImage.path).toString());
+        print("TYPE: " + File(pickedImage.mimeType.toString()).toString());
+        print("NAME: " + File(pickedImage.name.toString()).toString());
+        setState(() {
+          kostImg = File(pickedImage!.path);
+          print(roomImg);
+        });
+      } else {
+        await SharedCode.navigatorPop(context);
+        await ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("No image was selected"),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+      print("error");
+    }
   }
 
   @override
@@ -158,7 +218,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
                           borderRadius: BorderRadius.circular(8))),
                 ),
                 SizedBox(height: 25.h),
-                Text('Preview',
+                Text('Foto Kost',
                     style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600, color: Colors.black45)),
                 SizedBox(height: 15.h),
@@ -168,7 +228,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
                       padding: EdgeInsets.symmetric(horizontal: 12),
                       child: InkWell(
                         onTap: () {
-                          showModalBottom();
+                          showOptionKostImg();
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -189,21 +249,62 @@ class _AddKostPage1State extends State<AddKostPage1> {
                         ),
                       ),
                     ),
-                    kostImg.isNotEmpty
+                    kostImg != null
+                        ? Image.file(
+                            File(kostImg!.path),
+                            height: 125.h,
+                            width: 225.w,
+                            fit: BoxFit.fill,
+                          )
+                        : Container(),
+                  ],
+                ),
+                SizedBox(height: 25.h),
+                Text('Foto Kamar',
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600, color: Colors.black45)),
+                SizedBox(height: 15.h),
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: InkWell(
+                        onTap: () {
+                          showOptionRoomImg();
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.8),
+                                spreadRadius: 2,
+                                blurRadius: 5, // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.add, size: 50.w),
+                          ),
+                        ),
+                      ),
+                    ),
+                    roomImg.isNotEmpty
                         ? SizedBox(
                             height: 200.h,
                             width: 225.w,
                             child: Scrollbar(
-                              thumbVisibility: true,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 shrinkWrap: true,
-                                itemCount: kostImg.length,
+                                itemCount: roomImg.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Padding(
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 8),
-                                    child: Image.file(kostImg[index]),
+                                    child: Image.file(roomImg[index]),
                                   );
                                 },
                               ),
@@ -465,6 +566,8 @@ class _AddKostPage1State extends State<AddKostPage1> {
                                       ", " +
                                       _lokasiKodePos.text,
                                   location_url: _lokasiGoogleMaps.text,
+                                  roomImg: roomImg,
+                                  kostImg: kostImg!,
                                 ));
                           }
                         },
@@ -490,7 +593,7 @@ class _AddKostPage1State extends State<AddKostPage1> {
     );
   }
 
-  showModalBottom() {
+  showOptionRoomImg() {
     return showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -503,14 +606,42 @@ class _AddKostPage1State extends State<AddKostPage1> {
                 leading: Icon(Icons.folder),
                 title: Text('Galeri'),
                 onTap: () {
-                  _takePictureGallery(context);
+                  _takePictureGalleryRoom(context);
                 },
               ),
               ListTile(
                 leading: Icon(Icons.camera_alt),
                 title: Text('Camera'),
                 onTap: () {
-                  _takePictureCamera(context);
+                  _takePictureCameraRoom(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  showOptionKostImg() {
+    return showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.folder),
+                title: Text('Galeri'),
+                onTap: () {
+                  _takePictureGalleryKost(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.camera_alt),
+                title: Text('Camera'),
+                onTap: () {
+                  _takePictureCameraKost(context);
                 },
               ),
             ],

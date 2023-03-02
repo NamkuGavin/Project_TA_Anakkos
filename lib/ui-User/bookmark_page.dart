@@ -63,8 +63,7 @@ class _BookmarkPageState extends State<BookmarkPage> {
                       children: [
                         Container(
                             width: 100,
-                            child: Image.asset(
-                                BookmarkList.bookmarkItems[index].picture_kost,
+                            child: Image.asset("assets/dummykos/kost_4.png",
                                 fit: BoxFit.fill)),
                         Expanded(
                           child: Padding(
@@ -82,7 +81,7 @@ class _BookmarkPageState extends State<BookmarkPage> {
                                       strokeWidth: 1,
                                       child: Text(
                                           BookmarkList
-                                              .bookmarkItems[index].type_kost,
+                                              .bookmarkItems[index].kostType,
                                           style:
                                               GoogleFonts.inter(fontSize: 10)),
                                     ),
@@ -102,8 +101,7 @@ class _BookmarkPageState extends State<BookmarkPage> {
                                             color: ColorValues.primaryPurple))
                                   ],
                                 ),
-                                Text(
-                                    BookmarkList.bookmarkItems[index].name_kost,
+                                Text(BookmarkList.bookmarkItems[index].kostName,
                                     style: GoogleFonts.inter(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 11)),
@@ -112,10 +110,12 @@ class _BookmarkPageState extends State<BookmarkPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Icon(Icons.location_on_rounded, size: 13),
-                                    Text(
-                                        BookmarkList
-                                            .bookmarkItems[index].location_kost,
-                                        style: GoogleFonts.inter(fontSize: 10))
+                                    Expanded(
+                                      child: Text(
+                                          BookmarkList
+                                              .bookmarkItems[index].location,
+                                          style: GoogleFonts.inter(fontSize: 10)),
+                                    )
                                   ],
                                 ),
                                 Align(
@@ -125,7 +125,7 @@ class _BookmarkPageState extends State<BookmarkPage> {
                                         vertical: 8, horizontal: 12),
                                     child: Text(
                                         BookmarkList
-                                            .bookmarkItems[index].price_kost,
+                                            .bookmarkItems[index].roomPrice,
                                         style: GoogleFonts.inter(fontSize: 10)),
                                   ),
                                 )

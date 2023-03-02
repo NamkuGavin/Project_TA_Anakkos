@@ -18,9 +18,13 @@ class ServerConfig {
   static String startTrans = "/start-transaction";
   static String updateTrans = "/update-transaction-status";
   static String showFasilitasKos = "/show-facilitiesByKost";
-  static String uploadImage = "/create-images";
+  static String uploadImageRoom = "/create-images";
   static String chatRoomUser = "/get-chat-by-user";
   static String chat = "/get-message";
   static String createChat = "/create-message";
   static String createChatRoom = "/create-chatroom";
+  static String deleteKost = "/delete-kost";
+  static String getImageRoomKost = "/get-image";
+  static String uploadImageKost = "/create-cover";
+  static String updateImageKost = "/add-cover";
 }

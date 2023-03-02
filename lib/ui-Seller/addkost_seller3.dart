@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
@@ -27,6 +28,8 @@ class AddKostPage3 extends StatefulWidget {
   final String location;
   final String location_url;
   final List<int> idFacility;
+  final List<File> roomImg;
+  final File kostImg;
 
   AddKostPage3(
       {super.key,
@@ -37,7 +40,9 @@ class AddKostPage3 extends StatefulWidget {
       required this.total_unit,
       required this.location,
       required this.location_url,
-      required this.idFacility});
+      required this.idFacility,
+      required this.roomImg,
+      required this.kostImg});
   @override
   _AddKostPage3State createState() => _AddKostPage3State();
 }
@@ -52,6 +57,7 @@ class _AddKostPage3State extends State<AddKostPage3> {
   bool _isEnableBerbayar = true;
   final _formKey = GlobalKey<FormState>();
   bool _isLoad = false;
+  String? kost_id;
 
   Future createKost() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -76,6 +82,13 @@ class _AddKostPage3State extends State<AddKostPage3> {
         elec_price: electPrice.text.isEmpty ? "0" : electPrice.text,
         room_price: roomPrice.text,
         seller_id: res_login.data.id);
+    setState(() {
+      kost_id = res_createKost.data.id.toString();
+    });
+    await loopImage();
+    await Future.delayed(Duration(seconds: 2));
+    await uploadImageKost(widget.kostImg);
+    await Future.delayed(Duration(seconds: 1));
     await ApiService().createDetailKost(
         token: res_login.token,
         seller_id: res_login.data.id.toString(),
@@ -85,9 +98,35 @@ class _AddKostPage3State extends State<AddKostPage3> {
         token: res_login.token,
         kost_id: res_createKost.data.id,
         facilityId: widget.idFacility);
+    await ApiService().updateImageKost(kostId: res_createKost.data.id);
     setState(() {
       _isLoad = false;
     });
+  }
+
+  Future uploadImageRoom(File file) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    LoginModel result = await ApiService().getLogin(
+        email: pref.getString("email_owner").toString(),
+        password: pref.getString("pass_owner").toString());
+    await ApiService().uploadImageRoom(
+        file: file, kost_id: kost_id.toString(), token: result.token);
+  }
+
+  Future uploadImageKost(File file) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    LoginModel result = await ApiService().getLogin(
+        email: pref.getString("email_owner").toString(),
+        password: pref.getString("pass_owner").toString());
+    await ApiService().uploadImageKost(
+        file: file, kost_id: kost_id.toString(), token: result.token);
+  }
+
+  Future loopImage() async {
+    for (int i = 0; i < widget.roomImg.length; i++) {
+      await Future.delayed(Duration(seconds: 1));
+      uploadImageRoom(widget.roomImg[i]);
+    }
   }
 
   @override

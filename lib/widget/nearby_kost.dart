@@ -69,7 +69,7 @@ class _NearByKostState extends State<NearByKost> {
               padding: EdgeInsets.all(8.0),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 0.6,
+                  childAspectRatio: 0.55,
                   crossAxisCount: 2,
                   crossAxisSpacing: 10.0,
                   mainAxisSpacing: 10.0,
@@ -83,6 +83,7 @@ class _NearByKostState extends State<NearByKost> {
                           context,
                           DetailKost(
                             idKost: dataKostbyLoc![index].id.toString(),
+                            model: dataKostbyLoc![index],
                           ));
                     },
                     child: Card(

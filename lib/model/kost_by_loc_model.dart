@@ -36,8 +36,10 @@ class KostbyLocationModel {
 class KostbyLocationData {
   KostbyLocationData({
     required this.id,
+    required this.accStatus,
     required this.sellerId,
     required this.kostName,
+    required this.coverImg,
     required this.location,
     required this.locationUrl,
     required this.kostType,
@@ -57,8 +59,10 @@ class KostbyLocationData {
   });
 
   int id;
+  String accStatus;
   String sellerId;
   String kostName;
+  String coverImg;
   String location;
   String locationUrl;
   String kostType;
@@ -79,8 +83,10 @@ class KostbyLocationData {
   factory KostbyLocationData.fromJson(Map<String, dynamic> json) =>
       KostbyLocationData(
         id: json["id"],
+        accStatus: json["acc_status"],
         sellerId: json["seller_id"],
         kostName: json["kost_name"],
+        coverImg: json["cover_img"],
         location: json["location"],
         locationUrl: json["location_url"],
         kostType: json["kost_type"],
@@ -101,8 +107,10 @@ class KostbyLocationData {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "acc_status": accStatus,
         "seller_id": sellerId,
         "kost_name": kostName,
+        "cover_img": coverImg,
         "location": location,
         "location_url": locationUrl,
         "kost_type": kostType,

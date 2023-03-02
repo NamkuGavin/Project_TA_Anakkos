@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +19,7 @@ import 'package:project_anakkos_app/dummy/dummy%20model/ulasan_model.dart';
 import 'package:project_anakkos_app/dummy/dummy_bookmark.dart';
 import 'package:project_anakkos_app/model/comment_model.dart';
 import 'package:project_anakkos_app/model/detail_kost_user_model.dart';
+import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/model/show_fasilitas_kost_model.dart';
 import 'package:project_anakkos_app/ui-User/booking_page.dart';
@@ -31,8 +33,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailKost extends StatefulWidget {
+  final KostbyLocationData model;
   final String idKost;
-  DetailKost({Key? key, required this.idKost}) : super(key: key);
+  DetailKost({Key? key, required this.idKost, required this.model})
+      : super(key: key);
 
   @override
   State<DetailKost> createState() => _DetailKostState();
@@ -48,6 +52,7 @@ class _DetailKostState extends State<DetailKost> {
   bool _isLoad = false;
   bool _isRefresh = false;
   List<List<FasilitasKostData>>? dataFasilitas;
+  double? rate;
 
   Future getDetailKost() async {
     setState(() {
@@ -97,6 +102,26 @@ class _DetailKostState extends State<DetailKost> {
     });
   }
 
+  Future createComment() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      _isLoad = true;
+    });
+    LoginModel result_log = await ApiService().getLogin(
+        email: pref.getString("email_user").toString(),
+        password: pref.getString("pass_user").toString());
+    await ApiService().createComment(
+        token: result_log.token,
+        kost_id: widget.idKost,
+        user_id: result_log.data.id.toString(),
+        comment_body: commentController.text,
+        rating: rate!);
+    await getComment();
+    setState(() {
+      _isLoad = false;
+    });
+  }
+
   @override
   void initState() {
     // if (BookmarkList.bookmarkItems.contains(widget.model) == true) {
@@ -139,7 +164,8 @@ class _DetailKostState extends State<DetailKost> {
                     fotoKostWidget(),
                     mapKost(),
                     pemilikKost(),
-                    commentUser(),
+                    commentRatingUser(),
+                    comment(),
                     SizedBox(height: 25.h),
                     sewaButton(),
                   ],
@@ -152,7 +178,7 @@ class _DetailKostState extends State<DetailKost> {
   detailAppbar() {
     return Stack(
       children: [
-        Image.asset("assets/dummykos/kost_1.png",
+        Image.network(widget.model.coverImg,
             fit: BoxFit.cover, width: double.infinity, height: double.infinity),
         Positioned(
             top: 25,
@@ -392,258 +418,223 @@ class _DetailKostState extends State<DetailKost> {
     );
   }
 
-  buildUlasanComment() {
-    return makeDismissible(
-      child: StatefulBuilder(
-        builder: (context, setState) {
-          Future createComment() async {
-            SharedPreferences pref = await SharedPreferences.getInstance();
-            setState(() {
-              _isRefresh = true;
-            });
-            LoginModel result_log = await ApiService().getLogin(
-                email: pref.getString("email_user").toString(),
-                password: pref.getString("pass_user").toString());
-            await ApiService().createComment(
-                token: result_log.token,
-                kost_id: widget.idKost,
-                user_id: result_log.data.id.toString(),
-                comment_body: commentController.text,
-                rating: "0");
-            await getComment();
-            setState(() {
-              _isRefresh = false;
-            });
-          }
-
-          return DraggableScrollableSheet(
-              initialChildSize: 0.8,
-              minChildSize: 0.3,
-              maxChildSize: 0.8,
-              builder: (_, controller) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey,
-                        spreadRadius: 5,
-                        blurRadius: 10,
-                      ),
-                    ],
-                  ),
-                  padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                  child: _isRefresh
-                      ? LoadingAnimation()
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Ulasan Penyewa",
-                                style: GoogleFonts.roboto(
-                                    fontSize: 20, fontWeight: FontWeight.bold)),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 5),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.star,
-                                      color: ColorValues.primaryPurple,
-                                      size: 12),
-                                  SizedBox(width: 3),
-                                  Text(dataDetailKost!.rating.toString(),
-                                      style: GoogleFonts.roboto(fontSize: 12)),
-                                  SizedBox(width: 3),
-                                  Icon(Icons.circle,
-                                      size: 6, color: Colors.grey[400]),
-                                  // SizedBox(width: 3),
-                                  // Text(
-                                  //   "(" + "143" + " Ulasan)",
-                                  //   style: GoogleFonts.roboto(
-                                  //       fontSize: 12, color: Colors.grey[600]),
-                                  // ),
-                                ],
-                              ),
-                            ),
-                            Text(dataDetailKost!.location,
-                                style: GoogleFonts.roboto(
-                                    fontWeight: FontWeight.bold)),
-                            dataComment!.isEmpty
-                                ? Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Center(
-                                          child: Lottie.asset(
-                                            'assets/lottie/not_found.json',
-                                            width: 175.w,
-                                            repeat: false,
-                                          ),
-                                        ),
-                                        Center(
-                                          child: Text(
-                                            'Belum ada Komen yang tertulis',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline3!
-                                                .copyWith(
-                                                  fontSize: 15,
-                                                  color: Color(0XFF9B9B9B),
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(top: 15),
-                                      child: ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount: dataComment!.length,
-                                          controller: controller,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 8),
-                                              child: Row(
-                                                children: [
-                                                  Image.asset(
-                                                      "assets/icon/photo_profile.png",
-                                                      width: 50.w),
-                                                  Expanded(
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                            dataComment![index]
-                                                                .user
-                                                                .name,
-                                                            style: GoogleFonts.roboto(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
-                                                        Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Icon(Icons.star,
-                                                                color: ColorValues
-                                                                    .primaryPurple,
-                                                                size: 11),
-                                                            SizedBox(width: 3),
-                                                            Text(
-                                                                dataComment![
-                                                                        index]
-                                                                    .rating
-                                                                    .toString(),
-                                                                style: GoogleFonts
-                                                                    .roboto(
-                                                                        fontSize:
-                                                                            12)),
-                                                            SizedBox(width: 3),
-                                                            Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(top: 3),
-                                                              child: Icon(
-                                                                  Icons.circle,
-                                                                  size: 6,
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      400]),
-                                                            ),
-                                                            SizedBox(width: 3),
-                                                            Text(
-                                                                DateFormat(
-                                                                        'yy/MM/d HH:mm')
-                                                                    .format(dataComment![
-                                                                            index]
-                                                                        .createdAt),
-                                                                style: GoogleFonts
-                                                                    .roboto(
-                                                                        fontSize:
-                                                                            11)),
-                                                          ],
-                                                        ),
-                                                        Text(
-                                                            dataComment![index]
-                                                                .commentBody,
-                                                            style: GoogleFonts
-                                                                .roboto(
-                                                                    fontSize:
-                                                                        12)),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          }),
-                                    ),
-                                  ),
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(12),
-                                  width: 275.w,
-                                  height: 75.h,
-                                  child: CustomTextFormField(
-                                    label: 'Ketikkan seusatu',
-                                    controller: commentController,
-                                    borderRadius: 30,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                      shape: MaterialStateProperty.all(
-                                        CircleBorder(),
-                                      ),
-                                      padding: MaterialStateProperty.all(
-                                        EdgeInsets.all(10),
-                                      ),
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                        ColorValues.primaryBlue,
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      await createComment();
-                                      commentController.clear();
-                                    },
-                                    child: Icon(Icons.send, size: 20),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                );
-              });
-        },
-      ),
-    );
-  }
+  // buildUlasanComment() {
+  //   return makeDismissible(
+  //     child: StatefulBuilder(
+  //       builder: (context, setState) {
+  //         Future createComment() async {
+  //           SharedPreferences pref = await SharedPreferences.getInstance();
+  //           setState(() {
+  //             _isRefresh = true;
+  //           });
+  //           LoginModel result_log = await ApiService().getLogin(
+  //               email: pref.getString("email_user").toString(),
+  //               password: pref.getString("pass_user").toString());
+  //           await ApiService().createComment(
+  //               token: result_log.token,
+  //               kost_id: widget.idKost,
+  //               user_id: result_log.data.id.toString(),
+  //               comment_body: commentController.text,
+  //               rating: "0");
+  //           await getComment();
+  //           setState(() {
+  //             _isRefresh = false;
+  //           });
+  //         }
+  //
+  //         return DraggableScrollableSheet(
+  //             initialChildSize: 0.8,
+  //             minChildSize: 0.3,
+  //             maxChildSize: 0.8,
+  //             builder: (_, controller) {
+  //               return Container(
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.white,
+  //                   borderRadius:
+  //                       BorderRadius.vertical(top: Radius.circular(20)),
+  //                   boxShadow: [
+  //                     BoxShadow(
+  //                       color: Colors.grey,
+  //                       spreadRadius: 5,
+  //                       blurRadius: 10,
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+  //                 child: _isRefresh
+  //                     ? LoadingAnimation()
+  //                     : Column(
+  //                         mainAxisAlignment: MainAxisAlignment.start,
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: [
+  //                           Text("Ulasan Penyewa",
+  //                               style: GoogleFonts.roboto(
+  //                                   fontSize: 20, fontWeight: FontWeight.bold)),
+  //                           Padding(
+  //                             padding: EdgeInsets.symmetric(vertical: 5),
+  //                             child: Row(
+  //                               children: [
+  //                                 Icon(Icons.star,
+  //                                     color: ColorValues.primaryPurple,
+  //                                     size: 12),
+  //                                 SizedBox(width: 3),
+  //                                 Text(dataDetailKost!.rating.toString(),
+  //                                     style: GoogleFonts.roboto(fontSize: 12)),
+  //                                 SizedBox(width: 3),
+  //                                 Icon(Icons.circle,
+  //                                     size: 6, color: Colors.grey[400]),
+  //                                 // SizedBox(width: 3),
+  //                                 // Text(
+  //                                 //   "(" + "143" + " Ulasan)",
+  //                                 //   style: GoogleFonts.roboto(
+  //                                 //       fontSize: 12, color: Colors.grey[600]),
+  //                                 // ),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                           Text(dataDetailKost!.location,
+  //                               style: GoogleFonts.roboto(
+  //                                   fontWeight: FontWeight.bold)),
+  //                           dataComment!.isEmpty
+  //                               ? Expanded(
+  //                                   child: Column(
+  //                                     crossAxisAlignment:
+  //                                         CrossAxisAlignment.center,
+  //                                     mainAxisAlignment:
+  //                                         MainAxisAlignment.center,
+  //                                     children: [
+  //                                       Center(
+  //                                         child: Lottie.asset(
+  //                                           'assets/lottie/not_found.json',
+  //                                           width: 175.w,
+  //                                           repeat: false,
+  //                                         ),
+  //                                       ),
+  //                                       Center(
+  //                                         child: Text(
+  //                                           'Belum ada Komen yang tertulis',
+  //                                           style: Theme.of(context)
+  //                                               .textTheme
+  //                                               .headline3!
+  //                                               .copyWith(
+  //                                                 fontSize: 15,
+  //                                                 color: Color(0XFF9B9B9B),
+  //                                                 fontWeight: FontWeight.w500,
+  //                                               ),
+  //                                         ),
+  //                                       ),
+  //                                     ],
+  //                                   ),
+  //                                 )
+  //                               : Expanded(
+  //                                   child: Padding(
+  //                                     padding: EdgeInsets.only(top: 15),
+  //                                     child: ListView.builder(
+  //                                         shrinkWrap: true,
+  //                                         itemCount: dataComment!.length,
+  //                                         controller: controller,
+  //                                         itemBuilder: (BuildContext context,
+  //                                             int index) {
+  //                                           return Padding(
+  //                                             padding: EdgeInsets.symmetric(
+  //                                                 vertical: 8),
+  //                                             child: Row(
+  //                                               children: [
+  //                                                 Image.asset(
+  //                                                     "assets/icon/photo_profile.png",
+  //                                                     width: 50.w),
+  //                                                 Expanded(
+  //                                                   child: Column(
+  //                                                     mainAxisSize:
+  //                                                         MainAxisSize.min,
+  //                                                     mainAxisAlignment:
+  //                                                         MainAxisAlignment
+  //                                                             .start,
+  //                                                     crossAxisAlignment:
+  //                                                         CrossAxisAlignment
+  //                                                             .start,
+  //                                                     children: [
+  //                                                       Text(
+  //                                                           dataComment![index]
+  //                                                               .user
+  //                                                               .name,
+  //                                                           style: GoogleFonts.roboto(
+  //                                                               fontSize: 12,
+  //                                                               fontWeight:
+  //                                                                   FontWeight
+  //                                                                       .bold)),
+  //                                                       Row(
+  //                                                         mainAxisSize:
+  //                                                             MainAxisSize.min,
+  //                                                         mainAxisAlignment:
+  //                                                             MainAxisAlignment
+  //                                                                 .start,
+  //                                                         crossAxisAlignment:
+  //                                                             CrossAxisAlignment
+  //                                                                 .start,
+  //                                                         children: [
+  //                                                           Icon(Icons.star,
+  //                                                               color: ColorValues
+  //                                                                   .primaryPurple,
+  //                                                               size: 11),
+  //                                                           SizedBox(width: 3),
+  //                                                           Text(
+  //                                                               dataComment![
+  //                                                                       index]
+  //                                                                   .rating
+  //                                                                   .toString(),
+  //                                                               style: GoogleFonts
+  //                                                                   .roboto(
+  //                                                                       fontSize:
+  //                                                                           12)),
+  //                                                           SizedBox(width: 3),
+  //                                                           Padding(
+  //                                                             padding: EdgeInsets
+  //                                                                 .only(top: 3),
+  //                                                             child: Icon(
+  //                                                                 Icons.circle,
+  //                                                                 size: 6,
+  //                                                                 color: Colors
+  //                                                                         .grey[
+  //                                                                     400]),
+  //                                                           ),
+  //                                                           SizedBox(width: 3),
+  //                                                           Text(
+  //                                                               DateFormat(
+  //                                                                       'yy/MM/d HH:mm')
+  //                                                                   .format(dataComment![
+  //                                                                           index]
+  //                                                                       .createdAt),
+  //                                                               style: GoogleFonts
+  //                                                                   .roboto(
+  //                                                                       fontSize:
+  //                                                                           11)),
+  //                                                         ],
+  //                                                       ),
+  //                                                       Text(
+  //                                                           dataComment![index]
+  //                                                               .commentBody,
+  //                                                           style: GoogleFonts
+  //                                                               .roboto(
+  //                                                                   fontSize:
+  //                                                                       12)),
+  //                                                     ],
+  //                                                   ),
+  //                                                 ),
+  //                                               ],
+  //                                             ),
+  //                                           );
+  //                                         }),
+  //                                   ),
+  //                                 ),
+  //                         ],
+  //                       ),
+  //               );
+  //             });
+  //       },
+  //     ),
+  //   );
+  // }
 
   buildUlasan() {
     return makeDismissible(
@@ -953,20 +944,27 @@ class _DetailKostState extends State<DetailKost> {
                         fontSize: 20, fontWeight: FontWeight.w500)),
                 IconButton(
                     onPressed: () async {
-                      // SharedPreferences pref =
-                      //     await SharedPreferences.getInstance();
-                      // if (pref.getString("token") == null && user == null) {
-                      //   SharedCode.navigatorPush(context, RolePage());
-                      // } else if (user != null) {
-                      //   BookmarkList.bookmarkItems.add(widget.model);
-                      //   print("BOOKMARK LENGTH: " +
-                      //       BookmarkList.bookmarkItems.length.toString());
-                      //   setState(() {
-                      //     _iconColor = ColorValues.primaryPurple;
-                      //   });
-                      // } else {
-                      //   print("APPS LOGIN");
-                      // }
+                      SharedPreferences pref =
+                          await SharedPreferences.getInstance();
+                      if (pref.getString("token_user") == null &&
+                          user == null) {
+                        SharedCode.navigatorPush(context, RolePage());
+                      } else if (user != null) {
+                        BookmarkList.bookmarkItems.add(widget.model);
+                        print("BOOKMARK LENGTH: " +
+                            BookmarkList.bookmarkItems.length.toString());
+                        setState(() {
+                          _iconColor = ColorValues.primaryPurple;
+                        });
+                      } else {
+                        BookmarkList.bookmarkItems.add(widget.model);
+                        print("BOOKMARK LENGTH: " +
+                            BookmarkList.bookmarkItems.length.toString());
+                        setState(() {
+                          _iconColor = ColorValues.primaryPurple;
+                        });
+                        print("APPS LOGIN");
+                      }
                     },
                     icon: Icon(Icons.bookmark, color: _iconColor))
               ],
@@ -997,7 +995,10 @@ class _DetailKostState extends State<DetailKost> {
                 children: [
                   Icon(Icons.star, color: ColorValues.primaryPurple, size: 20),
                   SizedBox(width: 5.w),
-                  Text(dataDetailKost!.rating.toString() + " (" + "143" + ")")
+                  Text(dataDetailKost!.rating.toString() +
+                      " (" +
+                      dataComment!.length.toString() +
+                      ")")
                 ],
               ),
             )
@@ -1078,7 +1079,107 @@ class _DetailKostState extends State<DetailKost> {
     );
   }
 
-  commentUser() {
+  commentRatingUser() {
+    return Card(
+      color: Colors.white,
+      elevation: 4,
+      shadowColor: Colors.black,
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Rating Kos ini",
+              style: GoogleFonts.roboto(fontSize: 20),
+            ),
+            RatingBar.builder(
+              itemPadding: EdgeInsets.all(15),
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                switch (index) {
+                  case 0:
+                    return Icon(
+                      Icons.sentiment_very_dissatisfied,
+                      color: Colors.red,
+                    );
+                  case 1:
+                    return Icon(
+                      Icons.sentiment_dissatisfied,
+                      color: Colors.redAccent,
+                    );
+                  case 2:
+                    return Icon(
+                      Icons.sentiment_neutral,
+                      color: Colors.amber,
+                    );
+                  case 3:
+                    return Icon(
+                      Icons.sentiment_satisfied,
+                      color: Colors.lightGreen,
+                    );
+                  case 4:
+                    return Icon(
+                      Icons.sentiment_very_satisfied,
+                      color: Colors.green,
+                    );
+                }
+                return Icon(
+                  Icons.sentiment_very_dissatisfied,
+                  color: Colors.red,
+                );
+              },
+              onRatingUpdate: (rating) {
+                setState(() {
+                  rate = rating;
+                });
+                print(rate);
+              },
+            ),
+            rate == null
+                ? Container()
+                : Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        width: 275.w,
+                        height: 75.h,
+                        child: CustomTextFormField(
+                          label: 'Ketikkan seusatu',
+                          controller: commentController,
+                          borderRadius: 30,
+                        ),
+                      ),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                              CircleBorder(),
+                            ),
+                            padding: MaterialStateProperty.all(
+                              EdgeInsets.all(10),
+                            ),
+                            backgroundColor: MaterialStateProperty.all(
+                              ColorValues.primaryBlue,
+                            ),
+                          ),
+                          onPressed: () async {
+                            await createComment();
+                            commentController.clear();
+                          },
+                          child: Icon(Icons.send, size: 20),
+                        ),
+                      ),
+                    ],
+                  ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  comment() {
     return Card(
       color: Colors.white,
       elevation: 4,
@@ -1125,49 +1226,53 @@ class _DetailKostState extends State<DetailKost> {
                             fontSize: 12, color: Colors.grey[600]),
                       ),
                       listviewTopUlasan(),
-                      GestureDetector(
-                        onTap: () async {
-                          SharedPreferences pref =
-                              await SharedPreferences.getInstance();
-                          if (pref.getString("token_user") == null &&
-                              user == null) {
-                            showModalBottomSheet(
-                              backgroundColor: Colors.transparent,
-                              isScrollControlled: true,
-                              context: context,
-                              builder: (context) => buildUlasan(),
-                            );
-                          } else if (user != null) {
-                            showModalBottomSheet(
-                              backgroundColor: Colors.transparent,
-                              isScrollControlled: true,
-                              context: context,
-                              builder: (context) => buildUlasanComment(),
-                            );
-                          } else {
-                            showModalBottomSheet(
-                              backgroundColor: Colors.transparent,
-                              isScrollControlled: true,
-                              context: context,
-                              builder: (context) => buildUlasanComment(),
-                            );
-                          }
-                        },
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Text("Lihat semua ulasan",
-                                  style: GoogleFonts.roboto(fontSize: 12)),
-                              Icon(
-                                Icons.arrow_drop_down_rounded,
-                                color: ColorValues.primaryPurple,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
                     ],
                   ),
+            GestureDetector(
+              onTap: () async {
+                showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) => buildUlasan(),
+                );
+                // SharedPreferences pref = await SharedPreferences.getInstance();
+                // if (pref.getString("token_user") == null && user == null) {
+                //   showModalBottomSheet(
+                //     backgroundColor: Colors.transparent,
+                //     isScrollControlled: true,
+                //     context: context,
+                //     builder: (context) => buildUlasan(),
+                //   );
+                // } else if (user != null) {
+                //   showModalBottomSheet(
+                //     backgroundColor: Colors.transparent,
+                //     isScrollControlled: true,
+                //     context: context,
+                //     builder: (context) => buildUlasanComment(),
+                //   );
+                // } else {
+                //   showModalBottomSheet(
+                //     backgroundColor: Colors.transparent,
+                //     isScrollControlled: true,
+                //     context: context,
+                //     builder: (context) => buildUlasanComment(),
+                //   );
+                // }
+              },
+              child: Center(
+                child: Column(
+                  children: [
+                    Text("Lihat semua ulasan",
+                        style: GoogleFonts.roboto(fontSize: 12)),
+                    Icon(
+                      Icons.arrow_drop_down_rounded,
+                      color: ColorValues.primaryPurple,
+                    )
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -1398,7 +1503,7 @@ class _DetailKostState extends State<DetailKost> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialogImage();
+        return AlertDialogImage(idKost: widget.idKost);
       },
     );
   }
