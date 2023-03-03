@@ -7,6 +7,7 @@ import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:project_anakkos_app/api_url_config/server_config.dart';
+import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/model/chat_model.dart';
 import 'package:project_anakkos_app/model/chat_room_model.dart';
 import 'package:project_anakkos_app/model/comment_model.dart';
@@ -35,10 +36,10 @@ class ApiService {
     final body = {"email": email, "password": password};
     print("RAW LOGIN: " + body.toString());
     print("URL LOGIN: " + ServerConfig.baseURL + ServerConfig.login);
-    final res = await http.post(
-        Uri.parse(ServerConfig.baseURL + ServerConfig.login),
-        headers: headers,
-        body: jsonEncode(body));
+    final res = await http
+        .post(Uri.parse(ServerConfig.baseURL + ServerConfig.login),
+            headers: headers, body: jsonEncode(body))
+        .timeout(Duration(seconds: 20));
     print("STATUS CODE(LOGIN): " + res.statusCode.toString());
     print("RES LOGIN: " + res.body.toString());
     if (res.statusCode == 200) {
@@ -809,12 +810,34 @@ class ApiService {
         ServerConfig.baseURL +
         ServerConfig.updateImageKost +
         "/$kostId");
-    final res = await http.put(
+    final res = await http.post(
         Uri.parse(
             ServerConfig.baseURL + ServerConfig.updateImageKost + "/$kostId"),
         headers: headers);
     print("STATUS CODE(UPDATE IMAGE KOST): " + res.statusCode.toString());
     print("RES UPDATE IMAGE KOST: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body);
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future getAvgRate({required String kost_id}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    print("URL UPDATE AVG RATE: " +
+        ServerConfig.baseURL +
+        ServerConfig.updateAvgRating +
+        "/$kost_id");
+    final res = await http.get(
+        Uri.parse(
+            ServerConfig.baseURL + ServerConfig.updateAvgRating + "/$kost_id"),
+        headers: headers);
+    print("STATUS CODE(UPDATE AVG RATE): " + res.statusCode.toString());
+    print("RES UPDATE AVG RATE: " + res.body.toString());
     if (res.statusCode == 200) {
       return jsonDecode(res.body);
     } else {

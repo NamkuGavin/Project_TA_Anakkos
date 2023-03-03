@@ -50,33 +50,6 @@ class _HomePageState extends State<HomePage> {
   List<HistoryData> kostPending = [];
   final _seacrhController = TextEditingController();
 
-  List<ChatModel> chat = [
-    ChatModel("Hai, dengan Pemilik Kost disini. Ada yang bisa saya bantu?",
-        DateTime.now().subtract(Duration(days: 3)), false),
-    ChatModel(
-        "Halo, saya ingin bertanya apakah di kos ini boleh membawa kulkas?",
-        DateTime.now().subtract(Duration(days: 3)),
-        true),
-    ChatModel("Boleh tapi tanggungan harga listrik nya nanti bertamah y",
-        DateTime.now().subtract(Duration(days: 3)), false),
-    ChatModel("Oooh bertambah y, hmm...",
-        DateTime.now().subtract(Duration(days: 3)), true),
-    ChatModel("Kalau boleh kemungkinan tambah biaya listrik nya berapaan?",
-        DateTime.now().subtract(Duration(days: 3)), true),
-    ChatModel(
-        "kalau biaya listrik nya harus menyesuaikan berapa Watt kulkas anda",
-        DateTime.now().subtract(Duration(days: 3)),
-        false),
-    ChatModel("kulkas saya bertenaga 500 Watt, itu kira kira bisa berapa?",
-        DateTime.now().subtract(Duration(days: 3)), true),
-    ChatModel("kalo 500 Watt mungkin bertambah sekitar 100rb an",
-        DateTime.now().subtract(Duration(days: 3)), false),
-    ChatModel("ooh gitu...y udah ini ta pikirkan dulu, terima kasih banyak",
-        DateTime.now().subtract(Duration(days: 3)), true),
-    ChatModel(
-        "oke sama sama", DateTime.now().subtract(Duration(days: 3)), false),
-  ];
-
   Future getKostPending() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
@@ -95,19 +68,11 @@ class _HomePageState extends State<HomePage> {
             .where((element) => element.status == "pending")
             .toList();
       });
-      KostbyLocationModel kost_byLoc =
-          await ApiService().getKostbyLoc(location: location);
-      setState(() {
-        dataKostbyLoc = kost_byLoc.data;
-      });
+      await getKostbyLoc();
       await getKostbyPopular();
     } else {
       await getKostbyPopular();
-      KostbyLocationModel kost_byLoc =
-          await ApiService().getKostbyLoc(location: location);
-      setState(() {
-        dataKostbyLoc = kost_byLoc.data;
-      });
+      await getKostbyLoc();
     }
     setState(() {
       _isLoad = false;
@@ -132,6 +97,14 @@ class _HomePageState extends State<HomePage> {
         await ApiService().getKostbyPopu(location: location);
     setState(() {
       dataKostbyPopular = _model.data;
+    });
+  }
+
+  Future getKostbyLoc() async {
+    KostbyLocationModel _model =
+        await ApiService().getKostbyLoc(location: location);
+    setState(() {
+      dataKostbyLoc = _model.data;
     });
   }
 
@@ -183,15 +156,9 @@ class _HomePageState extends State<HomePage> {
           onSubmitted: (String) async {
             setState(() {
               location = _seacrhController.text;
-            });
-            setState(() {
               _isLoad = true;
             });
-            KostbyLocationModel _model =
-                await ApiService().getKostbyLoc(location: location);
-            setState(() {
-              dataKostbyLoc = _model.data;
-            });
+            await getKostbyLoc();
             await getKostbyPopular();
             setState(() {
               _isLoad = false;
@@ -259,12 +226,20 @@ class _HomePageState extends State<HomePage> {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 0.7,
+                    childAspectRatio: 0.57,
                     crossAxisCount: 2,
                     crossAxisSpacing: 10.0,
                     mainAxisSpacing: 10.0,
                   ),
-                  itemCount: 4,
+                  itemCount: dataKostbyPopular.length == 1
+                      ? 1
+                      : dataKostbyPopular.length == 2
+                          ? 2
+                          : dataKostbyPopular.length == 3
+                              ? 3
+                              : dataKostbyPopular.length == 4
+                                  ? 4
+                                  : dataKostbyPopular.length,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {
@@ -277,11 +252,16 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ClipRRect(
-                                borderRadius: BorderRadius.vertical(
-                                    bottom: Radius.circular(10)),
-                                child: Image.asset("assets/dummykos/kost_1.png",
-                                    fit: BoxFit.cover)),
+                            SizedBox(
+                              height: 125.h,
+                              width: 150.w,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.vertical(
+                                      bottom: Radius.circular(10)),
+                                  child: Image.network(
+                                      dataKostbyPopular[index].coverImg,
+                                      fit: BoxFit.cover)),
+                            ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 4),
                               child: Column(
@@ -304,9 +284,12 @@ class _HomePageState extends State<HomePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Icon(Icons.location_on_rounded, size: 13),
-                                      Text(dataKostbyPopular[index].location,
-                                          style:
-                                              GoogleFonts.inter(fontSize: 11))
+                                      Expanded(
+                                        child: Text(
+                                            dataKostbyPopular[index].location,
+                                            style: GoogleFonts.inter(
+                                                fontSize: 11)),
+                                      )
                                     ],
                                   ),
                                   SizedBox(height: 6.h),
@@ -341,7 +324,8 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(10)),
                 ),
                 onPressed: () {
-                  SharedCode.navigatorPush(context, PopulerKost());
+                  SharedCode.navigatorPush(
+                      context, PopulerKost(location: location));
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -453,11 +437,12 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             SizedBox(
                               height: 125.h,
-                              width: 150 .w,
+                              width: 150.w,
                               child: ClipRRect(
                                   borderRadius: BorderRadius.vertical(
                                       bottom: Radius.circular(10)),
-                                  child: Image.network(dataKostbyLoc[index].coverImg,
+                                  child: Image.network(
+                                      dataKostbyLoc[index].coverImg,
                                       fit: BoxFit.fill)),
                             ),
                             Padding(

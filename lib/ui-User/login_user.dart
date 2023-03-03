@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,17 +42,38 @@ class _LoginUserState extends State<LoginUser> {
 
   Future getLogin() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      _isLoad = true;
-    });
-    LoginModel model = await ApiService().getLogin(
-        email: _emailController.text, password: _passwordController.text);
-    pref.setString('pass_user', _passwordController.text);
-    pref.setString('email_user', _emailController.text);
-    pref.setString('token_user', model.token);
-    setState(() {
-      _isLoad = false;
-    });
+    try {
+      setState(() {
+        _isLoad = true;
+      });
+      LoginModel model = await ApiService().getLogin(
+          email: _emailController.text, password: _passwordController.text);
+      pref.setString('pass_user', _passwordController.text);
+      pref.setString('email_user', _emailController.text);
+      pref.setString('token_user', model.token);
+      setState(() {
+        _isLoad = false;
+      });
+      await SharedCode.navigatorReplacement(context, NavigationWidgetBarUser());
+    } on HttpException {
+      setState(() {
+        _isLoad = false;
+      });
+      return SharedCode.showAlertDialog(
+          context, 'Error', 'HttpException', 'error');
+    } on SocketException {
+      setState(() {
+        _isLoad = false;
+      });
+      return SharedCode.showAlertDialog(
+          context, 'Login Failed', 'Tidak ada koneksi internet', 'error');
+    } on TimeoutException {
+      setState(() {
+        _isLoad = false;
+      });
+      return SharedCode.showAlertDialog(context, 'Timeout',
+          'Sepertinya ada kesalahan koneksi internet', 'warning');
+    }
   }
 
   @override
@@ -123,8 +145,6 @@ class _LoginUserState extends State<LoginUser> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               await getLogin();
-                              await SharedCode.navigatorReplacement(
-                                  context, NavigationWidgetBarUser());
                             }
                           },
                           child: Text('Masuk'),
