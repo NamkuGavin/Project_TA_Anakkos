@@ -19,7 +19,6 @@ class NearByKost extends StatefulWidget {
 
 class _NearByKostState extends State<NearByKost> {
   bool _isLoad = false;
-  String location = "jakarta";
   List<KostbyLocationData>? dataKostbyLoc;
   List<KostDummyModel> nearby = [
     KostDummyModel("assets/dummykos/kost_1.png", "Laki-laki", "Kost Skywalker",
@@ -69,7 +68,7 @@ class _NearByKostState extends State<NearByKost> {
               padding: EdgeInsets.all(8.0),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 0.55,
+                  childAspectRatio: 0.57,
                   crossAxisCount: 2,
                   crossAxisSpacing: 10.0,
                   mainAxisSpacing: 10.0,
@@ -93,11 +92,16 @@ class _NearByKostState extends State<NearByKost> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ClipRRect(
-                              borderRadius: BorderRadius.vertical(
-                                  bottom: Radius.circular(10)),
-                              child: Image.asset("assets/dummykos/kost_1.png",
-                                  fit: BoxFit.cover)),
+                          SizedBox(
+                            height: 125.h,
+                            width: 150.w,
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.vertical(
+                                    bottom: Radius.circular(10)),
+                                child: Image.network(
+                                    dataKostbyLoc![index].coverImg,
+                                    fit: BoxFit.cover)),
+                          ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 4),
                             child: Column(

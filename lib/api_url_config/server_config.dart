@@ -27,4 +27,5 @@ class ServerConfig {
   static String getImageRoomKost = "/get-image";
   static String uploadImageKost = "/create-cover";
   static String updateImageKost = "/add-cover";
+  static String updateAvgRating = "/update-avg-rating";
 }

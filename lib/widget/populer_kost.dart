@@ -9,7 +9,8 @@ import 'package:project_anakkos_app/model/kost_by_popu_model.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 
 class PopulerKost extends StatefulWidget {
-  const PopulerKost({Key? key}) : super(key: key);
+  final String location;
+  PopulerKost({Key? key, required this.location}) : super(key: key);
 
   @override
   State<PopulerKost> createState() => _PopulerKostState();
@@ -17,7 +18,6 @@ class PopulerKost extends StatefulWidget {
 
 class _PopulerKostState extends State<PopulerKost> {
   bool _isLoad = false;
-  String location = "jakarta";
   List<KostbyPopularData>? dataKostbyPopular;
   List<KostDummyModel> popular = [
     KostDummyModel("assets/dummykos/kost_1.png", "Laki-laki", "Kost Skywalker",
@@ -43,7 +43,7 @@ class _PopulerKostState extends State<PopulerKost> {
       _isLoad = true;
     });
     KostbyPopularModel _model =
-        await ApiService().getKostbyPopu(location: location);
+        await ApiService().getKostbyPopu(location: widget.location);
     setState(() {
       dataKostbyPopular = _model.data;
       _isLoad = false;
@@ -67,7 +67,7 @@ class _PopulerKostState extends State<PopulerKost> {
               padding: EdgeInsets.all(8.0),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.57,
                   crossAxisCount: 2,
                   crossAxisSpacing: 10.0,
                   mainAxisSpacing: 10.0,
@@ -85,11 +85,16 @@ class _PopulerKostState extends State<PopulerKost> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ClipRRect(
-                              borderRadius: BorderRadius.vertical(
-                                  bottom: Radius.circular(10)),
-                              child: Image.asset("assets/dummykos/kost_1.png",
-                                  fit: BoxFit.cover)),
+                          SizedBox(
+                            height: 125.h,
+                            width: 150.w,
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.vertical(
+                                    bottom: Radius.circular(10)),
+                                child: Image.network(
+                                    dataKostbyPopular![index].coverImg,
+                                    fit: BoxFit.cover)),
+                          ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 4),
                             child: Column(
@@ -111,8 +116,12 @@ class _PopulerKostState extends State<PopulerKost> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Icon(Icons.location_on_rounded, size: 13),
-                                    Text(dataKostbyPopular![index].location,
-                                        style: GoogleFonts.inter(fontSize: 11))
+                                    Expanded(
+                                      child: Text(
+                                          dataKostbyPopular![index].location,
+                                          style:
+                                              GoogleFonts.inter(fontSize: 11)),
+                                    )
                                   ],
                                 ),
                                 SizedBox(height: 6.h),

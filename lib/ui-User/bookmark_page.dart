@@ -6,7 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/db_helper.dart';
 import 'package:project_anakkos_app/dummy/dummy_bookmark.dart';
+import 'package:project_anakkos_app/model/db_model/kost_model.dart';
+import 'package:project_anakkos_app/model/history_model.dart';
+import 'package:project_anakkos_app/widget/loadingWidget.dart';
 
 class BookmarkPage extends StatefulWidget {
   const BookmarkPage({Key? key}) : super(key: key);
@@ -16,6 +20,31 @@ class BookmarkPage extends StatefulWidget {
 }
 
 class _BookmarkPageState extends State<BookmarkPage> {
+  late List<KostFav> kostFav;
+  bool _isLoad = false;
+
+  @override
+  void initState() {
+    super.initState();
+    refreshKost();
+  }
+
+  // @override
+  // void dispose() {
+  //   KostDatabase.instance.close();
+  //   super.dispose();
+  // }
+
+  Future refreshKost() async {
+    setState(() {
+      _isLoad = true;
+    });
+    this.kostFav = await KostDatabase.instance.readAll();
+    setState(() {
+      _isLoad = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,116 +57,112 @@ class _BookmarkPageState extends State<BookmarkPage> {
             icon: Icon(Icons.arrow_back_rounded, color: Colors.black)),
         title: Text("Bookmark", style: GoogleFonts.roboto(color: Colors.black)),
       ),
-      body: BookmarkList.bookmarkItems.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Lottie.asset(
-                    'assets/lottie/not_found.json',
-                    width: 225.w,
-                    repeat: false,
+      body: _isLoad
+          ? LoadingAnimation()
+          : kostFav.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Lottie.asset(
+                        'assets/lottie/not_found.json',
+                        width: 225.w,
+                        repeat: false,
+                      ),
+                      Text(
+                        'Bookmark masih kosong',
+                        style: Theme.of(context).textTheme.headline3!.copyWith(
+                              fontSize: 17,
+                              color: Color(0XFF9B9B9B),
+                              fontWeight: FontWeight.w500,
+                            ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    'Bookmark masih kosong',
-                    style: Theme.of(context).textTheme.headline3!.copyWith(
-                          fontSize: 17,
-                          color: Color(0XFF9B9B9B),
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                ],
-              ),
-            )
-          : ListView.builder(
-              itemCount: BookmarkList.bookmarkItems.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Card(
-                  color: Colors.white,
-                  elevation: 4,
-                  shadowColor: Colors.black,
-                  child: IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                            width: 100,
-                            child: Image.asset("assets/dummykos/kost_4.png",
-                                fit: BoxFit.fill)),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    DottedBorder(
-                                      color: Colors.black,
-                                      strokeWidth: 1,
-                                      child: Text(
-                                          BookmarkList
-                                              .bookmarkItems[index].kostType,
-                                          style:
-                                              GoogleFonts.inter(fontSize: 10)),
-                                    ),
-                                    IconButton(
-                                        onPressed: () async {
-                                          setState(() {
-                                            BookmarkList.bookmarkItems.remove(
-                                                BookmarkList
-                                                    .bookmarkItems[index]);
-                                            print("BOOKMARK LENGTH: " +
-                                                BookmarkList
-                                                    .bookmarkItems.length
-                                                    .toString());
-                                          });
-                                        },
-                                        icon: Icon(Icons.bookmark,
-                                            color: ColorValues.primaryPurple))
-                                  ],
-                                ),
-                                Text(BookmarkList.bookmarkItems[index].kostName,
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11)),
-                                SizedBox(height: 5.h),
-                                Row(
+                )
+              : ListView.builder(
+                  itemCount: kostFav.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final kost = kostFav[index];
+                    return Card(
+                      color: Colors.white,
+                      elevation: 4,
+                      shadowColor: Colors.black,
+                      child: IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                                width: 100,
+                                child: Image.network(kost.coverImg,
+                                    fit: BoxFit.fill)),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Icon(Icons.location_on_rounded, size: 13),
-                                    Expanded(
-                                      child: Text(
-                                          BookmarkList
-                                              .bookmarkItems[index].location,
-                                          style: GoogleFonts.inter(fontSize: 10)),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        DottedBorder(
+                                          color: Colors.black,
+                                          strokeWidth: 1,
+                                          child: Text(kost.type,
+                                              style: GoogleFonts.inter(
+                                                  fontSize: 10)),
+                                        ),
+                                        IconButton(
+                                            onPressed: () async {
+                                              await KostDatabase.instance
+                                                  .delete(kost.id!);
+                                              refreshKost();
+                                            },
+                                            icon: Icon(Icons.bookmark,
+                                                color:
+                                                    ColorValues.primaryPurple))
+                                      ],
+                                    ),
+                                    Text(kost.name,
+                                        style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11)),
+                                    SizedBox(height: 5.h),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Icon(Icons.location_on_rounded,
+                                            size: 13),
+                                        Expanded(
+                                          child: Text(kost.location,
+                                              style: GoogleFonts.inter(
+                                                  fontSize: 10)),
+                                        )
+                                      ],
+                                    ),
+                                    Align(
+                                      alignment: AlignmentDirectional.bottomEnd,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 12),
+                                        child: Text(kost.price,
+                                            style: GoogleFonts.inter(
+                                                fontSize: 10)),
+                                      ),
                                     )
                                   ],
                                 ),
-                                Align(
-                                  alignment: AlignmentDirectional.bottomEnd,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 12),
-                                    child: Text(
-                                        BookmarkList
-                                            .bookmarkItems[index].roomPrice,
-                                        style: GoogleFonts.inter(fontSize: 10)),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
     );
   }
 }

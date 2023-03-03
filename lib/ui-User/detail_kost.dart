@@ -14,10 +14,12 @@ import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/db_helper.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/ulasan_model.dart';
 import 'package:project_anakkos_app/dummy/dummy_bookmark.dart';
 import 'package:project_anakkos_app/model/comment_model.dart';
+import 'package:project_anakkos_app/model/db_model/kost_model.dart';
 import 'package:project_anakkos_app/model/detail_kost_user_model.dart';
 import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
@@ -50,7 +52,6 @@ class _DetailKostState extends State<DetailKost> {
   DetailKostUserData? dataDetailKost;
   List<CommentData>? dataComment;
   bool _isLoad = false;
-  bool _isRefresh = false;
   List<List<FasilitasKostData>>? dataFasilitas;
   double? rate;
 
@@ -116,10 +117,22 @@ class _DetailKostState extends State<DetailKost> {
         user_id: result_log.data.id.toString(),
         comment_body: commentController.text,
         rating: rate!);
+    await ApiService().getAvgRate(kost_id: widget.idKost);
     await getComment();
     setState(() {
       _isLoad = false;
     });
+  }
+
+  Future addNote() async {
+    final kost_fav = KostFav(
+        idKost: int.parse(widget.idKost),
+        name: widget.model.kostName,
+        coverImg: widget.model.coverImg,
+        location: widget.model.location,
+        type: widget.model.kostType,
+        price: widget.model.totalPrice);
+    await KostDatabase.instance.create(kost_fav);
   }
 
   @override
@@ -950,20 +963,15 @@ class _DetailKostState extends State<DetailKost> {
                           user == null) {
                         SharedCode.navigatorPush(context, RolePage());
                       } else if (user != null) {
-                        BookmarkList.bookmarkItems.add(widget.model);
-                        print("BOOKMARK LENGTH: " +
-                            BookmarkList.bookmarkItems.length.toString());
+                        await addNote();
                         setState(() {
                           _iconColor = ColorValues.primaryPurple;
                         });
                       } else {
-                        BookmarkList.bookmarkItems.add(widget.model);
-                        print("BOOKMARK LENGTH: " +
-                            BookmarkList.bookmarkItems.length.toString());
+                        await addNote();
                         setState(() {
                           _iconColor = ColorValues.primaryPurple;
                         });
-                        print("APPS LOGIN");
                       }
                     },
                     icon: Icon(Icons.bookmark, color: _iconColor))
@@ -1094,48 +1102,33 @@ class _DetailKostState extends State<DetailKost> {
               "Rating Kos ini",
               style: GoogleFonts.roboto(fontSize: 20),
             ),
-            RatingBar.builder(
-              itemPadding: EdgeInsets.all(15),
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                switch (index) {
-                  case 0:
-                    return Icon(
-                      Icons.sentiment_very_dissatisfied,
-                      color: Colors.red,
-                    );
-                  case 1:
-                    return Icon(
-                      Icons.sentiment_dissatisfied,
-                      color: Colors.redAccent,
-                    );
-                  case 2:
-                    return Icon(
-                      Icons.sentiment_neutral,
-                      color: Colors.amber,
-                    );
-                  case 3:
-                    return Icon(
-                      Icons.sentiment_satisfied,
-                      color: Colors.lightGreen,
-                    );
-                  case 4:
-                    return Icon(
-                      Icons.sentiment_very_satisfied,
-                      color: Colors.green,
-                    );
-                }
-                return Icon(
-                  Icons.sentiment_very_dissatisfied,
-                  color: Colors.red,
-                );
-              },
-              onRatingUpdate: (rating) {
-                setState(() {
-                  rate = rating;
-                });
-                print(rate);
-              },
+            Center(
+              child: RatingBar(
+                itemPadding: EdgeInsets.all(15),
+                itemCount: 5,
+                itemSize: 30.w,
+                allowHalfRating: true,
+                ratingWidget: RatingWidget(
+                  full: Icon(
+                    Icons.star,
+                    color: ColorValues.primaryPurple,
+                  ),
+                  half: Icon(
+                    Icons.star_half,
+                    color: ColorValues.primaryPurple,
+                  ),
+                  empty: Icon(
+                    Icons.star_border,
+                    color: ColorValues.primaryPurple,
+                  ),
+                ),
+                onRatingUpdate: (rating) {
+                  setState(() {
+                    rate = rating;
+                  });
+                  print(rate);
+                },
+              ),
             ),
             rate == null
                 ? Container()
