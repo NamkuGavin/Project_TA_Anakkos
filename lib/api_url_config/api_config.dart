@@ -19,6 +19,7 @@ import 'package:project_anakkos_app/model/image_model.dart';
 import 'package:project_anakkos_app/model/kost_by_facility_model.dart';
 import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/model/kost_by_popu_model.dart';
+import 'package:project_anakkos_app/model/kost_room_rule_model.dart';
 import 'package:project_anakkos_app/model/kost_seller_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/model/register_model.dart';
@@ -902,6 +903,50 @@ class ApiService {
     print("RES CREATE ROOM RULE: " + res.body.toString());
     if (res.statusCode == 200) {
       return jsonDecode(res.body);
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<KostRoomRuleModel> getKostRule({required String kost_id}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    print("URL KOST RULE: " +
+        ServerConfig.baseURL +
+        ServerConfig.getKostRule +
+        "/$kost_id");
+    final res = await http.get(
+        Uri.parse(
+            ServerConfig.baseURL + ServerConfig.getKostRule + "/$kost_id"),
+        headers: headers);
+    print("STATUS CODE KOST RULE): " + res.statusCode.toString());
+    print("RES KOST RULE: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return KostRoomRuleModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<KostRoomRuleModel> getRoomRule({required String kost_id}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    print("URL ROOM RULE: " +
+        ServerConfig.baseURL +
+        ServerConfig.getRoomRule +
+        "/$kost_id");
+    final res = await http.get(
+        Uri.parse(
+            ServerConfig.baseURL + ServerConfig.getRoomRule + "/$kost_id"),
+        headers: headers);
+    print("STATUS CODE ROOM RULE): " + res.statusCode.toString());
+    print("RES ROOM RULE: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return KostRoomRuleModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

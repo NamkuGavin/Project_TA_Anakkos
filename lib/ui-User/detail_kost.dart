@@ -22,6 +22,7 @@ import 'package:project_anakkos_app/model/comment_model.dart';
 import 'package:project_anakkos_app/model/db_model/kost_model.dart';
 import 'package:project_anakkos_app/model/detail_kost_user_model.dart';
 import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
+import 'package:project_anakkos_app/model/kost_room_rule_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/model/show_fasilitas_kost_model.dart';
 import 'package:project_anakkos_app/ui-User/booking_page.dart';
@@ -54,6 +55,8 @@ class _DetailKostState extends State<DetailKost> {
   bool _isLoad = false;
   List<List<FasilitasKostData>>? dataFasilitas;
   double? rate;
+  List<KostRoomRuleData>? dataRoomRule;
+  List<KostRoomRuleData>? dataKostRule;
 
   Future getDetailKost() async {
     setState(() {
@@ -63,6 +66,7 @@ class _DetailKostState extends State<DetailKost> {
         await ApiService().getKostDetailUser(idKost: widget.idKost);
     await getComment();
     await getFasilitas();
+    await getRoomKostRule();
     setState(() {
       dataDetailKost = _model.data;
       pemilikkost = _model.data.user.name;
@@ -82,6 +86,17 @@ class _DetailKostState extends State<DetailKost> {
         await ApiService().showFasilitasKos(id: widget.idKost);
     setState(() {
       dataFasilitas = _model.data;
+    });
+  }
+
+  Future getRoomKostRule() async {
+    KostRoomRuleModel kostRuleModel =
+        await ApiService().getKostRule(kost_id: widget.idKost);
+    KostRoomRuleModel roomRuleModel =
+        await ApiService().getRoomRule(kost_id: widget.idKost);
+    setState(() {
+      dataKostRule = kostRuleModel.data;
+      dataRoomRule = roomRuleModel.data;
     });
   }
 
@@ -857,79 +872,68 @@ class _DetailKostState extends State<DetailKost> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(vertical: 6),
-              child: Text("Peraturan Kamar"),
+              child: Text(
+                "Peraturan Kamar",
+                style: GoogleFonts.roboto(fontSize: 20),
+              ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(child: SvgPicture.asset("assets/icon/Bed_maks.svg")),
-                  Expanded(
-                      flex: 7,
-                      child: Text("Tipe ini bisa diisi maks. 1 orang/kamar")),
-                ],
+            Container(
+              decoration: BoxDecoration(),
+              child: Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: dataRoomRule!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          CircleAvatar(
+                            backgroundColor: Colors.black,
+                            radius: 4,
+                          ),
+                          SizedBox(width: 12.w),
+                          Text(
+                            dataRoomRule![index].content,
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: SvgPicture.asset("assets/icon/Couple_heart.svg")),
-                  Expanded(flex: 7, child: Text("Tidak untuk pasutri")),
-                ],
-              ),
+              child: Text("Peraturan Kost",
+                  style: GoogleFonts.roboto(fontSize: 20)),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(child: SvgPicture.asset("assets/icon/Child.svg")),
-                  Expanded(flex: 7, child: Text("Tidak boleh bawa anak")),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Text("Peraturan Kost"),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: SvgPicture.asset("assets/icon/Time_maks.svg")),
-                  Expanded(flex: 7, child: Text("Akses 05.00 - 22.00")),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: SvgPicture.asset("assets/icon/Ban_smoking.svg")),
-                  Expanded(flex: 7, child: Text("Dilarang Merokok")),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: SvgPicture.asset("assets/icon/No_animal.svg")),
-                  Expanded(flex: 7, child: Text("Dilarang bawa hewan")),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(child: SvgPicture.asset("assets/icon/Bill.svg")),
-                  Expanded(flex: 7, child: Text("Denda kerusakan barang kos")),
-                ],
+            Container(
+              decoration: BoxDecoration(),
+              child: Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: dataKostRule!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          CircleAvatar(
+                            backgroundColor: Colors.black,
+                            radius: 4,
+                          ),
+                          SizedBox(width: 12.w),
+                          Text(
+                            dataKostRule![index].content,
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ],
