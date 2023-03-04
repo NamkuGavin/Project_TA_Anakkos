@@ -90,7 +90,7 @@ class _AddKostPage3State extends State<AddKostPage3> {
     await loopImage();
     await Future.delayed(Duration(seconds: 2));
     await uploadImageKost(widget.kostImg);
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(seconds: 2));
     await ApiService().createDetailKost(
         token: res_login.token,
         seller_id: res_login.data.id.toString(),
@@ -101,9 +101,18 @@ class _AddKostPage3State extends State<AddKostPage3> {
         kost_id: res_createKost.data.id,
         facilityId: widget.idFacility);
     await ApiService().updateImageKost(kostId: res_createKost.data.id);
+    await ApiService().createKostRule(
+        token: res_login.token,
+        kost_id: res_createKost.data.id.toString(),
+        content_rule: kostRule_list);
+    await ApiService().createRoomRule(
+        token: res_login.token,
+        kost_id: res_createKost.data.id.toString(),
+        content_rule: roomRule_list);
     setState(() {
       _isLoad = false;
     });
+    await SharedCode.navigatorPush(context, SuccessPageSeller());
   }
 
   Future uploadImageRoom(File file) async {
@@ -126,7 +135,7 @@ class _AddKostPage3State extends State<AddKostPage3> {
 
   Future loopImage() async {
     for (int i = 0; i < widget.roomImg.length; i++) {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(seconds: 2));
       uploadImageRoom(widget.roomImg[i]);
     }
   }
@@ -170,8 +179,6 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                 color: Colors.black45)),
                         SizedBox(height: 4.h),
                         TextFormField(
-                          validator: (value) =>
-                              SharedCode().emptyValidator(value),
                           controller: kostRule,
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
@@ -196,6 +203,7 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                       color: ColorValues.primaryBlue),
                                   borderRadius: BorderRadius.circular(8))),
                         ),
+                        SizedBox(height: 4.h),
                         Align(
                           alignment: Alignment.bottomRight,
                           child: ElevatedButton(
@@ -206,7 +214,12 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  kostRule_list.add(kostRule.text);
+                                  kostRule.clear();
+                                });
+                              },
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -218,23 +231,47 @@ class _AddKostPage3State extends State<AddKostPage3> {
                         ),
                         SizedBox(height: 10.h),
                         Container(
-                          height: 150.h,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: Colors.grey,
                               width: 1.0,
                             ),
                           ),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: 10, // jumlah item pada ListView
-                            itemBuilder: (BuildContext context, int index) {
-                              return ListTile(
-                                title: Text('Item $index'),
-                              );
-                            },
+                          child: Expanded(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: kostRule_list.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ListTile(
+                                  leading: Text(
+                                    '${index + 1}.', // menampilkan nomor urut
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  title: Text(
+                                    kostRule_list[index],
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  trailing: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          kostRule_list.removeAt(index);
+                                        });
+                                      },
+                                      icon: Icon(Icons.clear)),
+                                );
+                              },
+                            ),
                           ),
                         ),
+                        kostRule_list.isEmpty
+                            ? Padding(
+                                padding: EdgeInsets.only(left: 9.w, top: 15.h),
+                                child: Text("peraturan ini tidak boleh kosong*",
+                                    style: TextStyle(
+                                        color: Colors.red.shade700,
+                                        fontSize: 12)),
+                              )
+                            : Container(),
                         SizedBox(height: 10.h),
                         Divider(color: Colors.black),
                         SizedBox(height: 20.h),
@@ -244,8 +281,6 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                 color: Colors.black45)),
                         SizedBox(height: 4.h),
                         TextFormField(
-                          validator: (value) =>
-                              SharedCode().emptyValidator(value),
                           controller: roomRule,
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
@@ -270,6 +305,75 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                       color: ColorValues.primaryBlue),
                                   borderRadius: BorderRadius.circular(8))),
                         ),
+                        SizedBox(height: 4.h),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: ColorValues.primaryBlue,
+                                foregroundColor: Colors.white,
+                                minimumSize: Size(20.w, 30.h),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  roomRule_list.add(roomRule.text);
+                                  roomRule.clear();
+                                });
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('Tambahkan peraturan',
+                                      style: GoogleFonts.inter(fontSize: 12)),
+                                  Icon(Icons.add)
+                                ],
+                              )),
+                        ),
+                        SizedBox(height: 10.h),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                          ),
+                          child: Expanded(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: roomRule_list.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ListTile(
+                                  leading: Text(
+                                    '${index + 1}.', // menampilkan nomor urut
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  title: Text(
+                                    roomRule_list[index],
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  trailing: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          roomRule_list.removeAt(index);
+                                        });
+                                      },
+                                      icon: Icon(Icons.clear)),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        roomRule_list.isEmpty
+                            ? Padding(
+                                padding: EdgeInsets.only(left: 9.w, top: 15.h),
+                                child: Text("peraturan ini tidak boleh kosong*",
+                                    style: TextStyle(
+                                        color: Colors.red.shade700,
+                                        fontSize: 12)),
+                              )
+                            : Container(),
                         SizedBox(height: 25.h),
                         Text("Lain - Lain",
                             style: GoogleFonts.poppins(
@@ -282,8 +386,6 @@ class _AddKostPage3State extends State<AddKostPage3> {
                         SizedBox(height: 5.h),
                         TextFormField(
                           controller: descKost,
-                          validator: (value) =>
-                              SharedCode().emptyValidator(value),
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           decoration: InputDecoration(
@@ -477,11 +579,11 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate() &&
                                           CheckStatus.bayarListrik != false ||
-                                      CheckStatus.termasukListrik != false) {
+                                      CheckStatus.termasukListrik != false &&
+                                          kostRule_list.isNotEmpty &&
+                                          roomRule_list.isNotEmpty) {
                                     // await getLogin();
                                     await createKost();
-                                    await SharedCode.navigatorPush(
-                                        context, SuccessPageSeller());
                                   }
                                 },
                                 child: Padding(
