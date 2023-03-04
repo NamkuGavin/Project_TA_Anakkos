@@ -58,6 +58,8 @@ class _AddKostPage3State extends State<AddKostPage3> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoad = false;
   String? kost_id;
+  List<String> roomRule_list = [];
+  List<String> kostRule_list = [];
 
   Future createKost() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -194,7 +196,46 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                       color: ColorValues.primaryBlue),
                                   borderRadius: BorderRadius.circular(8))),
                         ),
-                        SizedBox(height: 20.h),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: ColorValues.primaryBlue,
+                                foregroundColor: Colors.white,
+                                minimumSize: Size(20.w, 30.h),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              onPressed: () {},
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('Tambahkan peraturan',
+                                      style: GoogleFonts.inter(fontSize: 12)),
+                                  Icon(Icons.add)
+                                ],
+                              )),
+                        ),
+                        SizedBox(height: 10.h),
+                        Container(
+                          height: 150.h,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                          ),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: 10, // jumlah item pada ListView
+                            itemBuilder: (BuildContext context, int index) {
+                              return ListTile(
+                                title: Text('Item $index'),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
                         Divider(color: Colors.black),
                         SizedBox(height: 20.h),
                         Text('Peraturan Kamar',
