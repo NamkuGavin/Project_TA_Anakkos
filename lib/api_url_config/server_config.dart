@@ -28,4 +28,6 @@ class ServerConfig {
   static String uploadImageKost = "/create-cover";
   static String updateImageKost = "/add-cover";
   static String updateAvgRating = "/update-avg-rating";
+  static String addKostRule = "/create-kost-rules";
+  static String addRoomRule = "/create-room-rules";
 }

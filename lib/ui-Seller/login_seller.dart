@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:convert';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -56,8 +58,26 @@ class _LoginSellerState extends State<LoginSeller> {
       setState(() {
         _isLoad = false;
       });
-    } catch (error) {
-      print('no internet ' + error.toString());
+      await SharedCode.navigatorReplacement(
+          context, NavigationWidgetBarSeller());
+    } on HttpException {
+      setState(() {
+        _isLoad = false;
+      });
+      return SharedCode.showAlertDialog(
+          context, 'Error', 'HttpException', 'error');
+    } on SocketException {
+      setState(() {
+        _isLoad = false;
+      });
+      return SharedCode.showAlertDialog(
+          context, 'Login Failed', 'Tidak ada koneksi internet', 'error');
+    } on TimeoutException {
+      setState(() {
+        _isLoad = false;
+      });
+      return SharedCode.showAlertDialog(context, 'Timeout',
+          'Sepertinya ada kesalahan koneksi internet', 'warning');
     }
   }
 
@@ -130,8 +150,6 @@ class _LoginSellerState extends State<LoginSeller> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               await getLogin();
-                              await SharedCode.navigatorReplacement(
-                                  context, NavigationWidgetBarSeller());
                             }
                           },
                           child: Text('Masuk'),

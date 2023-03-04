@@ -845,4 +845,66 @@ class ApiService {
       throw HttpException('request error code ${res.statusCode}');
     }
   }
+
+  Future createKostRule({
+    required String token,
+    required String kost_id,
+    required List<String> content_rule,
+  }) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = {
+      "kost_id": kost_id,
+      "content": content_rule,
+    };
+    print("RAW CREATE KOST RULE: " + body.toString());
+    print("URL CREATE KOST RULE: " +
+        ServerConfig.baseURL +
+        ServerConfig.addKostRule);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.addKostRule),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(CREATE KOST RULE): " + res.statusCode.toString());
+    print("RES CREATE KOST RULE: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body);
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future createRoomRule({
+    required String token,
+    required String kost_id,
+    required List<String> content_rule,
+  }) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = {
+      "kost_id": kost_id,
+      "content": content_rule,
+    };
+    print("RAW CREATE ROOM RULE: " + body.toString());
+    print("URL CREATE ROOM RULE: " +
+        ServerConfig.baseURL +
+        ServerConfig.addRoomRule);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.addRoomRule),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(CREATE ROOM RULE): " + res.statusCode.toString());
+    print("RES CREATE ROOM RULE: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body);
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
 }

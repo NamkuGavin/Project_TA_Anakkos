@@ -259,6 +259,15 @@ class _AddKostPage1State extends State<AddKostPage1> {
                         : Container(),
                   ],
                 ),
+                kostImg == null
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 9.w, top: 15.h),
+                        child: Text(
+                            "Pilih gambar untuk foto kost / cover image*",
+                            style: TextStyle(
+                                color: Colors.red.shade700, fontSize: 12)),
+                      )
+                    : Container(),
                 SizedBox(height: 25.h),
                 Text('Foto Kamar',
                     style: GoogleFonts.poppins(
@@ -313,6 +322,14 @@ class _AddKostPage1State extends State<AddKostPage1> {
                         : Container(),
                   ],
                 ),
+                roomImg.isEmpty
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 9.w, top: 15.h),
+                        child: Text("Pilih gambar untuk foto-foto ruangan*",
+                            style: TextStyle(
+                                color: Colors.red.shade700, fontSize: 12)),
+                      )
+                    : Container(),
                 SizedBox(height: 15.h),
                 Divider(color: Colors.black),
                 SizedBox(height: 10.h),
@@ -550,7 +567,9 @@ class _AddKostPage1State extends State<AddKostPage1> {
                         ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate() &&
-                              category != "") {
+                              category != "" &&
+                              kostImg != null &&
+                              roomImg.isNotEmpty) {
                             // await getLogin();
                             await SharedCode.navigatorPush(
                                 context,
