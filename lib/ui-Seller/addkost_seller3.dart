@@ -203,7 +203,16 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                       color: ColorValues.primaryBlue),
                                   borderRadius: BorderRadius.circular(8))),
                         ),
-                        SizedBox(height: 4.h),
+                        kostRule_list.isEmpty
+                            ? Padding(
+                                padding: EdgeInsets.only(left: 9.w, top: 5.h),
+                                child: Text("peraturan ini tidak boleh kosong*",
+                                    style: TextStyle(
+                                        color: Colors.red.shade700,
+                                        fontSize: 12)),
+                              )
+                            : Container(),
+                        SizedBox(height: 5.h),
                         Align(
                           alignment: Alignment.bottomRight,
                           child: ElevatedButton(
@@ -230,48 +239,42 @@ class _AddKostPage3State extends State<AddKostPage3> {
                               )),
                         ),
                         SizedBox(height: 10.h),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                          ),
-                          child: Expanded(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: kostRule_list.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ListTile(
-                                  leading: Text(
-                                    '${index + 1}.', // menampilkan nomor urut
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  title: Text(
-                                    kostRule_list[index],
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  trailing: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          kostRule_list.removeAt(index);
-                                        });
-                                      },
-                                      icon: Icon(Icons.clear)),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
                         kostRule_list.isEmpty
-                            ? Padding(
-                                padding: EdgeInsets.only(left: 9.w, top: 15.h),
-                                child: Text("peraturan ini tidak boleh kosong*",
-                                    style: TextStyle(
-                                        color: Colors.red.shade700,
-                                        fontSize: 12)),
-                              )
-                            : Container(),
+                            ? Container()
+                            : Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 1.0,
+                                  ),
+                                ),
+                                child: Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: kostRule_list.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return ListTile(
+                                        leading: Text(
+                                          '${index + 1}.', // menampilkan nomor urut
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        title: Text(
+                                          kostRule_list[index],
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        trailing: IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                kostRule_list.removeAt(index);
+                                              });
+                                            },
+                                            icon: Icon(Icons.clear)),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
                         SizedBox(height: 10.h),
                         Divider(color: Colors.black),
                         SizedBox(height: 20.h),
@@ -305,7 +308,16 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                       color: ColorValues.primaryBlue),
                                   borderRadius: BorderRadius.circular(8))),
                         ),
-                        SizedBox(height: 4.h),
+                        roomRule_list.isEmpty
+                            ? Padding(
+                                padding: EdgeInsets.only(left: 9.w, top: 5.h),
+                                child: Text("peraturan ini tidak boleh kosong*",
+                                    style: TextStyle(
+                                        color: Colors.red.shade700,
+                                        fontSize: 12)),
+                              )
+                            : Container(),
+                        SizedBox(height: 5.h),
                         Align(
                           alignment: Alignment.bottomRight,
                           child: ElevatedButton(
@@ -332,48 +344,42 @@ class _AddKostPage3State extends State<AddKostPage3> {
                               )),
                         ),
                         SizedBox(height: 10.h),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                          ),
-                          child: Expanded(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: roomRule_list.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ListTile(
-                                  leading: Text(
-                                    '${index + 1}.', // menampilkan nomor urut
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  title: Text(
-                                    roomRule_list[index],
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  trailing: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          roomRule_list.removeAt(index);
-                                        });
-                                      },
-                                      icon: Icon(Icons.clear)),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
                         roomRule_list.isEmpty
-                            ? Padding(
-                                padding: EdgeInsets.only(left: 9.w, top: 15.h),
-                                child: Text("peraturan ini tidak boleh kosong*",
-                                    style: TextStyle(
-                                        color: Colors.red.shade700,
-                                        fontSize: 12)),
-                              )
-                            : Container(),
+                            ? Container()
+                            : Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 1.0,
+                                  ),
+                                ),
+                                child: Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: roomRule_list.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return ListTile(
+                                        leading: Text(
+                                          '${index + 1}.', // menampilkan nomor urut
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        title: Text(
+                                          roomRule_list[index],
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        trailing: IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                roomRule_list.removeAt(index);
+                                              });
+                                            },
+                                            icon: Icon(Icons.clear)),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
                         SizedBox(height: 25.h),
                         Text("Lain - Lain",
                             style: GoogleFonts.poppins(
@@ -539,7 +545,7 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                       color: ColorValues.primaryBlue),
                                   borderRadius: BorderRadius.circular(8))),
                         ),
-                        SizedBox(height: 25.h),
+                        SizedBox(height: 50.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

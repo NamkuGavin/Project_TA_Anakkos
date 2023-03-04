@@ -30,4 +30,6 @@ class ServerConfig {
   static String updateAvgRating = "/update-avg-rating";
   static String addKostRule = "/create-kost-rules";
   static String addRoomRule = "/create-room-rules";
+  static String getKostRule = "/get-kost-rules";
+  static String getRoomRule = "/get-room-rules";
 }

@@ -18,12 +18,12 @@ class CreateKostModel {
   });
 
   String message;
-  Data data;
+  CreateKostData data;
 
   factory CreateKostModel.fromJson(Map<String, dynamic> json) =>
       CreateKostModel(
         message: json["message"],
-        data: Data.fromJson(json["data"]),
+        data: CreateKostData.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -32,8 +32,8 @@ class CreateKostModel {
       };
 }
 
-class Data {
-  Data({
+class CreateKostData {
+  CreateKostData({
     required this.kostName,
     required this.location,
     required this.locationUrl,
@@ -43,8 +43,6 @@ class Data {
     required this.desc,
     required this.width,
     required this.weight,
-    required this.roomRules,
-    required this.kostRules,
     required this.roomPrice,
     required this.elecPrice,
     required this.totalPrice,
@@ -62,8 +60,6 @@ class Data {
   String desc;
   String width;
   String weight;
-  String roomRules;
-  String kostRules;
   String roomPrice;
   String elecPrice;
   int totalPrice;
@@ -71,7 +67,7 @@ class Data {
   DateTime createdAt;
   int id;
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory CreateKostData.fromJson(Map<String, dynamic> json) => CreateKostData(
         kostName: json["kost_name"],
         location: json["location"],
         locationUrl: json["location_url"],
@@ -81,8 +77,6 @@ class Data {
         desc: json["desc"],
         width: json["width"],
         weight: json["weight"],
-        roomRules: json["room_rules"],
-        kostRules: json["kost_rules"],
         roomPrice: json["room_price"],
         elecPrice: json["elec_price"],
         totalPrice: json["total_price"],
@@ -101,8 +95,6 @@ class Data {
         "desc": desc,
         "width": width,
         "weight": weight,
-        "room_rules": roomRules,
-        "kost_rules": kostRules,
         "room_price": roomPrice,
         "elec_price": elecPrice,
         "total_price": totalPrice,

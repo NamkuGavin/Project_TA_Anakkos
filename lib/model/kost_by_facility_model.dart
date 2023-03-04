@@ -41,8 +41,6 @@ class KostbyFacilityData {
     required this.rating,
     required this.width,
     required this.weight,
-    required this.roomRules,
-    required this.kostRules,
     required this.desc,
     required this.unitOpen,
     required this.totalUnit,
@@ -62,8 +60,6 @@ class KostbyFacilityData {
   String rating;
   String width;
   String weight;
-  String roomRules;
-  String kostRules;
   String desc;
   String unitOpen;
   String totalUnit;
@@ -84,8 +80,6 @@ class KostbyFacilityData {
         rating: json["rating"],
         width: json["width"],
         weight: json["weight"],
-        roomRules: json["room_rules"],
-        kostRules: json["kost_rules"],
         desc: json["desc"],
         unitOpen: json["unit_open"],
         totalUnit: json["total_unit"],
@@ -106,8 +100,6 @@ class KostbyFacilityData {
         "rating": rating,
         "width": width,
         "weight": weight,
-        "room_rules": roomRules,
-        "kost_rules": kostRules,
         "desc": desc,
         "unit_open": unitOpen,
         "total_unit": totalUnit,
