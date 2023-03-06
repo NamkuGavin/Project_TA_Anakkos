@@ -306,6 +306,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SharedPreferences pref =
                                     await SharedPreferences.getInstance();
                                 await FirebaseAuth.instance.signOut();
+                                await ApiService().logout(pref
+                                    .getString('token_user_google')
+                                    .toString());
                                 await pref.clear();
                                 await GoogleSignIn().signOut();
                                 if (!mounted) return;

@@ -20,6 +20,8 @@ import 'package:project_anakkos_app/widget/chatWidget.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/login_google_model.dart';
+
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
 
@@ -73,9 +75,7 @@ class _ChatPageState extends State<ChatPage> {
       });
     } else if (user != null) {
       print("GOOGLE LOGIN");
-      setState(() {
-        _widget = sudahLoginGoogle();
-      });
+      await getLoginGoogle();
     } else {
       print("APPS LOGIN");
       await getLoginApps();
@@ -100,6 +100,20 @@ class _ChatPageState extends State<ChatPage> {
     } catch (error) {
       print('no internet ' + error.toString());
     }
+  }
+
+  getLoginGoogle() async {
+    setState(() {
+      _widget = LoadingAnimation();
+    });
+    LoginGoogleModel result =
+        await ApiService().getLoginGoogle(email: user!.email.toString());
+    ChatRoomModel res = await ApiService().getChatRoomUser(
+        token: result.token, user_id: result.data.id.toString());
+    setState(() {
+      dataChatRoom = res.data;
+      _widget = sudahLoginGoogle();
+    });
   }
 
   @override
@@ -198,23 +212,29 @@ class _ChatPageState extends State<ChatPage> {
               } else {
                 return Scaffold(
                   appBar: appbarWidget(),
-                  body: ListView(
-                    children: [
-                      InkWell(
+                  body: ListView.builder(
+                    itemCount: dataChatRoom.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
                         onTap: () {
-                          // SharedCode.navigatorPush(context,
-                          //     ChatWidget(chats: chat, title: 'Seller 1'));
+                          SharedCode.navigatorPush(
+                              context,
+                              ChatWidget(
+                                  idRoom: dataChatRoom[index].id.toString()));
                         },
                         child: Card(
                           child: ListTile(
                             leading: SvgPicture.asset("assets/icon/profile.svg",
                                 width: 30.w),
-                            title: Text('Seller 1'),
-                            trailing: Text("12:00"),
+                            title: Text(dataChatRoom[index].kostName +
+                                " - " +
+                                dataChatRoom[index].sellerName),
+                            trailing: Text(DateFormat("HH:mm")
+                                .format(dataChatRoom[index].createdAt)),
                           ),
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                   // body: ChatWidget(chats: chat),
                 );

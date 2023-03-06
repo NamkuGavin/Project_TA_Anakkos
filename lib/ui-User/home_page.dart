@@ -19,6 +19,7 @@ import 'package:project_anakkos_app/model/history_model.dart';
 import 'package:project_anakkos_app/model/kost_by_facility_model.dart';
 import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/model/kost_by_popu_model.dart';
+import 'package:project_anakkos_app/model/login_google_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-User/booking_pay_page.dart';
 import 'package:project_anakkos_app/ui-User/detail_kost.dart';
@@ -60,6 +61,19 @@ class _HomePageState extends State<HomePage> {
       LoginModel login_res = await ApiService().getLogin(
           email: pref.getString("email_user").toString(),
           password: pref.getString("pass_user").toString());
+      HistoryModel history_res = await ApiService().getHistory(
+          token: login_res.token, user_id: login_res.data.id.toString());
+      setState(() {
+        dataPendingan = history_res.data;
+        kostPending = dataPendingan
+            .where((element) => element.status == "pending")
+            .toList();
+      });
+      await getKostbyLoc();
+      await getKostbyPopular();
+    } else if (user != null) {
+      LoginGoogleModel login_res =
+          await ApiService().getLoginGoogle(email: user!.email.toString());
       HistoryModel history_res = await ApiService().getHistory(
           token: login_res.token, user_id: login_res.data.id.toString());
       setState(() {

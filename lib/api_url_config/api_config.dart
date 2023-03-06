@@ -21,7 +21,9 @@ import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/model/kost_by_popu_model.dart';
 import 'package:project_anakkos_app/model/kost_room_rule_model.dart';
 import 'package:project_anakkos_app/model/kost_seller_model.dart';
+import 'package:project_anakkos_app/model/login_google_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
+import 'package:project_anakkos_app/model/register_google_model.dart';
 import 'package:project_anakkos_app/model/register_model.dart';
 import 'package:project_anakkos_app/model/show_fasilitas_kost_model.dart';
 import 'package:project_anakkos_app/model/start_trans_model.dart';
@@ -947,6 +949,50 @@ class ApiService {
     print("RES ROOM RULE: " + res.body.toString());
     if (res.statusCode == 200) {
       return KostRoomRuleModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<LoginGoogleModel> getLoginGoogle({required String email}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    final body = {"email": email};
+    print("RAW LOGIN GOOGLE: " + body.toString());
+    print("URL LOGIN GOOGLE: " + ServerConfig.baseURL + ServerConfig.loginGoogle);
+    final res = await http
+        .post(Uri.parse(ServerConfig.baseURL + ServerConfig.loginGoogle),
+            headers: headers, body: jsonEncode(body))
+        .timeout(Duration(seconds: 20));
+    print("STATUS CODE(LOGIN GOOGLE): " + res.statusCode.toString());
+    print("RES LOGIN GOOGLE: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return LoginGoogleModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<RegisterGoogleModel> getRegisterGoogle(
+      {required String email, required String name}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    final body = {"name": name, "email": email};
+    print("RAW REGISTER GOOGLE: " + body.toString());
+    print(
+        "URL REGISTER GOOGLE: " + ServerConfig.baseURL + ServerConfig.registerGoogle);
+    final res = await http
+        .post(Uri.parse(ServerConfig.baseURL + ServerConfig.registerGoogle),
+            headers: headers, body: jsonEncode(body))
+        .timeout(Duration(seconds: 20));
+    print("STATUS CODE(REGISTER GOOGLE): " + res.statusCode.toString());
+    print("RES REGISTER GOOGLE: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return RegisterGoogleModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');
