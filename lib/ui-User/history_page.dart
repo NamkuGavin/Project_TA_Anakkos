@@ -16,6 +16,7 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/riwayat_model.dart';
 import 'package:project_anakkos_app/model/history_model.dart';
+import 'package:project_anakkos_app/model/login_google_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
@@ -70,9 +71,7 @@ class _HistoryPageState extends State<HistoryPage> {
       });
     } else if (user != null) {
       print("GOOGLE LOGIN");
-      setState(() {
-        _widget = sudahLoginGoogle();
-      });
+      await getLoginGoogle();
     } else {
       print("APPS LOGIN");
       await getLoginApps();
@@ -89,7 +88,19 @@ class _HistoryPageState extends State<HistoryPage> {
         password: pref.getString("pass_user").toString());
     await getHistory(result.token, result.data.id.toString());
     setState(() {
-      _widget = sudahLoginApps();
+      _widget = sudahLogin();
+    });
+  }
+
+  getLoginGoogle() async {
+    setState(() {
+      _widget = LoadingAnimation();
+    });
+    LoginGoogleModel result =
+        await ApiService().getLoginGoogle(email: user!.email.toString());
+    await getHistory(result.token, result.data.id.toString());
+    setState(() {
+      _widget = sudahLogin();
     });
   }
 
@@ -151,7 +162,7 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  sudahLoginApps() {
+  sudahLogin() {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -160,34 +171,6 @@ class _HistoryPageState extends State<HistoryPage> {
       ),
       body: riwayat(),
     );
-  }
-
-  sudahLoginGoogle() {
-    return Scaffold(
-        body: FutureBuilder<DocumentSnapshot>(
-            future: _users.doc(user!.uid).get(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                    child: Lottie.asset(
-                  'assets/lottie/loading.json',
-                  width: 150.w,
-                ));
-              } else if (snapshot.hasError) {
-                print("ERROR: " + snapshot.hasError.toString());
-                return Center(child: Text("Something Wrong"));
-              } else {
-                return Scaffold(
-                  appBar: AppBar(
-                    automaticallyImplyLeading: false,
-                    backgroundColor: Colors.white,
-                    title:
-                        Text('History', style: TextStyle(color: Colors.black)),
-                  ),
-                  body: riwayat(),
-                );
-              }
-            }));
   }
 
   riwayat() {

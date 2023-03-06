@@ -6,7 +6,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:project_anakkos_app/api_url_config/api_config.dart';
+import 'package:project_anakkos_app/model/login_google_model.dart';
 import 'package:project_anakkos_app/widget/snackbar_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirebaseService {
   Future<bool> signInGoogle(BuildContext context) async {
@@ -50,6 +53,21 @@ class FirebaseService {
             }
           });
         });
+        try {
+          SharedPreferences pref = await SharedPreferences.getInstance();
+          LoginGoogleModel model = await ApiService()
+              .getLoginGoogle(email: googleSignInAccount.email);
+          pref.setString('token_user_google', model.token);
+        } on HttpException {
+          SharedPreferences pref = await SharedPreferences.getInstance();
+          await ApiService().getRegisterGoogle(
+              email: googleSignInAccount.email,
+              name: googleSignInAccount.displayName.toString());
+          await Future.delayed(Duration(seconds: 1));
+          LoginGoogleModel model = await ApiService()
+              .getLoginGoogle(email: googleSignInAccount.email);
+          pref.setString('token_user_google', model.token);
+        }
         return true;
       } on FirebaseAuthException catch (e) {
         return false;
