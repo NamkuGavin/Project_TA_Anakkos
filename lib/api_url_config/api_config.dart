@@ -217,13 +217,13 @@ class ApiService {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
     };
-    final body = {"name": name};
+    final body = {"name": name, 'pfp': 'inc'};
     print("RAW EDIT PROFILE: " + body.toString());
     print("URL EDIT PROFILE: " +
         ServerConfig.baseURL +
         ServerConfig.editProfile +
         "/$id_user");
-    final res = await http.put(
+    final res = await http.post(
         Uri.parse(
             ServerConfig.baseURL + ServerConfig.editProfile + "/$id_user"),
         headers: headers,
@@ -961,7 +961,8 @@ class ApiService {
     };
     final body = {"email": email};
     print("RAW LOGIN GOOGLE: " + body.toString());
-    print("URL LOGIN GOOGLE: " + ServerConfig.baseURL + ServerConfig.loginGoogle);
+    print(
+        "URL LOGIN GOOGLE: " + ServerConfig.baseURL + ServerConfig.loginGoogle);
     final res = await http
         .post(Uri.parse(ServerConfig.baseURL + ServerConfig.loginGoogle),
             headers: headers, body: jsonEncode(body))
@@ -983,8 +984,9 @@ class ApiService {
     };
     final body = {"name": name, "email": email};
     print("RAW REGISTER GOOGLE: " + body.toString());
-    print(
-        "URL REGISTER GOOGLE: " + ServerConfig.baseURL + ServerConfig.registerGoogle);
+    print("URL REGISTER GOOGLE: " +
+        ServerConfig.baseURL +
+        ServerConfig.registerGoogle);
     final res = await http
         .post(Uri.parse(ServerConfig.baseURL + ServerConfig.registerGoogle),
             headers: headers, body: jsonEncode(body))
@@ -996,6 +998,51 @@ class ApiService {
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future editProfile_withImage(
+      {required File file,
+      required String name,
+      required String token,
+      required int id_user}) async {
+    var mimeType = lookupMimeType(file.path);
+    var bytes = await File.fromUri(Uri.parse(file.path)).readAsBytes();
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = {
+      "name": name,
+    };
+    http.MultipartRequest request = new http.MultipartRequest(
+        "POST",
+        Uri.parse(
+            ServerConfig.baseURL + ServerConfig.editProfile + "/$id_user"));
+    print("URL UPDATE PROFILE WITH IMAGE: " +
+        ServerConfig.baseURL +
+        ServerConfig.editProfile +
+        "/$id_user");
+    http.MultipartFile multipartFile = await http.MultipartFile.fromBytes(
+        'pfp', bytes,
+        filename: basename(file.path),
+        contentType: MediaType.parse(mimeType.toString()));
+    request.fields.addAll(body);
+    request.headers.addAll(headers);
+    request.files.add(multipartFile);
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+    // streamedResponse.stream.transform(utf8.decoder).listen((value) {
+    //   debugPrint(value);
+    // });
+    print("STATUS CODE(UPDATE PROFILE WITH IMAGE): " +
+        response.statusCode.toString());
+    print("RES UPDATE PROFILE WITH IMAGE: " + response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      print(response.statusCode);
+      throw HttpException('request error code ${response.statusCode}');
     }
   }
 }

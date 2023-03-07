@@ -1,41 +1,38 @@
 // To parse this JSON data, do
 //
-//     final loginModel = loginModelFromJson(jsonString);
+//     final profileModel = profileModelFromJson(jsonString);
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-LoginModel loginModelFromJson(String str) =>
-    LoginModel.fromJson(json.decode(str));
+ProfileModel profileModelFromJson(String str) =>
+    ProfileModel.fromJson(json.decode(str));
 
-String loginModelToJson(LoginModel data) => json.encode(data.toJson());
+String profileModelToJson(ProfileModel data) => json.encode(data.toJson());
 
-class LoginModel {
-  LoginModel({
+class ProfileModel {
+  ProfileModel({
     required this.message,
     required this.data,
-    required this.token,
   });
 
   String message;
-  LoginData data;
-  String token;
+  List<ProfileData> data;
 
-  factory LoginModel.fromJson(Map<String, dynamic> json) => LoginModel(
+  factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
         message: json["message"],
-        data: LoginData.fromJson(json["data"]),
-        token: json["token"],
+        data: List<ProfileData>.from(
+            json["data"].map((x) => ProfileData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "message": message,
-        "data": data.toJson(),
-        "token": token,
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
       };
 }
 
-class LoginData {
-  LoginData({
+class ProfileData {
+  ProfileData({
     required this.id,
     required this.name,
     required this.pfp,
@@ -59,7 +56,7 @@ class LoginData {
   DateTime createdAt;
   DateTime updatedAt;
 
-  factory LoginData.fromJson(Map<String, dynamic> json) => LoginData(
+  factory ProfileData.fromJson(Map<String, dynamic> json) => ProfileData(
         id: json["id"],
         name: json["name"],
         pfp: json["pfp"],
