@@ -35,6 +35,8 @@ class Data {
     required this.name,
     required this.email,
     required this.role,
+    required this.pfp,
+    required this.chatStatus,
     required this.updatedAt,
     required this.createdAt,
     required this.id,
@@ -43,6 +45,8 @@ class Data {
   String name;
   String email;
   String role;
+  String pfp;
+  String chatStatus;
   DateTime updatedAt;
   DateTime createdAt;
   int id;
@@ -51,6 +55,8 @@ class Data {
         name: json["name"],
         email: json["email"],
         role: json["role"],
+        pfp: json["pfp"],
+        chatStatus: json["chat_status"],
         updatedAt: DateTime.parse(json["updated_at"]),
         createdAt: DateTime.parse(json["created_at"]),
         id: json["id"],
@@ -60,6 +66,8 @@ class Data {
         "name": name,
         "email": email,
         "role": role,
+        "pfp": pfp,
+        "chat_status": chatStatus,
         "updated_at": updatedAt.toIso8601String(),
         "created_at": createdAt.toIso8601String(),
         "id": id,

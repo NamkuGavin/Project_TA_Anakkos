@@ -35,6 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _widget = Container();
   String username = "";
   String email = "";
+  String photo = "";
 
   @override
   void initState() {
@@ -70,6 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
           password: pref.getString("pass_user").toString());
       username = result.data.name;
       email = result.data.email;
+      photo = result.data.pfp;
       setState(() {
         _widget = sudahLoginApps();
       });
@@ -142,7 +144,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       padding: EdgeInsets.fromLTRB(28, 75, 28, 0),
                       child: Column(
                         children: [
-                          headerProfileApps(username, email),
+                          headerProfileApps(username, email, photo),
                           SizedBox(
                             height: 16.h,
                           ),
@@ -186,8 +188,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => EditProfileApps(
-                                            email: email, name: username)));
+                                        builder: (context) => EditProfileApps()));
                                 print('result: ' + result);
                                 await getProfileApps();
                               },
@@ -365,30 +366,30 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  headerProfileApps(String user, String email) {
+  headerProfileApps(String user, String email, String photo) {
     return Column(
       children: [
         CircleAvatar(
           backgroundColor: Color(0XFFE7E7E7),
           radius: 50,
-          // backgroundImage: photo != '' ? NetworkImage(photo) : null,
-          backgroundImage: null,
-          // child: photo != ''
-          //     ? null
-          //     : Text(
-          //         getInitials(user),
-          //         style: GoogleFonts.poppins(
-          //           color: Colors.black,
-          //           fontSize: 22,
-          //         ),
-          //       ),
-          child: Text(
-            getInitials(user),
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontSize: 22,
-            ),
-          ),
+          backgroundImage: photo != '' ? NetworkImage(photo) : null,
+          // backgroundImage: null,
+          child: photo != ''
+              ? null
+              : Text(
+                  getInitials(user),
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 22,
+                  ),
+                ),
+          // child: Text(
+          //   getInitials(user),
+          //   style: GoogleFonts.poppins(
+          //     color: Colors.black,
+          //     fontSize: 22,
+          //   ),
+          // ),
         ),
         SizedBox(
           height: 24.h,
