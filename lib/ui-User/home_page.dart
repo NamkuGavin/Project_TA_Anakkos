@@ -23,7 +23,7 @@ import 'package:project_anakkos_app/model/login_google_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-User/booking_pay_page.dart';
 import 'package:project_anakkos_app/ui-User/detail_kost.dart';
-import 'package:project_anakkos_app/widget/chatWidget.dart';
+import 'package:project_anakkos_app/widget/chat_widget/chatWidget_user.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:project_anakkos_app/widget/nearby_kost.dart';
 import 'package:project_anakkos_app/widget/populer_kost.dart';
@@ -257,7 +257,12 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {
-                        // SharedCode.navigatorPush(context, DetailKost(model: widget.model));
+                        SharedCode.navigatorPush(
+                            context,
+                            DetailKost(
+                              idKost: dataKostbyLoc[index].id.toString(),
+                              model: dataKostbyLoc[index],
+                            ));
                       },
                       child: Card(
                         color: Colors.white,
@@ -1079,7 +1084,7 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.all(8.0),
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 0.6,
+                childAspectRatio: 0.57,
                 crossAxisCount: 2,
                 crossAxisSpacing: 10.0,
                 mainAxisSpacing: 10.0,
@@ -1088,20 +1093,29 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () {
-                    // SharedCode.navigatorPush(context, DetailKost(model: widget.model));
+                    SharedCode.navigatorPush(
+                        context,
+                        DetailKost(
+                          idKost: dataKostbyLoc[index].id.toString(),
+                          model: dataKostbyLoc[index],
+                        ));
                   },
                   child: Card(
                     color: Colors.white,
                     elevation: 5,
                     shadowColor: Colors.black,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ClipRRect(
-                            borderRadius: BorderRadius.vertical(
-                                bottom: Radius.circular(10)),
-                            child: Image.asset("assets/dummykos/kost_1.png",
-                                fit: BoxFit.cover)),
+                        SizedBox(
+                          height: 125.h,
+                          width: 150.w,
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.vertical(
+                                  bottom: Radius.circular(10)),
+                              child: Image.network(
+                                  dataKostbyFacility![index][0].coverImg,
+                                  fit: BoxFit.cover)),
+                        ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 4),
                           child: Column(

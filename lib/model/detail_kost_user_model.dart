@@ -35,8 +35,10 @@ class DetailKostUserModel {
 class DetailKostUserData {
   DetailKostUserData({
     required this.id,
+    required this.accStatus,
     required this.sellerId,
     required this.kostName,
+    required this.coverImg,
     required this.location,
     required this.locationUrl,
     required this.kostType,
@@ -55,8 +57,10 @@ class DetailKostUserData {
   });
 
   int id;
+  String accStatus;
   String sellerId;
   String kostName;
+  String coverImg;
   String location;
   String locationUrl;
   String kostType;
@@ -76,8 +80,10 @@ class DetailKostUserData {
   factory DetailKostUserData.fromJson(Map<String, dynamic> json) =>
       DetailKostUserData(
         id: json["id"],
+        accStatus: json["acc_status"],
         sellerId: json["seller_id"],
         kostName: json["kost_name"],
+        coverImg: json["cover_img"],
         location: json["location"],
         locationUrl: json["location_url"],
         kostType: json["kost_type"],
@@ -97,8 +103,10 @@ class DetailKostUserData {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "acc_status": accStatus,
         "seller_id": sellerId,
         "kost_name": kostName,
+        "cover_img": coverImg,
         "location": location,
         "location_url": locationUrl,
         "kost_type": kostType,
@@ -121,6 +129,8 @@ class User {
   User({
     required this.id,
     required this.name,
+    required this.pfp,
+    required this.chatStatus,
     required this.email,
     required this.rentStatus,
     required this.role,
@@ -131,6 +141,8 @@ class User {
 
   int id;
   String name;
+  String pfp;
+  String chatStatus;
   String email;
   dynamic rentStatus;
   String role;
@@ -141,6 +153,8 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
         name: json["name"],
+        pfp: json["pfp"],
+        chatStatus: json["chat_status"],
         email: json["email"],
         rentStatus: json["rent_status"],
         role: json["role"],
@@ -152,6 +166,8 @@ class User {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "pfp": pfp,
+        "chat_status": chatStatus,
         "email": email,
         "rent_status": rentStatus,
         "role": role,

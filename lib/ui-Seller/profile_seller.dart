@@ -34,6 +34,7 @@ class _ProfileSellerState extends State<ProfileSeller> {
   bool _isLoad = false;
   String full_name = "";
   String email = "";
+  String photo = "";
 
   Future getProfileSeller() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -46,6 +47,7 @@ class _ProfileSellerState extends State<ProfileSeller> {
           password: pref.getString("pass_owner").toString());
       full_name = result.data.name;
       email = result.data.email;
+      photo = result.data.pfp;
       setState(() {
         _isLoad = false;
       });
@@ -75,7 +77,7 @@ class _ProfileSellerState extends State<ProfileSeller> {
                       padding: EdgeInsets.fromLTRB(28, 75, 28, 0),
                       child: Column(
                         children: [
-                          headerProfileApps(full_name, email),
+                          headerProfileApps(full_name, email, photo),
                           SizedBox(
                             height: 16.h,
                           ),
@@ -108,8 +110,8 @@ class _ProfileSellerState extends State<ProfileSeller> {
                                 final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => EditProfileSeller(
-                                            email: email, name: full_name)));
+                                        builder: (context) =>
+                                            EditProfileSeller()));
                                 print('result: ' + result);
                                 await getProfileSeller();
                               },
@@ -145,20 +147,30 @@ class _ProfileSellerState extends State<ProfileSeller> {
         ));
   }
 
-  headerProfileApps(String user, String email) {
+  headerProfileApps(String user, String email, String photo) {
     return Column(
       children: [
         CircleAvatar(
           backgroundColor: Color(0XFFE7E7E7),
           radius: 50,
-          backgroundImage: null,
-          child: Text(
-            getInitials(user),
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontSize: 22,
-            ),
-          ),
+          backgroundImage: photo != '' ? NetworkImage(photo) : null,
+          // backgroundImage: null,
+          child: photo != ''
+              ? null
+              : Text(
+                  getInitials(user),
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 22,
+                  ),
+                ),
+          // child: Text(
+          //   getInitials(user),
+          //   style: GoogleFonts.poppins(
+          //     color: Colors.black,
+          //     fontSize: 22,
+          //   ),
+          // ),
         ),
         SizedBox(
           height: 24.h,

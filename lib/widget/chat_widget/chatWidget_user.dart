@@ -11,15 +11,15 @@ import 'package:project_anakkos_app/widget/custom_text_form.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ChatWidget extends StatefulWidget {
+class ChatWidgetUser extends StatefulWidget {
   final String idRoom;
-  ChatWidget({Key? key, required this.idRoom}) : super(key: key);
+  ChatWidgetUser({Key? key, required this.idRoom}) : super(key: key);
 
   @override
-  State<ChatWidget> createState() => _ChatWidgetState();
+  State<ChatWidgetUser> createState() => _ChatWidgetUserState();
 }
 
-class _ChatWidgetState extends State<ChatWidget> {
+class _ChatWidgetUserState extends State<ChatWidgetUser> {
   TextEditingController chatController = TextEditingController();
   bool _isLoad = true;
   ChatData? dataChat;
@@ -109,7 +109,11 @@ class _ChatWidgetState extends State<ChatWidget> {
                   floatingHeader: true,
                   elements: messageData!,
                   groupBy: (chat) {
-                    return DateTime.now();
+                    return DateTime(
+                      chat.updatedAt.year,
+                      chat.updatedAt.month,
+                      chat.updatedAt.day,
+                    );
                   },
                   groupHeaderBuilder: (Message chat) {
                     return SizedBox(

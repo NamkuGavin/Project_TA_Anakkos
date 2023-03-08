@@ -13,10 +13,10 @@ import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/chat_model.dart';
-import 'package:project_anakkos_app/model/chat_room_model.dart';
+import 'package:project_anakkos_app/model/chat_room/chat_roomUser_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
-import 'package:project_anakkos_app/widget/chatWidget.dart';
+import 'package:project_anakkos_app/widget/chat_widget/chatWidget_user.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,7 +33,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget _widget = Container();
   final user = FirebaseAuth.instance.currentUser;
   CollectionReference _users = FirebaseFirestore.instance.collection('users');
-  List<ChatRoomData> dataChatRoom = [];
+  List<ChatRoomUserData> dataChatRoom = [];
   List<ChatModel> chat = [
     ChatModel("Hai, dengan Pemilik Kost disini. Ada yang bisa saya bantu?",
         DateTime.now().subtract(Duration(days: 3)), false),
@@ -91,7 +91,7 @@ class _ChatPageState extends State<ChatPage> {
       LoginModel result = await ApiService().getLogin(
           email: pref.getString("email_user").toString(),
           password: pref.getString("pass_user").toString());
-      ChatRoomModel res = await ApiService().getChatRoomUser(
+      ChatRoomUserModel res = await ApiService().getChatRoomUser(
           token: result.token, user_id: result.data.id.toString());
       setState(() {
         dataChatRoom = res.data;
@@ -108,7 +108,7 @@ class _ChatPageState extends State<ChatPage> {
     });
     LoginGoogleModel result =
         await ApiService().getLoginGoogle(email: user!.email.toString());
-    ChatRoomModel res = await ApiService().getChatRoomUser(
+    ChatRoomUserModel res = await ApiService().getChatRoomUser(
         token: result.token, user_id: result.data.id.toString());
     setState(() {
       dataChatRoom = res.data;
@@ -175,7 +175,7 @@ class _ChatPageState extends State<ChatPage> {
           return InkWell(
             onTap: () {
               SharedCode.navigatorPush(context,
-                  ChatWidget(idRoom: dataChatRoom[index].id.toString()));
+                  ChatWidgetUser(idRoom: dataChatRoom[index].id.toString()));
             },
             child: Card(
               child: ListTile(
@@ -219,7 +219,7 @@ class _ChatPageState extends State<ChatPage> {
                         onTap: () {
                           SharedCode.navigatorPush(
                               context,
-                              ChatWidget(
+                              ChatWidgetUser(
                                   idRoom: dataChatRoom[index].id.toString()));
                         },
                         child: Card(
