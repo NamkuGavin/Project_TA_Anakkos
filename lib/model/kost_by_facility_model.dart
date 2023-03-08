@@ -15,6 +15,7 @@ class KostbyFacilityModel {
   KostbyFacilityModel({
     required this.data,
   });
+
   List<List<KostbyFacilityData>> data;
 
   factory KostbyFacilityModel.fromJson(Map<String, dynamic> json) =>
@@ -33,8 +34,10 @@ class KostbyFacilityModel {
 class KostbyFacilityData {
   KostbyFacilityData({
     required this.id,
+    required this.accStatus,
     required this.sellerId,
     required this.kostName,
+    required this.coverImg,
     required this.location,
     required this.locationUrl,
     required this.kostType,
@@ -52,8 +55,10 @@ class KostbyFacilityData {
   });
 
   int id;
+  String accStatus;
   String sellerId;
   String kostName;
+  String coverImg;
   String location;
   String locationUrl;
   String kostType;
@@ -72,8 +77,10 @@ class KostbyFacilityData {
   factory KostbyFacilityData.fromJson(Map<String, dynamic> json) =>
       KostbyFacilityData(
         id: json["id"],
+        accStatus: json["acc_status"],
         sellerId: json["seller_id"],
         kostName: json["kost_name"],
+        coverImg: json["cover_img"],
         location: json["location"],
         locationUrl: json["location_url"],
         kostType: json["kost_type"],
@@ -92,8 +99,10 @@ class KostbyFacilityData {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "acc_status": accStatus,
         "seller_id": sellerId,
         "kost_name": kostName,
+        "cover_img": coverImg,
         "location": location,
         "location_url": locationUrl,
         "kost_type": kostType,

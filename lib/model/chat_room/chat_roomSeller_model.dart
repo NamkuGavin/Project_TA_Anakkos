@@ -5,24 +5,26 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-ChatRoomModel chatRoomModelFromJson(String str) =>
-    ChatRoomModel.fromJson(json.decode(str));
+ChatRoomSellerModel chatRoomModelFromJson(String str) =>
+    ChatRoomSellerModel.fromJson(json.decode(str));
 
-String chatRoomModelToJson(ChatRoomModel data) => json.encode(data.toJson());
+String chatRoomModelToJson(ChatRoomSellerModel data) =>
+    json.encode(data.toJson());
 
-class ChatRoomModel {
-  ChatRoomModel({
+class ChatRoomSellerModel {
+  ChatRoomSellerModel({
     required this.message,
     required this.data,
   });
 
   String message;
-  List<ChatRoomData> data;
+  List<ChatRoomSellerData> data;
 
-  factory ChatRoomModel.fromJson(Map<String, dynamic> json) => ChatRoomModel(
+  factory ChatRoomSellerModel.fromJson(Map<String, dynamic> json) =>
+      ChatRoomSellerModel(
         message: json["message"],
-        data: List<ChatRoomData>.from(
-            json["data"].map((x) => ChatRoomData.fromJson(x))),
+        data: List<ChatRoomSellerData>.from(
+            json["data"].map((x) => ChatRoomSellerData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -31,8 +33,8 @@ class ChatRoomModel {
       };
 }
 
-class ChatRoomData {
-  ChatRoomData({
+class ChatRoomSellerData {
+  ChatRoomSellerData({
     required this.id,
     required this.userId,
     required this.sellerId,
@@ -54,7 +56,8 @@ class ChatRoomData {
   DateTime createdAt;
   DateTime updatedAt;
 
-  factory ChatRoomData.fromJson(Map<String, dynamic> json) => ChatRoomData(
+  factory ChatRoomSellerData.fromJson(Map<String, dynamic> json) =>
+      ChatRoomSellerData(
         id: json["id"],
         userId: json["user_id"],
         sellerId: json["seller_id"],

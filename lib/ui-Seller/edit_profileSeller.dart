@@ -16,10 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfileSeller extends StatefulWidget {
-  final String email;
-  final String name;
-  EditProfileSeller({Key? key, required this.email, required this.name})
-      : super(key: key);
+  const EditProfileSeller({Key? key}) : super(key: key);
 
   @override
   State<EditProfileSeller> createState() => _EditProfileSellerState();
@@ -27,35 +24,77 @@ class EditProfileSeller extends StatefulWidget {
 
 class _EditProfileSellerState extends State<EditProfileSeller> {
   final _fullNameController = TextEditingController();
+  String name = "";
+  String email = "";
+  String imageProfile = "";
   final _formKey = GlobalKey<FormState>();
-  bool _isLoad = false;
+  final ValueNotifier<bool> _isLoad = ValueNotifier<bool>(false);
+  PlatformFile? _pickedImage;
 
-  @override
-  void initState() {
-    super.initState();
-    _fullNameController.text = widget.name;
+  Future loadProfile() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    _isLoad.value = true;
+    LoginModel result = await ApiService().getLogin(
+        email: pref.getString("email_owner").toString(),
+        password: pref.getString("pass_owner").toString());
+    setState(() {
+      _fullNameController.text = result.data.name;
+      name = result.data.name;
+      email = result.data.email;
+      imageProfile = result.data.pfp;
+    });
+    _isLoad.value = false;
   }
 
   editProfile() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    try {
+    LoginModel result = await ApiService().getLogin(
+        email: pref.getString("email_owner").toString(),
+        password: pref.getString("pass_owner").toString());
+    await ApiService().editProfile(
+        id_user: result.data.id,
+        token: result.token,
+        name: _fullNameController.text);
+    setState(() {
+      Navigator.pop(context, 'update');
+    });
+  }
+
+  editProfile_withImage(File file) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    LoginModel result = await ApiService().getLogin(
+        email: pref.getString("email_owner").toString(),
+        password: pref.getString("pass_owner").toString());
+    await ApiService().editProfile_withImage(
+        id_user: result.data.id,
+        token: result.token,
+        name: _fullNameController.text,
+        file: file);
+    setState(() {
+      Navigator.pop(context, 'update');
+    });
+  }
+
+  Future _selectImage() async {
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png'],
+    );
+
+    if (result != null) {
       setState(() {
-        _isLoad = true;
+        _pickedImage = result.files.first;
       });
-      LoginModel result = await ApiService().getLogin(
-          email: pref.getString("email_owner").toString(),
-          password: pref.getString("pass_owner").toString());
-      await ApiService().editProfile(
-          id_user: result.data.id,
-          token: result.token,
-          name: _fullNameController.text);
-      setState(() {
-        _isLoad = false;
-        Navigator.pop(context, 'update');
-      });
-    } catch (error) {
-      print('no internet ' + error.toString());
+    } else {
+      showSnackBar(context, title: 'Tidak ada gambar yang dipilih');
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadProfile();
   }
 
   @override
@@ -75,75 +114,130 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
           color: Colors.black,
         ),
       ),
-      body: _isLoad
-          ? LoadingAnimation()
-          : Container(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 32.h,
-                    ),
-                    Text(
-                      'Nama Lengkap',
-                      style: textTheme.bodyText1!.copyWith(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
+      body: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: GestureDetector(
+                      onTap: _selectImage,
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: Color(0XFFE7E7E7),
+                            radius: 50,
+                            backgroundImage: _pickedImage != null
+                                ? FileImage(
+                                    File(
+                                      _pickedImage!.path!,
+                                    ),
+                                  )
+                                : imageProfile != ''
+                                    ? NetworkImage(imageProfile)
+                                        as ImageProvider
+                                    : null,
+                            child: imageProfile != '' || _pickedImage != null
+                                ? null
+                                : Text(
+                                    SharedCode().getInitials(name),
+                                    style: textTheme.headline2!.copyWith(
+                                      color: Colors.black,
+                                      fontSize: 22,
+                                    ),
+                                  ),
+                          ),
+                          Positioned(
+                            bottom: 5,
+                            right: 3,
+                            child: CircleAvatar(
+                              radius: 12,
+                              child: Icon(Icons.edit_rounded, size: 12),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      height: 8.h,
+                  ),
+                  SizedBox(
+                    height: 32.h,
+                  ),
+                  Text(
+                    'Nama Lengkap',
+                    style: textTheme.bodyText1!.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
                     ),
-                    _textFormTransaction(
-                      textTheme,
-                      hint: 'Masukkan nama lengkap',
-                      controller: _fullNameController,
-                      validator: (value) => SharedCode().nameValidator(value),
+                  ),
+                  SizedBox(
+                    height: 8.h,
+                  ),
+                  _textFormTransaction(
+                    textTheme,
+                    hint: 'Masukkan nama lengkap',
+                    controller: _fullNameController,
+                    validator: (value) => SharedCode().nameValidator(value),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Text(
+                    'Email',
+                    style: textTheme.bodyText1!.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
                     ),
-                    SizedBox(
-                      height: 16,
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: 50,
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    Text(
-                      'Email',
-                      style: textTheme.bodyText1!.copyWith(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    child: Text(
+                      email,
+                      style: textTheme.bodyText1,
                     ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 50,
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        widget.email,
-                        style: textTheme.bodyText1,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 32,
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          editProfile();
-                        }
-                      },
-                      child: Text('Edit'),
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: 32,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        _isLoad.value = true;
+                        _pickedImage != null
+                            ? editProfile_withImage(
+                                File(_pickedImage!.path.toString()))
+                            : editProfile();
+                        _isLoad.value = false;
+                      }
+                    },
+                    child: Text('Edit'),
+                  ),
+                ],
               ),
             ),
+          ),
+          ValueListenableBuilder<bool>(
+            valueListenable: _isLoad,
+            builder: (context, value, _) => Visibility(
+              visible: value,
+              child: LoadingAnimation(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

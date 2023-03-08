@@ -9,7 +9,8 @@ import 'package:http_parser/http_parser.dart';
 import 'package:project_anakkos_app/api_url_config/server_config.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/model/chat_model.dart';
-import 'package:project_anakkos_app/model/chat_room_model.dart';
+import 'package:project_anakkos_app/model/chat_room/chat_roomSeller_model.dart';
+import 'package:project_anakkos_app/model/chat_room/chat_roomUser_model.dart';
 import 'package:project_anakkos_app/model/comment_model.dart';
 import 'package:project_anakkos_app/model/create_chatRoom_model.dart';
 import 'package:project_anakkos_app/model/create_kost_model.dart';
@@ -607,13 +608,13 @@ class ApiService {
   //   }
   // }
 
-  Future<ChatRoomModel> getChatRoomUser(
+  Future<ChatRoomUserModel> getChatRoomUser(
       {required String token, required String user_id}) async {
     Map<String, String> headers = {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
     };
-    print("URL GET CHAT ROOM: " +
+    print("URL GET CHAT ROOM USER: " +
         ServerConfig.baseURL +
         ServerConfig.chatRoomUser +
         "/$user_id");
@@ -621,10 +622,34 @@ class ApiService {
         Uri.parse(
             ServerConfig.baseURL + ServerConfig.chatRoomUser + "/$user_id"),
         headers: headers);
-    print("STATUS CODE(GET CHAT ROOM): " + res.statusCode.toString());
-    print("RES GET CHAT ROOM: " + res.body.toString());
+    print("STATUS CODE(GET CHAT ROOM USER): " + res.statusCode.toString());
+    print("RES GET CHAT ROOM USER: " + res.body.toString());
     if (res.statusCode == 200) {
-      return ChatRoomModel.fromJson(jsonDecode(res.body));
+      return ChatRoomUserModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<ChatRoomSellerModel> getChatRoomSeller(
+      {required String token, required String seller_id}) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    print("URL GET CHAT ROOM SELLER: " +
+        ServerConfig.baseURL +
+        ServerConfig.chatRoomSeller +
+        "/$seller_id");
+    final res = await http.get(
+        Uri.parse(
+            ServerConfig.baseURL + ServerConfig.chatRoomSeller + "/$seller_id"),
+        headers: headers);
+    print("STATUS CODE(GET CHAT ROOM SELLER): " + res.statusCode.toString());
+    print("RES GET CHAT ROOM SELLER: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return ChatRoomSellerModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

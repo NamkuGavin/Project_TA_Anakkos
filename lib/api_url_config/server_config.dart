@@ -20,6 +20,7 @@ class ServerConfig {
   static String showFasilitasKos = "/show-facilitiesByKost";
   static String uploadImageRoom = "/create-images";
   static String chatRoomUser = "/get-chat-by-user";
+  static String chatRoomSeller = "/get-chat-by-seller";
   static String chat = "/get-message";
   static String createChat = "/create-message";
   static String createChatRoom = "/create-chatroom";

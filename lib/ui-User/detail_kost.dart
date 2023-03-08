@@ -29,7 +29,7 @@ import 'package:project_anakkos_app/ui-User/booking_page.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_dates.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_image.dart';
-import 'package:project_anakkos_app/widget/chatWidget.dart';
+import 'package:project_anakkos_app/widget/chat_widget/chatWidget_user.dart';
 import 'package:project_anakkos_app/widget/custom_text_form.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,11 +57,24 @@ class _DetailKostState extends State<DetailKost> {
   double? rate;
   List<KostRoomRuleData>? dataRoomRule;
   List<KostRoomRuleData>? dataKostRule;
+  Widget widgetChat = Container();
 
   Future getDetailKost() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
       _isLoad = true;
     });
+    if (pref.getString("token_user") == null && user == null) {
+      null;
+    } else if (user != null) {
+      setState(() {
+        widgetChat = chatButton();
+      });
+    } else {
+      setState(() {
+        widgetChat = chatButton();
+      });
+    }
     DetailKostUserModel _model =
         await ApiService().getKostDetailUser(idKost: widget.idKost);
     await getComment();
@@ -240,7 +253,10 @@ class _DetailKostState extends State<DetailKost> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(vertical: 6),
-              child: Text("Fasilitas Kamar"),
+              child: Text(
+                "Fasilitas Kamar",
+                style: GoogleFonts.roboto(fontSize: 20),
+              ),
             ),
             SizedBox(
               height: 100.h,
@@ -1037,7 +1053,13 @@ class _DetailKostState extends State<DetailKost> {
             ),
             Row(
               children: [
-                Image.asset("assets/icon/Pemilik_kost.png", width: 75.w),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    radius: 25,
+                    backgroundImage: NetworkImage(dataDetailKost!.user.pfp),
+                  ),
+                ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1045,7 +1067,10 @@ class _DetailKostState extends State<DetailKost> {
                     Text(pemilikkost,
                         style: GoogleFonts.roboto(
                             fontSize: 17, fontWeight: FontWeight.bold)),
-                    Text("Bergabung 19 Juli 2022",
+                    Text(
+                        "Bergabung " +
+                            DateFormat('dd MMM yyyy')
+                                .format(dataDetailKost!.user.createdAt),
                         style: GoogleFonts.roboto(fontSize: 12)),
                   ],
                 ),
@@ -1058,33 +1083,7 @@ class _DetailKostState extends State<DetailKost> {
             SizedBox(height: 5.h),
             Text(dataDetailKost!.desc, style: GoogleFonts.roboto(fontSize: 13)),
             SizedBox(height: 10.h),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    side:
-                        BorderSide(width: 1, color: ColorValues.primaryPurple),
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    minimumSize: Size(0.w, 30.h),
-                  ),
-                  onPressed: () async {
-                    await createChatRoom();
-                    await SharedCode.navigatorPush(
-                        context, ChatWidget(idRoom: widget.idKost));
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Tanya Pemilik Kost',
-                          style: GoogleFonts.inter(fontSize: 12)),
-                      SizedBox(width: 5.w),
-                      Icon(CupertinoIcons.chat_bubble_text_fill, size: 17)
-                    ],
-                  )),
-            ),
+            widgetChat
           ],
         ),
       ),
@@ -1493,6 +1492,35 @@ class _DetailKostState extends State<DetailKost> {
           ],
         ),
       ),
+    );
+  }
+
+  chatButton() {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            side: BorderSide(width: 1, color: ColorValues.primaryPurple),
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            minimumSize: Size(0.w, 30.h),
+          ),
+          onPressed: () async {
+            await createChatRoom();
+            await SharedCode.navigatorPush(
+                context, ChatWidgetUser(idRoom: widget.idKost));
+          },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Tanya Pemilik Kost',
+                  style: GoogleFonts.inter(fontSize: 12)),
+              SizedBox(width: 5.w),
+              Icon(CupertinoIcons.chat_bubble_text_fill, size: 17)
+            ],
+          )),
     );
   }
 
