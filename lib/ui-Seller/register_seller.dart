@@ -24,9 +24,11 @@ class RegisterSeller extends StatefulWidget {
 }
 
 class _RegisterSellerState extends State<RegisterSeller> {
-  final _fullNameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _NoHPController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoad = false;
 
@@ -37,13 +39,16 @@ class _RegisterSellerState extends State<RegisterSeller> {
         _isLoad = true;
       });
       RegisterModel model = await ApiService().getRegister(
-          username: _fullNameController.text,
           email: _emailController.text,
           password: _passwordController.text,
-          role: pref.getString("owner").toString());
+          role: pref.getString("owner").toString(),
+          first_name: _firstNameController.text,
+          last_name: _lastNameController.text,
+          phone: _NoHPController.text);
       setState(() {
         _isLoad = false;
       });
+      await SharedCode.navigatorPush(context, LoginSeller());
     } catch (error) {
       print('no internet ' + error.toString());
     }
@@ -92,11 +97,29 @@ class _RegisterSellerState extends State<RegisterSeller> {
                         SizedBox(
                           height: 24.h,
                         ),
-                        CustomTextFormField(
-                          label: 'Masukkan nama lengkap',
-                          controller: _fullNameController,
-                          validator: (value) =>
-                              SharedCode().nameValidator(value),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: CustomTextFormField(
+                                label: 'Masukkan nama depan',
+                                controller: _firstNameController,
+                                validator: (value) =>
+                                    SharedCode().nameValidator(value),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 12.w,
+                            ),
+                            Expanded(
+                              child: CustomTextFormField(
+                                label: 'Masukkan nama belakang',
+                                controller: _lastNameController,
+                                validator: (value) =>
+                                    SharedCode().nameValidator(value),
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: 12.h,
@@ -107,6 +130,16 @@ class _RegisterSellerState extends State<RegisterSeller> {
                           textInputType: TextInputType.emailAddress,
                           validator: (value) =>
                               SharedCode().emailValidator(value),
+                        ),
+                        SizedBox(
+                          height: 12.h,
+                        ),
+                        CustomTextFormField(
+                          label: 'Masukkan No Handphone',
+                          controller: _NoHPController,
+                          textInputType: TextInputType.number,
+                          validator: (value) =>
+                              SharedCode().emptyValidator(value),
                         ),
                         SizedBox(
                           height: 12.h,
@@ -125,8 +158,6 @@ class _RegisterSellerState extends State<RegisterSeller> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               await getRegister();
-                              await SharedCode.navigatorPush(
-                                  context, LoginSeller());
                             }
                           },
                           child: Text('Daftar'),

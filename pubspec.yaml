@@ -77,6 +77,7 @@ dependencies:
   syncfusion_flutter_charts:
   flutter_rating_bar:
   mime:
+  midtrans_sdk: ^0.3.4
 
 #firebase
   firebase_auth:

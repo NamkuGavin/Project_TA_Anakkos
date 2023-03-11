@@ -10,6 +10,7 @@ import 'package:project_anakkos_app/model/start_trans_model.dart';
 import 'package:project_anakkos_app/ui-User/booking_page.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:midtrans_sdk/midtrans_sdk.dart';
 
 class AlertDialogDates extends StatefulWidget {
   final String idKost;
@@ -29,6 +30,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
   final DateFormat _dateFormatAPI = DateFormat('dd MMM yyyy');
   bool _isLoad = false;
   StartTransData? dataTrans;
+  MidtransSDK? _midtrans;
 
   Future startTrans() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -41,8 +43,6 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
     StartTransModel start = await ApiService().startTransaksi(
         token: result.token,
         user_id: result.data.id.toString(),
-        status: "pending",
-        proof_img: "qwqwq",
         stay_duration: _dateFormatAPI.format(selected_dari!) +
             " - " +
             _dateFormatAPI.format(selected_sampai!),
@@ -58,6 +58,33 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
   void initState() {
     date_dari = _dateFormat.format(selectedDate_dari);
     super.initState();
+    initSDK();
+  }
+
+  void initSDK() async {
+    _midtrans = await MidtransSDK.init(
+      config: MidtransConfig(
+        clientKey: "SB-Mid-client-zZp8FY_6ph9SrxOP",
+        merchantBaseUrl: 'https://api.sandbox.midtrans.com/v2/',
+        // colorTheme: ColorTheme(
+        //   colorPrimary: Theme.of(context).accentColor,
+        //   colorPrimaryDark: Theme.of(context).accentColor,
+        //   colorSecondary: Theme.of(context).accentColor,
+        // ),
+      ),
+    );
+    _midtrans?.setUIKitCustomSetting(
+      skipCustomerDetailsPages: true,
+    );
+    _midtrans!.setTransactionFinishedCallback((result) {
+      print(result.toJson());
+    });
+  }
+
+  @override
+  void dispose() {
+    _midtrans?.removeTransactionFinishedCallback();
+    super.dispose();
   }
 
   @override

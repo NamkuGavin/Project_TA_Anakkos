@@ -23,9 +23,11 @@ class RegisterUser extends StatefulWidget {
 }
 
 class _RegisterUserState extends State<RegisterUser> {
-  final _fullNameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _NoHPController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoad = false;
 
@@ -36,10 +38,12 @@ class _RegisterUserState extends State<RegisterUser> {
         _isLoad = true;
       });
       RegisterModel model = await ApiService().getRegister(
-          username: _fullNameController.text,
           email: _emailController.text,
           password: _passwordController.text,
-          role: pref.getString("user").toString());
+          role: pref.getString("user").toString(),
+          first_name: _firstNameController.text,
+          last_name: _lastNameController.text,
+          phone: _NoHPController.text);
       setState(() {
         _isLoad = false;
       });
@@ -91,11 +95,29 @@ class _RegisterUserState extends State<RegisterUser> {
                         SizedBox(
                           height: 24.h,
                         ),
-                        CustomTextFormField(
-                          label: 'Masukkan nama lengkap',
-                          controller: _fullNameController,
-                          validator: (value) =>
-                              SharedCode().nameValidator(value),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: CustomTextFormField(
+                                label: 'Masukkan nama depan',
+                                controller: _firstNameController,
+                                validator: (value) =>
+                                    SharedCode().nameValidator(value),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 12.w,
+                            ),
+                            Expanded(
+                              child: CustomTextFormField(
+                                label: 'Masukkan nama belakang',
+                                controller: _lastNameController,
+                                validator: (value) =>
+                                    SharedCode().nameValidator(value),
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: 12.h,
@@ -106,6 +128,16 @@ class _RegisterUserState extends State<RegisterUser> {
                           textInputType: TextInputType.emailAddress,
                           validator: (value) =>
                               SharedCode().emailValidator(value),
+                        ),
+                        SizedBox(
+                          height: 12.h,
+                        ),
+                        CustomTextFormField(
+                          label: 'Masukkan No Handphone',
+                          controller: _NoHPController,
+                          textInputType: TextInputType.number,
+                          validator: (value) =>
+                              SharedCode().emptyValidator(value),
                         ),
                         SizedBox(
                           height: 12.h,

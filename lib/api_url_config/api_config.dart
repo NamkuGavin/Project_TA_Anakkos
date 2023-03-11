@@ -54,19 +54,24 @@ class ApiService {
     }
   }
 
-  Future<RegisterModel> getRegister(
-      {required String username,
-      required String email,
-      required String password,
-      required String role}) async {
+  Future<RegisterModel> getRegister({
+    required String email,
+    required String password,
+    required String role,
+    required String first_name,
+    required String last_name,
+    required String phone,
+  }) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
     final body = {
-      "name": username,
       "email": email,
       "password": password,
-      "role": role
+      "role": role,
+      "first_name": first_name,
+      "last_name": last_name,
+      "phone": phone,
     };
     print("RAW REGISTER: " + body.toString());
     print("URL REGISTER: " + ServerConfig.baseURL + ServerConfig.register);
@@ -437,8 +442,6 @@ class ApiService {
   Future<StartTransModel> startTransaksi({
     required String token,
     required String user_id,
-    required String status,
-    required String proof_img,
     required String stay_duration,
     required String due_date,
     required String kost_id,
@@ -449,8 +452,6 @@ class ApiService {
     };
     final body = {
       "user_id": user_id,
-      "status": status,
-      "proof_img": proof_img,
       "stay_duration": stay_duration,
       "due_date": due_date,
       "kost_id": kost_id,
