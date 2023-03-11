@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         dataPendingan = history_res.data;
         kostPending = dataPendingan
-            .where((element) => element.status == "pending")
+            .where((element) => element.status == "Unpaid")
             .toList();
       });
       await getKostbyLoc();
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         dataPendingan = history_res.data;
         kostPending = dataPendingan
-            .where((element) => element.status == "pending")
+            .where((element) => element.status == "Unpaid")
             .toList();
       });
       await getKostbyLoc();
@@ -609,7 +609,8 @@ class _HomePageState extends State<HomePage> {
                             child: Container(
                                 height: 150.h,
                                 width: 100.w,
-                                child: Image.asset("assets/dummykos/kost_2.png",
+                                child: Image.network(
+                                    kostPending[0].kost.coverImg,
                                     fit: BoxFit.fill)),
                           ),
                           Expanded(

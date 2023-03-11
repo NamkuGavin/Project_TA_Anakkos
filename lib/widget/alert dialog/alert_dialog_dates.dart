@@ -30,6 +30,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
   final DateFormat _dateFormatAPI = DateFormat('dd MMM yyyy');
   bool _isLoad = false;
   StartTransData? dataTrans;
+  StartTransModel? dataMidtrans;
   MidtransSDK? _midtrans;
 
   Future startTrans() async {
@@ -50,6 +51,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
         kost_id: widget.idKost);
     setState(() {
       dataTrans = start.data;
+      dataMidtrans = start;
       _isLoad = false;
     });
   }
@@ -58,27 +60,6 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
   void initState() {
     date_dari = _dateFormat.format(selectedDate_dari);
     super.initState();
-    initSDK();
-  }
-
-  void initSDK() async {
-    _midtrans = await MidtransSDK.init(
-      config: MidtransConfig(
-        clientKey: "SB-Mid-client-zZp8FY_6ph9SrxOP",
-        merchantBaseUrl: 'https://api.sandbox.midtrans.com/v2/',
-        // colorTheme: ColorTheme(
-        //   colorPrimary: Theme.of(context).accentColor,
-        //   colorPrimaryDark: Theme.of(context).accentColor,
-        //   colorSecondary: Theme.of(context).accentColor,
-        // ),
-      ),
-    );
-    _midtrans?.setUIKitCustomSetting(
-      skipCustomerDetailsPages: true,
-    );
-    _midtrans!.setTransactionFinishedCallback((result) {
-      print(result.toJson());
-    });
   }
 
   @override
@@ -169,6 +150,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
                         context,
                         BookingPage(
                           dataTrans: dataTrans!,
+                          dataMidtrans: dataMidtrans!,
                         ));
                   } else {
                     setState(() {
@@ -188,6 +170,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
                         context,
                         BookingPage(
                           dataTrans: dataTrans!,
+                          dataMidtrans: dataMidtrans!,
                         ));
                   }
                 },

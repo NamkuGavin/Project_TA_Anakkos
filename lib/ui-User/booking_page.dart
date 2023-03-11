@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:midtrans_sdk/midtrans_sdk.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/paymentType_model.dart';
@@ -20,7 +21,9 @@ import 'package:project_anakkos_app/widget/timer.dart';
 
 class BookingPage extends StatefulWidget {
   final StartTransData dataTrans;
-  BookingPage({Key? key, required this.dataTrans}) : super(key: key);
+  final StartTransModel dataMidtrans;
+  BookingPage({Key? key, required this.dataTrans, required this.dataMidtrans})
+      : super(key: key);
 
   @override
   State<BookingPage> createState() => _BookingPageState();
@@ -33,6 +36,33 @@ class _BookingPageState extends State<BookingPage> {
   ];
   PaymentTypeModel? paymentValue;
   bool showCardField = false;
+  MidtransSDK? _midtrans;
+
+  void initSDK() async {
+    _midtrans = await MidtransSDK.init(
+      config: MidtransConfig(
+        clientKey: "SB-Mid-client-zZp8FY_6ph9SrxOP",
+        merchantBaseUrl: 'https://api.sandbox.midtrans.com/v3/',
+        // colorTheme: ColorTheme(
+        //   colorPrimary: Theme.of(context).accentColor,
+        //   colorPrimaryDark: Theme.of(context).accentColor,
+        //   colorSecondary: Theme.of(context).accentColor,
+        // ),
+      ),
+    );
+    _midtrans?.setUIKitCustomSetting(
+      skipCustomerDetailsPages: true,
+    );
+    _midtrans!.setTransactionFinishedCallback((result) {
+      print(result.toJson());
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initSDK();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -387,6 +417,9 @@ class _BookingPageState extends State<BookingPage> {
                                 borderRadius: BorderRadius.circular(10)),
                           ),
                           onPressed: () {
+                            _midtrans?.startPaymentUiFlow(
+                              token: widget.dataMidtrans.snapToken,
+                            );
                             SharedCode.navigatorPush(
                                 context,
                                 InvoicePage(

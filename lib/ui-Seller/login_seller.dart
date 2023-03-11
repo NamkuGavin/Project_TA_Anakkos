@@ -55,6 +55,7 @@ class _LoginSellerState extends State<LoginSeller> {
       pref.setString('pass_owner', _passwordController.text);
       pref.setString('email_owner', _emailController.text);
       pref.setString('token_owner', model.token);
+      pref.setInt('id_seller', model.data.id);
       setState(() {
         _isLoad = false;
       });

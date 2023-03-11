@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,24 +26,19 @@ class HomeSeller extends StatefulWidget {
 }
 
 class _HomeSellerState extends State<HomeSeller> {
-  List<KostSellerData> items = [];
+  ValueNotifier<List<KostSellerData>> items =
+      ValueNotifier<List<KostSellerData>>([]);
+  // List<KostSellerData> items = [];
   bool _isLoad = false;
+  Timer? timer;
 
   Future getKostSeller() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+    KostSellerModel res = await ApiService().getKostSeller(
+        id_seller: pref.getInt("id_seller")!,
+        token: pref.getString("token_owner")!);
     setState(() {
-      _isLoad = true;
-    });
-    LoginModel result = await ApiService().getLogin(
-        email: pref.getString("email_owner").toString(),
-        password: pref.getString("pass_owner").toString());
-    KostSellerModel res = await ApiService()
-        .getKostSeller(id_seller: result.data.id, token: result.token);
-    setState(() {
-      items = res.data;
-    });
-    setState(() {
-      _isLoad = false;
+      items.value = res.data;
     });
   }
 
@@ -62,8 +59,15 @@ class _HomeSellerState extends State<HomeSeller> {
 
   @override
   void initState() {
+    timer = Timer.periodic(Duration(seconds: 3), (Timer t) => getKostSeller());
     getKostSeller();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -76,7 +80,7 @@ class _HomeSellerState extends State<HomeSeller> {
   }
 
   kostSeller() {
-    return items.isEmpty
+    return items.value.isEmpty
         ? Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -97,133 +101,153 @@ class _HomeSellerState extends State<HomeSeller> {
               ],
             ),
           )
-        : ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (BuildContext context, int index) {
-              return InkWell(
-                onTap: () {
-                  SharedCode.navigatorPush(
-                      context,
-                      DetailSellerKost(
-                        dataDetail: items[index],
-                        idKost: items[index].kostId,
-                      ));
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(width: 0.5)),
-                    child: IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.horizontal(
-                                left: Radius.circular(10)),
-                            child: Container(
-                                width: 100.w,
-                                child: items[index].kostImg != "kosong"
-                                    ? Image.network(items[index].kostImg,
-                                        fit: BoxFit.fill)
-                                    : Image.asset("assets/dummykos/kost_1.png",
-                                        fit: BoxFit.fill)),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(items[index].kostName,
-                                      style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 11)),
-                                  SizedBox(height: 7.h),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        color: items[index].status == "pending"
-                                            ? Colors.yellow.shade800
-                                            : items[index].status == "rejected"
-                                                ? Colors.red
-                                                : Colors.green,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5))),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 5),
-                                      child: Text(items[index].status,
-                                          style: GoogleFonts.inter(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 10)),
+        : ValueListenableBuilder(
+            valueListenable: items,
+            builder: (context, value, child) {
+              return ListView.builder(
+                  itemCount: value.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return InkWell(
+                      onTap: () {
+                        SharedCode.navigatorPush(
+                            context,
+                            DetailSellerKost(
+                              dataDetail: value[index],
+                              idKost: value[index].kostId,
+                            ));
+                      },
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              border: Border.all(width: 0.5)),
+                          child: IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.horizontal(
+                                      left: Radius.circular(10)),
+                                  child: Container(
+                                      width: 100.w,
+                                      child: value[index].kostImg != "kosong"
+                                          ? Image.network(value[index].kostImg,
+                                              fit: BoxFit.fill)
+                                          : Image.asset(
+                                              "assets/dummykos/kost_1.png",
+                                              fit: BoxFit.fill)),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(value[index].kostName,
+                                            style: GoogleFonts.inter(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 11)),
+                                        SizedBox(height: 7.h),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: value[index].status ==
+                                                      "pending"
+                                                  ? Colors.yellow.shade800
+                                                  : value[index].status ==
+                                                          "rejected"
+                                                      ? Colors.red
+                                                      : Colors.green,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8, vertical: 5),
+                                            child: Text(value[index].status,
+                                                style: GoogleFonts.inter(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 10)),
+                                          ),
+                                        ),
+                                        SizedBox(height: 7.h),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Icon(Icons.star,
+                                                size: 15, color: Colors.black),
+                                            SizedBox(width: 4.w),
+                                            Text(
+                                                value[index]
+                                                    .avgRating
+                                                    .toString(),
+                                                style: GoogleFonts.inter(
+                                                    fontSize: 11))
+                                          ],
+                                        ),
+                                        SizedBox(height: 7.h),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Icon(Icons.person,
+                                                size: 15, color: Colors.black),
+                                            SizedBox(width: 4.w),
+                                            Text(
+                                                value[index]
+                                                    .unitRented
+                                                    .toString(),
+                                                style: GoogleFonts.inter(
+                                                    fontSize: 11))
+                                          ],
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              height: 35.h,
+                                              width: 40.w,
+                                              child: IconButton(
+                                                  onPressed: () {},
+                                                  icon: Icon(
+                                                      CupertinoIcons.pencil)),
+                                            ),
+                                            SizedBox(width: 4.w),
+                                            SizedBox(
+                                              height: 35.h,
+                                              width: 40.w,
+                                              child: IconButton(
+                                                  onPressed: () async {
+                                                    await deleteKost(
+                                                        value[index].kostId);
+                                                  },
+                                                  icon: Icon(
+                                                      CupertinoIcons.trash)),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  SizedBox(height: 7.h),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Icon(Icons.star,
-                                          size: 15, color: Colors.black),
-                                      SizedBox(width: 4.w),
-                                      Text(items[index].avgRating.toString(),
-                                          style:
-                                              GoogleFonts.inter(fontSize: 11))
-                                    ],
-                                  ),
-                                  SizedBox(height: 7.h),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Icon(Icons.person,
-                                          size: 15, color: Colors.black),
-                                      SizedBox(width: 4.w),
-                                      Text(items[index].unitRented.toString(),
-                                          style:
-                                              GoogleFonts.inter(fontSize: 11))
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        height: 35.h,
-                                        width: 40.w,
-                                        child: IconButton(
-                                            onPressed: () {},
-                                            icon: Icon(CupertinoIcons.pencil)),
-                                      ),
-                                      SizedBox(width: 4.w),
-                                      SizedBox(
-                                        height: 35.h,
-                                        width: 40.w,
-                                        child: IconButton(
-                                            onPressed: () async {
-                                              await deleteKost(
-                                                  items[index].kostId);
-                                            },
-                                            icon: Icon(CupertinoIcons.trash)),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              );
-            });
+                    );
+                  });
+            },
+          );
   }
 
   appbarWidget() {
