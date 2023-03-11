@@ -909,9 +909,11 @@ class _DetailKostState extends State<DetailKost> {
                             radius: 4,
                           ),
                           SizedBox(width: 12.w),
-                          Text(
-                            dataRoomRule![index].content,
-                            style: TextStyle(fontSize: 16.0),
+                          Expanded(
+                            child: Text(
+                              dataRoomRule![index].content,
+                              style: TextStyle(fontSize: 16.0),
+                            ),
                           ),
                         ],
                       ),
@@ -941,9 +943,11 @@ class _DetailKostState extends State<DetailKost> {
                             radius: 4,
                           ),
                           SizedBox(width: 12.w),
-                          Text(
-                            dataKostRule![index].content,
-                            style: TextStyle(fontSize: 16.0),
+                          Expanded(
+                            child: Text(
+                              dataKostRule![index].content,
+                              style: TextStyle(fontSize: 16.0),
+                            ),
                           ),
                         ],
                       ),

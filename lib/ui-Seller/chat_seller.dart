@@ -103,9 +103,7 @@ class _ChatSellerState extends State<ChatSeller> {
               child: ListTile(
                 leading:
                     SvgPicture.asset("assets/icon/profile.svg", width: 30.w),
-                title: Text(dataChatRoom[index].kostName +
-                    " - " +
-                    dataChatRoom[index].sellerName),
+                title: Text(dataChatRoom[index].username),
                 trailing: Text(
                     DateFormat("HH:mm").format(dataChatRoom[index].createdAt)),
               ),

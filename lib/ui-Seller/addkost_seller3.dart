@@ -6,6 +6,7 @@ import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cupertino_stepper/cupertino_stepper.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
@@ -391,6 +392,9 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                 color: Colors.black45)),
                         SizedBox(height: 5.h),
                         TextFormField(
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(500),
+                          ],
                           controller: descKost,
                           keyboardType: TextInputType.multiline,
                           maxLines: null,

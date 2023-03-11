@@ -110,7 +110,8 @@ class _TimerWidgetState extends State<TimerWidget> {
           Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: Color(0xFFF8ECEC), borderRadius: BorderRadius.circular(10)),
+                color: Color(0xFFF8ECEC),
+                borderRadius: BorderRadius.circular(10)),
             child: Text(
               time,
               style: TextStyle(

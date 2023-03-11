@@ -51,6 +51,7 @@ class _LoginUserState extends State<LoginUser> {
       pref.setString('pass_user', _passwordController.text);
       pref.setString('email_user', _emailController.text);
       pref.setString('token_user', model.token);
+      pref.setInt('id_user', model.data.id);
       setState(() {
         _isLoad = false;
       });

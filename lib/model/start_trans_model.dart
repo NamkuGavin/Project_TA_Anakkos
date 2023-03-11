@@ -15,20 +15,28 @@ class StartTransModel {
   StartTransModel({
     required this.message,
     required this.data,
+    required this.paymentUrl,
+    required this.snapToken,
   });
 
   String message;
   StartTransData data;
+  String paymentUrl;
+  String snapToken;
 
   factory StartTransModel.fromJson(Map<String, dynamic> json) =>
       StartTransModel(
         message: json["message"],
         data: StartTransData.fromJson(json["data"]),
+        paymentUrl: json["payment_url"],
+        snapToken: json["snapToken"],
       );
 
   Map<String, dynamic> toJson() => {
         "message": message,
         "data": data.toJson(),
+        "payment_url": paymentUrl,
+        "snapToken": snapToken,
       };
 }
 
@@ -36,6 +44,7 @@ class StartTransData {
   StartTransData({
     required this.kostId,
     required this.userId,
+    required this.orderId,
     required this.kostName,
     required this.kostType,
     required this.location,
@@ -52,6 +61,7 @@ class StartTransData {
 
   String kostId;
   String userId;
+  String orderId;
   String kostName;
   String kostType;
   String location;
@@ -68,6 +78,7 @@ class StartTransData {
   factory StartTransData.fromJson(Map<String, dynamic> json) => StartTransData(
         kostId: json["kost_id"],
         userId: json["user_id"],
+        orderId: json["order_id"],
         kostName: json["kost_name"],
         kostType: json["kost_type"],
         location: json["location"],
@@ -85,6 +96,7 @@ class StartTransData {
   Map<String, dynamic> toJson() => {
         "kost_id": kostId,
         "user_id": userId,
+        "order_id": orderId,
         "kost_name": kostName,
         "kost_type": kostType,
         "location": location,

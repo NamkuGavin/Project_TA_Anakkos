@@ -107,6 +107,7 @@ class Kost {
   Kost({
     required this.id,
     required this.sellerId,
+    required this.coverImg,
     required this.kostName,
     required this.location,
     required this.locationUrl,
@@ -114,8 +115,6 @@ class Kost {
     required this.rating,
     required this.width,
     required this.weight,
-    required this.roomRules,
-    required this.kostRules,
     required this.desc,
     required this.unitOpen,
     required this.totalUnit,
@@ -128,6 +127,7 @@ class Kost {
 
   int id;
   String sellerId;
+  String coverImg;
   String kostName;
   String location;
   String locationUrl;
@@ -135,8 +135,6 @@ class Kost {
   String rating;
   String width;
   String weight;
-  String roomRules;
-  String kostRules;
   String desc;
   String unitOpen;
   String totalUnit;
@@ -149,6 +147,7 @@ class Kost {
   factory Kost.fromJson(Map<String, dynamic> json) => Kost(
         id: json["id"],
         sellerId: json["seller_id"],
+        coverImg: json["cover_img"],
         kostName: json["kost_name"],
         location: json["location"],
         locationUrl: json["location_url"],
@@ -156,8 +155,6 @@ class Kost {
         rating: json["rating"],
         width: json["width"],
         weight: json["weight"],
-        roomRules: json["room_rules"],
-        kostRules: json["kost_rules"],
         desc: json["desc"],
         unitOpen: json["unit_open"],
         totalUnit: json["total_unit"],
@@ -171,6 +168,7 @@ class Kost {
   Map<String, dynamic> toJson() => {
         "id": id,
         "seller_id": sellerId,
+        "cover_img": coverImg,
         "kost_name": kostName,
         "location": location,
         "location_url": locationUrl,
@@ -178,8 +176,6 @@ class Kost {
         "rating": rating,
         "width": width,
         "weight": weight,
-        "room_rules": roomRules,
-        "kost_rules": kostRules,
         "desc": desc,
         "unit_open": unitOpen,
         "total_unit": totalUnit,

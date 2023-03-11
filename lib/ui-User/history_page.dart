@@ -175,7 +175,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   riwayat() {
     List<HistoryData> dataPending =
-        dataHistory!.where((element) => element.status == "pending").toList();
+        dataHistory!.where((element) => element.status == "Unpaid").toList();
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Column(
@@ -187,7 +187,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 shrinkWrap: true,
                 itemCount: dataHistory!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return dataHistory![index].status != "pending"
+                  return dataHistory![index].status != "Unpaid"
                       ? SizedBox(
                           height: 170.h,
                           child: Column(
@@ -231,8 +231,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                       children: [
                                         Container(
                                             width: 100,
-                                            child: Image.asset(
-                                                "assets/dummykos/kost_4.png",
+                                            child: Image.network(
+                                                dataHistory![index]
+                                                    .kost
+                                                    .coverImg,
                                                 fit: BoxFit.fill)),
                                         Expanded(
                                           child: Padding(
@@ -245,7 +247,12 @@ class _HistoryPageState extends State<HistoryPage> {
                                               children: [
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                      color: Colors.green,
+                                                      color: dataHistory![index]
+                                                                  .status ==
+                                                              "Paid"
+                                                          ? Colors.green
+                                                          : Colors
+                                                              .yellow.shade800,
                                                       borderRadius:
                                                           BorderRadius.all(
                                                               Radius.circular(
@@ -378,7 +385,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     child: Container(
                         width: 100.w,
                         height: 125.h,
-                        child: Image.asset("assets/dummykos/kost_4.png",
+                        child: Image.network(pendingKost[0].kost.coverImg,
                             fit: BoxFit.fill)),
                   ),
                   Expanded(
