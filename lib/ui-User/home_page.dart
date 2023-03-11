@@ -27,6 +27,7 @@ import 'package:project_anakkos_app/widget/chat_widget/chatWidget_user.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:project_anakkos_app/widget/nearby_kost.dart';
 import 'package:project_anakkos_app/widget/populer_kost.dart';
+import 'package:project_anakkos_app/widget/search_bar.dart';
 import 'package:project_anakkos_app/widget/timer_paymonth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -133,23 +134,30 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget(),
-      body: _isLoad
-          ? LoadingAnimation()
-          : idFacilityConfirm.isEmpty
-              ? SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      filterWidget(),
-                      ongoingKost(),
-                      SizedBox(height: 20.h),
-                      popularKost(),
-                      nearbyKost(),
-                    ],
-                  ),
-                )
-              : kostByFacility(),
+      body: idFacilityConfirm.isEmpty
+          ? SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  searchBar(),
+                  _isLoad
+                      ? LoadingAnimation()
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            filterWidget(),
+                            ongoingKost(),
+                            SizedBox(height: 20.h),
+                            popularKost(),
+                            nearbyKost(),
+                          ],
+                        ),
+                ],
+              ),
+            )
+          : kostByFacility(),
     );
   }
 
@@ -157,36 +165,41 @@ class _HomePageState extends State<HomePage> {
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: Colors.white,
-      actions: [
-        AnimSearchBar(
-          boxShadow: false,
-          width: 375,
-          textController: _seacrhController,
-          onSuffixTap: () {
-            setState(() {
-              _seacrhController.clear();
-            });
-          },
-          onSubmitted: (String) async {
-            setState(() {
-              location = _seacrhController.text;
-              _isLoad = true;
-            });
-            await getKostbyLoc();
-            await getKostbyPopular();
-            setState(() {
-              _isLoad = false;
-            });
-          },
-        ),
-      ],
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(0.0),
-        child: Container(
-          color: Colors.black,
-          height: 0.2.h,
-        ),
+      title: SvgPicture.asset(
+        "assets/logo/anakkos_logo4.svg",
+        height: 37.h,
+        fit: BoxFit.fill,
       ),
+      // actions: [
+      //   AnimSearchBar(
+      //     boxShadow: false,
+      //     width: 375,
+      //     textController: _seacrhController,
+      //     onSuffixTap: () {
+      //       setState(() {
+      //         _seacrhController.clear();
+      //       });
+      //     },
+      //     onSubmitted: (String) async {
+      //       setState(() {
+      //         location = _seacrhController.text;
+      //         _isLoad = true;
+      //       });
+      //       await getKostbyLoc();
+      //       await getKostbyPopular();
+      //       setState(() {
+      //         _isLoad = false;
+      //       });
+      //     },
+      //   ),
+      // ],
+      // bottom: PreferredSize(
+      //   preferredSize: Size.fromHeight(0.0),
+      //   child: Container(
+      //     color: Colors.black,
+      //     height: 0.2.h,
+      //   ),
+      // ),
     );
   }
 
@@ -694,9 +707,9 @@ class _HomePageState extends State<HomePage> {
 
   filterWidget() {
     return Padding(
-      padding: EdgeInsets.only(right: 12, top: 5),
+      padding: EdgeInsets.only(left: 12),
       child: Align(
-        alignment: Alignment.topRight,
+        alignment: Alignment.topLeft,
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: ColorValues.primaryBlue,
@@ -1167,6 +1180,38 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ],
+    );
+  }
+
+  searchBar() {
+    return Padding(
+      padding: EdgeInsets.all(12),
+      child: SearchBar(
+        controller: _seacrhController,
+        onChanged: (String) async {
+          if (_seacrhController.text == "") {
+            setState(() {
+              location = "jakarta";
+              _isLoad = true;
+            });
+            await getKostbyLoc();
+            await getKostbyPopular();
+            setState(() {
+              _isLoad = false;
+            });
+          } else {
+            setState(() {
+              location = _seacrhController.text;
+              _isLoad = true;
+            });
+            await getKostbyLoc();
+            await getKostbyPopular();
+            setState(() {
+              _isLoad = false;
+            });
+          }
+        },
+      ),
     );
   }
 }
