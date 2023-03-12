@@ -50,6 +50,7 @@ class _HomePageState extends State<HomePage> {
   List<List<KostbyFacilityData>>? dataKostbyFacility;
   List<HistoryData> dataPendingan = [];
   List<HistoryData> kostPending = [];
+  Widget? kostHome;
   final _seacrhController = TextEditingController();
 
   Future getKostPending() async {
@@ -95,14 +96,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future getKostbyFacility() async {
-    setState(() {
-      _isLoad = true;
-    });
     KostbyFacilityModel _model =
         await ApiService().getKostbyFacility(facilityId: idFacilityConfirm);
     setState(() {
       dataKostbyFacility = _model.data;
-      _isLoad = false;
     });
     Navigator.pop(context);
   }
@@ -134,30 +131,32 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget(),
-      body: idFacilityConfirm.isEmpty
-          ? SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  searchBar(),
-                  _isLoad
-                      ? LoadingAnimation()
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            filterWidget(),
-                            ongoingKost(),
-                            SizedBox(height: 20.h),
-                            popularKost(),
-                            nearbyKost(),
-                          ],
-                        ),
-                ],
-              ),
-            )
-          : kostByFacility(),
+      body: idFacilityConfirm.isEmpty ? kostHomePage() : kostByFacility(),
+    );
+  }
+
+  kostHomePage() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          searchBar(),
+          _isLoad
+              ? LoadingAnimation()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    filterWidget(),
+                    ongoingKost(),
+                    SizedBox(height: 20.h),
+                    popularKost(),
+                    nearbyKost(),
+                  ],
+                ),
+        ],
+      ),
     );
   }
 
@@ -760,7 +759,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(right: 12),
+                            padding: EdgeInsets.only(left: 15),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -824,7 +823,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           VerticalDivider(color: Colors.black),
                           Padding(
-                            padding: EdgeInsets.only(left: 12),
+                            padding: EdgeInsets.only(right: 30),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -897,7 +896,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(right: 12),
+                            padding: EdgeInsets.only(left: 15),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -985,7 +984,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           VerticalDivider(color: Colors.black),
                           Padding(
-                            padding: EdgeInsets.only(left: 12),
+                            padding: EdgeInsets.only(right: 15),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1050,32 +1049,102 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Expanded(child: Container()),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorValues.primaryPurple,
-                            foregroundColor: Colors.white,
-                            minimumSize: Size(0.w, 0.h),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                          ),
-                          onPressed: () {
-                            getKostbyFacility();
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('Tampilkan Hasil',
-                                    style: GoogleFonts.inter(fontSize: 14)),
-                                SizedBox(width: 10.w),
-                                Icon(Icons.save)
-                              ],
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey.shade200,
+                                foregroundColor: Colors.black,
+                                minimumSize: Size(50.w, 0.h),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  CheckStatus.termasukListrik = false;
+                                  CheckStatus.bayarListrik = false;
+                                  CheckStatus.bantal = false;
+                                  CheckStatus.guling = false;
+                                  CheckStatus.kasur = false;
+                                  CheckStatus.kamarMandi = false;
+                                  CheckStatus.laundry = false;
+                                  CheckStatus.dapur = false;
+                                  CheckStatus.kulkas = false;
+                                  CheckStatus.katering = false;
+                                  CheckStatus.wifi = false;
+                                  CheckStatus.tv = false;
+                                  CheckStatus.lemari = false;
+                                  CheckStatus.jendela = false;
+                                  CheckStatus.meja = false;
+                                  CheckStatus.kursi = false;
+                                  CheckStatus.kipas = false;
+                                  CheckStatus.ac = false;
+                                });
+                                idFacilityConfirm.clear();
+                                print(
+                                    "LIST ID: " + idFacilityConfirm.toString());
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('Hapus',
+                                        style: GoogleFonts.inter(fontSize: 14)),
+                                    SizedBox(width: 10.w),
+                                    Icon(Icons.delete_forever)
+                                  ],
+                                ),
+                              )),
+                        ),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorValues.primaryPurple,
+                              foregroundColor: Colors.white,
+                              minimumSize: Size(0.w, 0.h),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
                             ),
-                          )),
+                            onPressed: () async {
+                              if (idFacilityConfirm.isNotEmpty) {
+                                setState(() {
+                                  _isLoad = true;
+                                });
+                                await getKostbyFacility();
+                                setState(() {
+                                  _isLoad = false;
+                                });
+                              } else {
+                                setState(() {
+                                  _isLoad = true;
+                                });
+                                await getKostPending();
+                                setState(() {
+                                  _isLoad = false;
+                                  Navigator.pop(context);
+                                });
+                              }
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('Tampilkan Hasil',
+                                      style: GoogleFonts.inter(fontSize: 14)),
+                                  SizedBox(width: 10.w),
+                                  Icon(Icons.save)
+                                ],
+                              ),
+                            )),
+                      ],
                     ),
                   ],
                 ),
@@ -1088,100 +1157,109 @@ class _HomePageState extends State<HomePage> {
   }
 
   kostByFacility() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        filterWidget(),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 0.57,
-                crossAxisCount: 2,
-                crossAxisSpacing: 10.0,
-                mainAxisSpacing: 10.0,
-              ),
-              itemCount: dataKostbyFacility!.length,
-              itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                  onTap: () {
-                    SharedCode.navigatorPush(
-                        context,
-                        DetailKost(
-                          idKost: dataKostbyLoc[index].id.toString(),
-                          model: dataKostbyLoc[index],
-                        ));
-                  },
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 5,
-                    shadowColor: Colors.black,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 125.h,
-                          width: 150.w,
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.vertical(
-                                  bottom: Radius.circular(10)),
-                              child: Image.network(
-                                  dataKostbyFacility![index][0].coverImg,
-                                  fit: BoxFit.cover)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 4),
+    return _isLoad
+        ? LoadingAnimation()
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              filterWidget(),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 0.57,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
+                    ),
+                    itemCount: dataKostbyFacility!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          SharedCode.navigatorPush(
+                              context,
+                              DetailKost(
+                                idKost: dataKostbyLoc[index].id.toString(),
+                                model: dataKostbyLoc[index],
+                              ));
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          elevation: 5,
+                          shadowColor: Colors.black,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 15.h),
-                              DottedBorder(
-                                color: Colors.black,
-                                strokeWidth: 1,
-                                child: Text(
-                                    dataKostbyFacility![index][0].kostType,
-                                    style: GoogleFonts.inter(fontSize: 11)),
+                              SizedBox(
+                                height: 125.h,
+                                width: 150.w,
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.vertical(
+                                        bottom: Radius.circular(10)),
+                                    child: Image.network(
+                                        dataKostbyFacility![index][0].coverImg,
+                                        fit: BoxFit.cover)),
                               ),
-                              SizedBox(height: 7.h),
-                              Text(dataKostbyFacility![index][0].kostName,
-                                  style: GoogleFonts.inter(fontSize: 11)),
-                              SizedBox(height: 7.h),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Icon(Icons.location_on_rounded, size: 13),
-                                  Expanded(
-                                    child: Text(
-                                        dataKostbyFacility![index][0].location,
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 4),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 15.h),
+                                    DottedBorder(
+                                      color: Colors.black,
+                                      strokeWidth: 1,
+                                      child: Text(
+                                          dataKostbyFacility![index][0]
+                                              .kostType,
+                                          style:
+                                              GoogleFonts.inter(fontSize: 11)),
+                                    ),
+                                    SizedBox(height: 7.h),
+                                    Text(dataKostbyFacility![index][0].kostName,
                                         style: GoogleFonts.inter(fontSize: 11)),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 8.h),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Text(
-                                    "Rp. " +
-                                        dataKostbyFacility![index][0]
-                                            .roomPrice
-                                            .toString() +
-                                        " / Bulan",
-                                    style: GoogleFonts.inter(fontSize: 11)),
+                                    SizedBox(height: 7.h),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Icon(Icons.location_on_rounded,
+                                            size: 13),
+                                        Expanded(
+                                          child: Text(
+                                              dataKostbyFacility![index][0]
+                                                  .location,
+                                              style: GoogleFonts.inter(
+                                                  fontSize: 11)),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: Text(
+                                          "Rp. " +
+                                              dataKostbyFacility![index][0]
+                                                  .roomPrice
+                                                  .toString() +
+                                              " / Bulan",
+                                          style:
+                                              GoogleFonts.inter(fontSize: 11)),
+                                    )
+                                  ],
+                                ),
                               )
                             ],
                           ),
-                        )
-                      ],
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-          ),
-        ),
-      ],
-    );
+                ),
+              ),
+            ],
+          );
   }
 
   searchBar() {
