@@ -78,7 +78,12 @@ class CommentData {
 class User {
   User({
     required this.id,
+    required this.firstName,
+    required this.lastName,
     required this.name,
+    required this.phone,
+    required this.chatStatus,
+    required this.pfp,
     required this.email,
     required this.rentStatus,
     required this.role,
@@ -88,7 +93,12 @@ class User {
   });
 
   int id;
+  String firstName;
+  String lastName;
   String name;
+  String phone;
+  String chatStatus;
+  String pfp;
   String email;
   dynamic rentStatus;
   String role;
@@ -98,7 +108,12 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
+        firstName: json["first_name"],
+        lastName: json["last_name"],
         name: json["name"],
+        phone: json["phone"],
+        chatStatus: json["chat_status"],
+        pfp: json["pfp"],
         email: json["email"],
         rentStatus: json["rent_status"],
         role: json["role"],
@@ -109,7 +124,12 @@ class User {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "first_name": firstName,
+        "last_name": lastName,
         "name": name,
+        "phone": phone,
+        "chat_status": chatStatus,
+        "pfp": pfp,
         "email": email,
         "rent_status": rentStatus,
         "role": role,

@@ -52,7 +52,8 @@ class _DetailKostState extends State<DetailKost> {
   final user = FirebaseAuth.instance.currentUser;
   DetailKostUserData? dataDetailKost;
   List<CommentData>? dataComment;
-  bool _isLoad = false;
+  bool _isLoad = true;
+  bool _isLogin = false;
   List<List<FasilitasKostData>>? dataFasilitas;
   double? rate;
   List<KostRoomRuleData>? dataRoomRule;
@@ -68,10 +69,12 @@ class _DetailKostState extends State<DetailKost> {
       null;
     } else if (user != null) {
       setState(() {
+        _isLogin = true;
         widgetChat = chatButton();
       });
     } else {
       setState(() {
+        _isLogin = true;
         widgetChat = chatButton();
       });
     }
@@ -176,44 +179,82 @@ class _DetailKostState extends State<DetailKost> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _isLoad
-            ? LoadingAnimation()
-            : NestedScrollView(
-                headerSliverBuilder: (context, scrolling) {
-                  return <Widget>[
-                    SliverOverlapAbsorber(
-                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                          context),
-                      sliver: SliverAppBar(
-                        automaticallyImplyLeading: false,
-                        backgroundColor: Colors.transparent,
-                        expandedHeight: 250.h,
-                        forceElevated: scrolling,
-                        flexibleSpace:
-                            FlexibleSpaceBar(background: detailAppbar()),
-                      ),
+    return _isLoad
+        ? SafeArea(child: Scaffold(body: LoadingAnimation()))
+        : _isLogin
+            ? SafeArea(
+                child: Scaffold(
+                  body: NestedScrollView(
+                    headerSliverBuilder: (context, scrolling) {
+                      return <Widget>[
+                        SliverOverlapAbsorber(
+                          handle:
+                              NestedScrollView.sliverOverlapAbsorberHandleFor(
+                                  context),
+                          sliver: SliverAppBar(
+                            automaticallyImplyLeading: false,
+                            backgroundColor: Colors.transparent,
+                            expandedHeight: 250.h,
+                            forceElevated: scrolling,
+                            flexibleSpace:
+                                FlexibleSpaceBar(background: detailAppbar()),
+                          ),
+                        ),
+                      ];
+                    },
+                    body: ListView(
+                      children: [
+                        detailHeader(),
+                        detailFasilitas(),
+                        detailPeraturan(),
+                        fotoKostWidget(),
+                        mapKost(),
+                        pemilikKost(),
+                        commentRatingUser(),
+                        comment(),
+                        SizedBox(height: 25.h),
+                        sewaButton(),
+                      ],
                     ),
-                  ];
-                },
-                body: ListView(
-                  children: [
-                    detailHeader(),
-                    detailFasilitas(),
-                    detailPeraturan(),
-                    fotoKostWidget(),
-                    mapKost(),
-                    pemilikKost(),
-                    commentRatingUser(),
-                    comment(),
-                    SizedBox(height: 25.h),
-                    sewaButton(),
-                  ],
+                  ),
                 ),
-              ),
-      ),
-    );
+              )
+            : SafeArea(
+                child: Scaffold(
+                  body: NestedScrollView(
+                    headerSliverBuilder: (context, scrolling) {
+                      return <Widget>[
+                        SliverOverlapAbsorber(
+                          handle:
+                              NestedScrollView.sliverOverlapAbsorberHandleFor(
+                                  context),
+                          sliver: SliverAppBar(
+                            automaticallyImplyLeading: false,
+                            backgroundColor: Colors.transparent,
+                            expandedHeight: 250.h,
+                            forceElevated: scrolling,
+                            flexibleSpace:
+                                FlexibleSpaceBar(background: detailAppbar()),
+                          ),
+                        ),
+                      ];
+                    },
+                    body: ListView(
+                      children: [
+                        detailHeader(),
+                        detailFasilitas(),
+                        detailPeraturan(),
+                        fotoKostWidget(),
+                        mapKost(),
+                        pemilikKost(),
+                        comment(),
+                        SizedBox(height: 25.h),
+                        sewaButton(),
+                      ],
+                    ),
+                  ),
+                ),
+              );
   }
 
   detailAppbar() {
@@ -777,9 +818,18 @@ class _DetailKostState extends State<DetailKost> {
                                             EdgeInsets.symmetric(vertical: 8),
                                         child: Row(
                                           children: [
-                                            Image.asset(
-                                                "assets/icon/photo_profile.png",
-                                                width: 50.w),
+                                            Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: CircleAvatar(
+                                                backgroundColor:
+                                                    Color(0XFFE7E7E7),
+                                                radius: 20,
+                                                backgroundImage: NetworkImage(
+                                                    dataComment![index]
+                                                        .user
+                                                        .pfp),
+                                              ),
+                                            ),
                                             Expanded(
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
@@ -897,6 +947,7 @@ class _DetailKostState extends State<DetailKost> {
               decoration: BoxDecoration(),
               child: Expanded(
                 child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: dataRoomRule!.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -931,6 +982,7 @@ class _DetailKostState extends State<DetailKost> {
               decoration: BoxDecoration(),
               child: Expanded(
                 child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: dataKostRule!.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -1060,6 +1112,7 @@ class _DetailKostState extends State<DetailKost> {
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: CircleAvatar(
+                    backgroundColor: Color(0XFFE7E7E7),
                     radius: 25,
                     backgroundImage: NetworkImage(dataDetailKost!.user.pfp),
                   ),
@@ -1141,10 +1194,8 @@ class _DetailKostState extends State<DetailKost> {
                 ? Container()
                 : Row(
                     children: [
-                      Container(
-                        padding: EdgeInsets.all(12),
-                        width: 275.w,
-                        height: 75.h,
+                      Expanded(
+                        flex: 4,
                         child: CustomTextFormField(
                           label: 'Ketikkan seusatu',
                           controller: commentController,
@@ -1293,7 +1344,15 @@ class _DetailKostState extends State<DetailKost> {
                 padding: EdgeInsets.symmetric(vertical: 8),
                 child: Row(
                   children: [
-                    Image.asset("assets/icon/photo_profile.png", width: 50.w),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        backgroundColor: Color(0XFFE7E7E7),
+                        radius: 20,
+                        backgroundImage:
+                            NetworkImage(dataComment![index].user.pfp),
+                      ),
+                    ),
                     Expanded(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,

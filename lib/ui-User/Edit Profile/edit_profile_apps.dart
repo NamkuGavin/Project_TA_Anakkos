@@ -48,6 +48,7 @@ class _EditProfileAppsState extends State<EditProfileApps> {
 
   editProfile() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+    _isLoad.value = true;
     LoginModel result = await ApiService().getLogin(
         email: pref.getString("email_user").toString(),
         password: pref.getString("pass_user").toString());
@@ -55,6 +56,7 @@ class _EditProfileAppsState extends State<EditProfileApps> {
         id_user: result.data.id,
         token: result.token,
         name: _fullNameController.text);
+    _isLoad.value = false;
     setState(() {
       Navigator.pop(context, 'update');
     });
@@ -62,6 +64,7 @@ class _EditProfileAppsState extends State<EditProfileApps> {
 
   editProfile_withImage(File file) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+    _isLoad.value = true;
     LoginModel result = await ApiService().getLogin(
         email: pref.getString("email_user").toString(),
         password: pref.getString("pass_user").toString());
@@ -70,6 +73,7 @@ class _EditProfileAppsState extends State<EditProfileApps> {
         token: result.token,
         name: _fullNameController.text,
         file: file);
+    _isLoad.value = false;
     setState(() {
       Navigator.pop(context, 'update');
     });
@@ -215,12 +219,10 @@ class _EditProfileAppsState extends State<EditProfileApps> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        _isLoad.value = true;
                         _pickedImage != null
                             ? editProfile_withImage(
                                 File(_pickedImage!.path.toString()))
                             : editProfile();
-                        _isLoad.value = false;
                       }
                     },
                     child: Text('Edit'),
