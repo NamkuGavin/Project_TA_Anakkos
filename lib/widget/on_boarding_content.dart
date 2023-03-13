@@ -12,18 +12,18 @@ class OnBoardingContents {
 List<OnBoardingContents> contents = [
   OnBoardingContents(
     title: "Register & Login",
-    image: "assets/images/boardingone.svg",
+    image: "assets/lottie/login.json",
     desc: "Anakkos adalah aplikasi pemesanan kos berbasis digital",
   ),
   OnBoardingContents(
     title: "Cari Kos Terdekat",
-    image: "assets/images/boardingtwo.svg",
+    image: "assets/lottie/location.json",
     desc:
         "Anakkos membantu Anda mencari kos terdekat atau dimana saja dengan mudah",
   ),
   OnBoardingContents(
     title: "Pilih Rumah Kosmu",
-    image: "assets/images/boardingthree.svg",
+    image: "assets/lottie/search.json",
     desc:
         "Anakkos juga menyediakan informasi lengkap terkait kos agar Anda dapat memilih kos dengan mudah",
   ),

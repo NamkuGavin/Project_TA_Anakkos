@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/ui-User/landing_page.dart';
 import 'package:project_anakkos_app/widget/bottomNavigation_seller.dart';
@@ -19,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   final user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 3), () async {
+    Future.delayed(Duration(seconds: 5), () async {
       final prefs = await SharedPreferences.getInstance();
       if (prefs.getString('token_user') == null &&
           prefs.getString('token_owner') == null &&
@@ -39,8 +40,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF3399FF),
       body: Center(
-        child: SvgPicture.asset("assets/logo/anakkos_logo1.svg", width: 175.w),
+        child: Lottie.asset("assets/lottie/app_splash.json", width: 175.w),
       ),
     );
   }

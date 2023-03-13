@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/common/size_config.dart';
@@ -71,9 +72,9 @@ class _LandingPageState extends State<LandingPage> {
                         SizedBox(
                           height: 100.h,
                         ),
-                        SvgPicture.asset(
+                        Lottie.asset(
                           contents[i].image,
-                          height: SizeConfig.blockV! * 20,
+                          height: SizeConfig.blockV! * 30,
                         ),
                         SizedBox(
                           height: 100.h,

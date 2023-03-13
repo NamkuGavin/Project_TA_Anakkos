@@ -130,7 +130,7 @@ class _ChatPageState extends State<ChatPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SvgPicture.asset("assets/logo/blm_login.svg", width: 175.w),
+              Lottie.asset("assets/lottie/login_first.json"),
               SizedBox(height: 40.h),
               Text("Login terlebih dahulu untuk mengakses fitur ini",
                   textAlign: TextAlign.center,
