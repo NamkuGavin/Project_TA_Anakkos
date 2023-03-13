@@ -98,7 +98,7 @@ class _ChatWidgetUserState extends State<ChatWidgetUser> {
       await ApiService().createChat(
           token: pref.getString("token_user_google")!,
           kost_chat_id: widget.idRoom,
-          user_id: pref.getInt("id_user").toString(),
+          user_id: pref.getInt("id_user_google").toString(),
           role: "user",
           msg_content: chatController.text);
     } else {

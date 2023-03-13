@@ -117,21 +117,36 @@ class _DetailKostState extends State<DetailKost> {
   }
 
   Future createChatRoom() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      _isLoad = true;
-    });
-    LoginModel result = await ApiService().getLogin(
-        email: pref.getString("email_user").toString(),
-        password: pref.getString("pass_user").toString());
-    await ApiService().createChatRoom(
-      token: result.token,
-      user_id: result.data.id.toString(),
-      kost_id: widget.idKost,
-    );
-    setState(() {
-      _isLoad = true;
-    });
+    if (user != null) {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      setState(() {
+        _isLoad = true;
+      });
+      await ApiService().createChatRoom(
+        token: pref.getString("token_user_google")!,
+        user_id: pref.getInt("id_user_google").toString(),
+        kost_id: widget.idKost,
+      );
+      setState(() {
+        _isLoad = true;
+      });
+    } else {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      setState(() {
+        _isLoad = true;
+      });
+      LoginModel result = await ApiService().getLogin(
+          email: pref.getString("email_user").toString(),
+          password: pref.getString("pass_user").toString());
+      await ApiService().createChatRoom(
+        token: result.token,
+        user_id: result.data.id.toString(),
+        kost_id: widget.idKost,
+      );
+      setState(() {
+        _isLoad = true;
+      });
+    }
   }
 
   Future createComment() async {

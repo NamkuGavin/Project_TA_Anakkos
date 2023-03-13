@@ -58,6 +58,7 @@ class FirebaseService {
           LoginGoogleModel model = await ApiService()
               .getLoginGoogle(email: googleSignInAccount.email);
           pref.setString('token_user_google', model.token);
+          pref.setInt('id_user_google', model.data.id);
         } on HttpException {
           String? firstName;
           String? lastName;
@@ -77,6 +78,7 @@ class FirebaseService {
           LoginGoogleModel model = await ApiService()
               .getLoginGoogle(email: googleSignInAccount.email);
           pref.setString('token_user_google', model.token);
+          pref.setInt('id_user_google', model.data.id);
         }
         return true;
       } on FirebaseAuthException catch (e) {
