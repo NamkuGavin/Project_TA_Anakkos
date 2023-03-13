@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:project_anakkos_app/api_url_config/server_config.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/model/chart_model.dart';
 import 'package:project_anakkos_app/model/chat_model.dart';
 import 'package:project_anakkos_app/model/chat_room/chat_roomSeller_model.dart';
 import 'package:project_anakkos_app/model/chat_room/chat_roomUser_model.dart';
@@ -1069,6 +1070,27 @@ class ApiService {
     } else {
       print(response.statusCode);
       throw HttpException('request error code ${response.statusCode}');
+    }
+  }
+
+  Future<ChartModel> getChartDetail({required String kost_id}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    print("URL CHART DETAIL: " +
+        ServerConfig.baseURL +
+        ServerConfig.getChart +
+        "/$kost_id");
+    final res = await http.get(
+        Uri.parse(ServerConfig.baseURL + ServerConfig.getChart + "/$kost_id"),
+        headers: headers);
+    print("STATUS CODE CHART DETAIL): " + res.statusCode.toString());
+    print("RES CHART DETAIL: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return ChartModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
     }
   }
 }
