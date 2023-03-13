@@ -188,7 +188,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => EditProfileApps()));
+                                        builder: (context) =>
+                                            EditProfileApps()));
                                 print('result: ' + result);
                                 await getProfileApps();
                               },

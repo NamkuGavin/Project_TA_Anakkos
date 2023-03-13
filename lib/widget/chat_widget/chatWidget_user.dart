@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,30 +28,55 @@ class _ChatWidgetUserState extends State<ChatWidgetUser> {
   ChatData? dataChat;
   // List<Message>? messageData;
   ValueNotifier<List<Message>> messageData = ValueNotifier<List<Message>>([]);
+  final user = FirebaseAuth.instance.currentUser;
   Timer? timer;
 
   Future getChat() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    ChatModel res = await ApiService()
-        .getChat(token: pref.getString("token_user")!, room_id: widget.idRoom);
-    setState(() {
-      dataChat = res.data;
-      messageData.value = res.data.message;
-    });
+    if (user != null) {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      ChatModel res = await ApiService().getChat(
+          token: pref.getString("token_user_google")!, room_id: widget.idRoom);
+      setState(() {
+        dataChat = res.data;
+        messageData.value = res.data.message;
+      });
+    } else {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      ChatModel res = await ApiService().getChat(
+          token: pref.getString("token_user")!, room_id: widget.idRoom);
+      setState(() {
+        dataChat = res.data;
+        messageData.value = res.data.message;
+      });
+    }
   }
 
   Future getChatBeginning() async {
-    setState(() {
-      _isLoad = true;
-    });
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    ChatModel res = await ApiService()
-        .getChat(token: pref.getString("token_user")!, room_id: widget.idRoom);
-    setState(() {
-      dataChat = res.data;
-      messageData.value = res.data.message;
-      _isLoad = false;
-    });
+    if (user != null) {
+      setState(() {
+        _isLoad = true;
+      });
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      ChatModel res = await ApiService().getChat(
+          token: pref.getString("token_user_google")!, room_id: widget.idRoom);
+      setState(() {
+        dataChat = res.data;
+        messageData.value = res.data.message;
+        _isLoad = false;
+      });
+    } else {
+      setState(() {
+        _isLoad = true;
+      });
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      ChatModel res = await ApiService().getChat(
+          token: pref.getString("token_user")!, room_id: widget.idRoom);
+      setState(() {
+        dataChat = res.data;
+        messageData.value = res.data.message;
+        _isLoad = false;
+      });
+    }
   }
 
   // Future getChatAfterCreate() async {
@@ -67,13 +93,23 @@ class _ChatWidgetUserState extends State<ChatWidgetUser> {
   // }
 
   Future createChat() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    await ApiService().createChat(
-        token: pref.getString("token_user")!,
-        kost_chat_id: widget.idRoom,
-        user_id: pref.getInt("id_user").toString(),
-        role: "user",
-        msg_content: chatController.text);
+    if (user != null) {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      await ApiService().createChat(
+          token: pref.getString("token_user_google")!,
+          kost_chat_id: widget.idRoom,
+          user_id: pref.getInt("id_user").toString(),
+          role: "user",
+          msg_content: chatController.text);
+    } else {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      await ApiService().createChat(
+          token: pref.getString("token_user")!,
+          kost_chat_id: widget.idRoom,
+          user_id: pref.getInt("id_user").toString(),
+          role: "user",
+          msg_content: chatController.text);
+    }
   }
 
   @override

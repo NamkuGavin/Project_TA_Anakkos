@@ -59,10 +59,20 @@ class FirebaseService {
               .getLoginGoogle(email: googleSignInAccount.email);
           pref.setString('token_user_google', model.token);
         } on HttpException {
+          String? firstName;
+          String? lastName;
+          final user = FirebaseAuth.instance.currentUser;
+          List<String> nameSplit = user!.displayName!.split(' ');
+          firstName = nameSplit[0];
+          if (nameSplit.length > 1) {
+            lastName = nameSplit[nameSplit.length - 1];
+          }
           SharedPreferences pref = await SharedPreferences.getInstance();
           await ApiService().getRegisterGoogle(
               email: googleSignInAccount.email,
-              name: googleSignInAccount.displayName.toString());
+              name: googleSignInAccount.displayName.toString(),
+              first_name: firstName,
+              last_name: lastName!);
           await Future.delayed(Duration(seconds: 1));
           LoginGoogleModel model = await ApiService()
               .getLoginGoogle(email: googleSignInAccount.email);
