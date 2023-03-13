@@ -5,6 +5,7 @@ import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
+import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/model/start_trans_model.dart';
 import 'package:project_anakkos_app/ui-User/booking_page.dart';
@@ -14,7 +15,9 @@ import 'package:midtrans_sdk/midtrans_sdk.dart';
 
 class AlertDialogDates extends StatefulWidget {
   final String idKost;
-  AlertDialogDates({Key? key, required this.idKost}) : super(key: key);
+  final KostbyLocationData model;
+  AlertDialogDates({Key? key, required this.idKost, required this.model})
+      : super(key: key);
 
   @override
   State<AlertDialogDates> createState() => _AlertDialogDatesState();
@@ -49,6 +52,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
             _dateFormatAPI.format(selected_sampai!),
         due_date: _dateFormatAPI.format(dueDate!),
         kost_id: widget.idKost);
+    pref.setString("token_snapMidtrans", start.snapToken);
     setState(() {
       dataTrans = start.data;
       dataMidtrans = start;
@@ -149,6 +153,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
                     await SharedCode.navigatorPush(
                         context,
                         BookingPage(
+                          model: widget.model,
                           dataTrans: dataTrans!,
                           dataMidtrans: dataMidtrans!,
                         ));
@@ -171,6 +176,7 @@ class _AlertDialogDatesState extends State<AlertDialogDates> {
                         BookingPage(
                           dataTrans: dataTrans!,
                           dataMidtrans: dataMidtrans!,
+                          model: widget.model,
                         ));
                   }
                 },

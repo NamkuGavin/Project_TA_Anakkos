@@ -1479,7 +1479,7 @@ class _DetailKostState extends State<DetailKost> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialogDates(idKost: widget.idKost);
+        return AlertDialogDates(idKost: widget.idKost, model: widget.model);
       },
     );
   }

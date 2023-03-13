@@ -38,6 +38,8 @@ class ChatRoomUserData {
     required this.id,
     required this.userId,
     required this.sellerId,
+    required this.user_pfp,
+    required this.seller_pfp,
     required this.sellerName,
     required this.kostId,
     required this.username,
@@ -49,6 +51,8 @@ class ChatRoomUserData {
   int id;
   String userId;
   String sellerId;
+  String user_pfp;
+  String seller_pfp;
   String sellerName;
   String kostId;
   String username;
@@ -56,10 +60,13 @@ class ChatRoomUserData {
   DateTime createdAt;
   DateTime updatedAt;
 
-  factory ChatRoomUserData.fromJson(Map<String, dynamic> json) => ChatRoomUserData(
+  factory ChatRoomUserData.fromJson(Map<String, dynamic> json) =>
+      ChatRoomUserData(
         id: json["id"],
         userId: json["user_id"],
         sellerId: json["seller_id"],
+        user_pfp: json["user_pfp"],
+        seller_pfp: json["seller_pfp"],
         sellerName: json["seller_name"],
         kostId: json["kost_id"],
         username: json["username"],
@@ -72,6 +79,8 @@ class ChatRoomUserData {
         "id": id,
         "user_id": userId,
         "seller_id": sellerId,
+        "user_pfp": user_pfp,
+        "seller_pfp": seller_pfp,
         "seller_name": sellerName,
         "kost_id": kostId,
         "username": username,

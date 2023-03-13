@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Color(0xFF3399FF),
       body: Center(
-        child: Lottie.asset("assets/lottie/app_splash.json", width: 175.w),
+        child: Lottie.asset("assets/lottie/app_splash.json", width: 200.w),
       ),
     );
   }

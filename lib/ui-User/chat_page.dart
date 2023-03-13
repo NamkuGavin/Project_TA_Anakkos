@@ -179,8 +179,11 @@ class _ChatPageState extends State<ChatPage> {
             },
             child: Card(
               child: ListTile(
-                leading:
-                    SvgPicture.asset("assets/icon/profile.svg", width: 30.w),
+                leading: CircleAvatar(
+                  backgroundColor: Color(0XFFE7E7E7),
+                  radius: 20,
+                  backgroundImage: NetworkImage(dataChatRoom[index].seller_pfp),
+                ),
                 title: Text(dataChatRoom[index].kostName),
                 trailing: Text(
                     DateFormat("HH:mm").format(dataChatRoom[index].createdAt)),
