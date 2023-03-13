@@ -195,7 +195,7 @@ class _InvoicePagePayState extends State<InvoicePagePay> {
             children: [
               Container(
                   width: 100.w,
-                  child: Image.asset("assets/dummykos/kost_1.png",
+                  child: Image.network(widget.kostPending[0].kost.coverImg,
                       fit: BoxFit.fill)),
               Expanded(
                 child: Padding(

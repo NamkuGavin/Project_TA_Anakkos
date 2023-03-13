@@ -10,14 +10,17 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
 import 'package:project_anakkos_app/main.dart';
+import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/model/start_trans_model.dart';
 import 'package:project_anakkos_app/widget/bottomNavigation_user.dart';
 
 class InvoicePage extends StatefulWidget {
   final StartTransData dataTrans;
+  final KostbyLocationData model;
   InvoicePage({
     Key? key,
     required this.dataTrans,
+    required this.model,
   }) : super(key: key);
 
   @override
@@ -199,8 +202,8 @@ class _InvoicePageState extends State<InvoicePage> {
               Container(
                   width: 100.w,
                   height: 120.h,
-                  child: Image.asset("assets/dummykos/kost_1.png",
-                      fit: BoxFit.fill)),
+                  child:
+                      Image.network(widget.model.coverImg, fit: BoxFit.fill)),
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),

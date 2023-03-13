@@ -13,6 +13,7 @@ import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/paymentType_model.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/populer_model.dart';
+import 'package:project_anakkos_app/model/kost_by_loc_model.dart';
 import 'package:project_anakkos_app/model/start_trans_model.dart';
 import 'package:project_anakkos_app/ui-User/invoice_page.dart';
 import 'package:project_anakkos_app/widget/alert%20dialog/alert_dialog_help.dart';
@@ -22,7 +23,12 @@ import 'package:project_anakkos_app/widget/timer.dart';
 class BookingPage extends StatefulWidget {
   final StartTransData dataTrans;
   final StartTransModel dataMidtrans;
-  BookingPage({Key? key, required this.dataTrans, required this.dataMidtrans})
+  final KostbyLocationData model;
+  BookingPage(
+      {Key? key,
+      required this.dataTrans,
+      required this.dataMidtrans,
+      required this.model})
       : super(key: key);
 
   @override
@@ -133,6 +139,7 @@ class _BookingPageState extends State<BookingPage> {
                         context,
                         InvoicePage(
                           dataTrans: widget.dataTrans,
+                          model: widget.model,
                         ));
                   },
                   child: Row(
@@ -156,8 +163,7 @@ class _BookingPageState extends State<BookingPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // TimerWidget(),
-              // SizedBox(height: 50.h),
+              TimerWidget(),
               SizedBox(height: 50.h),
               Text('Payment summary',
                   style: GoogleFonts.poppins(
@@ -557,8 +563,8 @@ class _BookingPageState extends State<BookingPage> {
             children: [
               Container(
                   width: 100.w,
-                  child: Image.asset("assets/dummykos/kost_1.png",
-                      fit: BoxFit.fill)),
+                  child:
+                      Image.network(widget.model.coverImg, fit: BoxFit.fill)),
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),

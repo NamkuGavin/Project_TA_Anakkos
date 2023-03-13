@@ -23,7 +23,7 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   @override
   void initState() {
-    hours1 = int.parse("03");
+    hours1 = int.parse("24");
     mints1 = int.parse("00");
     secs1 = int.parse("00");
     countdownDuration1 =
