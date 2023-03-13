@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/ui-Seller/login_seller.dart';
@@ -47,19 +48,16 @@ class _RolePageState extends State<RolePage> {
                 shadowColor: Colors.black,
                 elevation: 4.0,
               ),
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    SvgPicture.asset("assets/logo/user.svg", width: 125.w),
-                    SizedBox(width: 30.w),
-                    Text("Pencari Kos",
-                        style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                            color: Colors.black))
-                  ],
-                ),
+              child: Row(
+                children: [
+                  Lottie.asset("assets/lottie/kos_search.json", width: 150.w),
+                  SizedBox(width: 30.w),
+                  Text("Pencari Kos",
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                          color: Colors.black))
+                ],
               ),
             ),
             SizedBox(height: 25.h),
@@ -75,19 +73,16 @@ class _RolePageState extends State<RolePage> {
                 shadowColor: Colors.black,
                 elevation: 4.0,
               ),
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    SvgPicture.asset("assets/logo/seller.svg", width: 125.w),
-                    SizedBox(width: 30.w),
-                    Text("Pemilik Kos",
-                        style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                            color: Colors.black))
-                  ],
-                ),
+              child: Row(
+                children: [
+                  Lottie.asset("assets/lottie/new_kos.json", width: 150.w),
+                  SizedBox(width: 30.w),
+                  Text("Pemilik Kos",
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                          color: Colors.black))
+                ],
               ),
             )
           ],
