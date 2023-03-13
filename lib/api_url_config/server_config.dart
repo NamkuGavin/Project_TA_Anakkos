@@ -35,4 +35,5 @@ class ServerConfig {
   static String getRoomRule = "/get-room-rules";
   static String registerGoogle = "/reg-google";
   static String loginGoogle = "/log-google";
+  static String getChart = "/get-chart";
 }

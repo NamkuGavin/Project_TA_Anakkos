@@ -8,6 +8,7 @@ import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/dummy/dummy%20model/ulasan_model.dart';
+import 'package:project_anakkos_app/model/chart_model.dart';
 import 'package:project_anakkos_app/model/comment_model.dart';
 import 'package:project_anakkos_app/model/kost_seller_model.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
@@ -90,18 +91,22 @@ class _DetailSellerKostState extends State<DetailSellerKost> {
   //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies iaculis nisl."),
   // ];
   List<CommentData>? dataComment;
+  List<Chart>? dataChart;
   bool _isLoad = false;
   List<String> pending = [
     "Bayar Katering",
     "Bayar Laundry",
   ];
 
-  Future getComment() async {
+  Future getDetail() async {
     setState(() {
       _isLoad = true;
     });
+    ChartModel _chartModel =
+        await ApiService().getChartDetail(kost_id: widget.idKost);
     CommentModel _model = await ApiService().getComment(idKost: widget.idKost);
     setState(() {
+      dataChart = _chartModel.chart;
       dataComment = _model.data;
     });
     setState(() {
@@ -112,7 +117,7 @@ class _DetailSellerKostState extends State<DetailSellerKost> {
   @override
   void initState() {
     super.initState();
-    getComment();
+    getDetail();
   }
 
   @override
@@ -145,8 +150,8 @@ class _DetailSellerKostState extends State<DetailSellerKost> {
             color: Colors.transparent,
             image: DecorationImage(
               fit: BoxFit.fill,
-              image: AssetImage(
-                "assets/dummykos/kost_1.png",
+              image: NetworkImage(
+                widget.dataDetail.kostImg,
               ),
             ),
           ),
@@ -216,155 +221,112 @@ class _DetailSellerKostState extends State<DetailSellerKost> {
           SizedBox(height: 5.h),
           Text("Penghasilan", style: TextStyle(fontSize: 17)),
           SizedBox(height: 15.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12),
-                  ),
-                ),
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(left: 15, right: 35, top: 15, bottom: 15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(),
+              borderRadius: BorderRadius.all(
+                Radius.circular(12),
+              ),
+            ),
+            child: Padding(
+              padding:
+                  EdgeInsets.only(left: 15, right: 35, top: 15, bottom: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          SvgPicture.asset("assets/icon/currency.svg"),
-                          SizedBox(width: 7.w),
-                          Text("Keuntungan")
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Text("Rp. " + widget.dataDetail.profit,
-                          style: TextStyle(
-                              fontSize: 23, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 5.h),
-                      Text("per Bulan"),
+                      SvgPicture.asset("assets/icon/currency.svg"),
+                      SizedBox(width: 7.w),
+                      Text("Keuntungan")
                     ],
                   ),
-                ),
+                  SizedBox(height: 10.h),
+                  Text("Rp. " + widget.dataDetail.profit,
+                      style: TextStyle(
+                          fontSize: 23, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 5.h),
+                  Text("per Bulan"),
+                ],
               ),
-              SizedBox(width: 12.w),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12),
-                  ),
-                ),
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(left: 15, right: 20, top: 15, bottom: 15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.star_border, size: 17),
-                          SizedBox(width: 4.w),
-                          Text("Rating Kos")
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(widget.dataDetail.avgRating + " Avg",
-                          style: TextStyle(
-                              fontSize: 23, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
           SizedBox(height: 20.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12),
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(left: 10, right: 15, top: 15, bottom: 15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.person_outlined, size: 17),
-                          SizedBox(width: 4.w),
-                          Text("Unit Tersewa")
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(widget.dataDetail.unitRented + " Unit",
-                          style: TextStyle(
-                              fontSize: 23, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 15.h),
-                      Row(
-                        children: [
-                          Icon(Icons.person_outlined, size: 17),
-                          SizedBox(width: 4.w),
-                          Text("Belum Tersewa")
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(widget.dataDetail.unitOpen + " Unit",
-                          style: TextStyle(
-                              fontSize: 23, fontWeight: FontWeight.bold)),
-                    ],
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(left: 10, right: 15, top: 15, bottom: 15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.person_outlined, size: 17),
+                            SizedBox(width: 4.w),
+                            Text("Unit Tersewa")
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(widget.dataDetail.unitRented + " Unit",
+                            style: TextStyle(
+                                fontSize: 23, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 15.h),
+                        Row(
+                          children: [
+                            Icon(Icons.person_outlined, size: 17),
+                            SizedBox(width: 4.w),
+                            Text("Belum Tersewa")
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(widget.dataDetail.unitOpen + " Unit",
+                            style: TextStyle(
+                                fontSize: 23, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
                   ),
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12),
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.person_outlined, size: 17),
-                          SizedBox(width: 4.w),
-                          Text("Pembayaran Pending")
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Text("2 Pending",
-                          style: TextStyle(
-                              fontSize: 23, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 15.h),
-                      SizedBox(
-                        height: 50,
-                        width: 150.w,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: pending.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Text("- " + pending[index]);
-                          },
+                  child: Padding(
+                    padding:
+                    EdgeInsets.only(left: 15, right: 20, top: 15, bottom: 15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.star_border, size: 17),
+                            SizedBox(width: 4.w),
+                            Text("Rating Kos")
+                          ],
                         ),
-                      )
-                    ],
+                        SizedBox(height: 10.h),
+                        Text(widget.dataDetail.avgRating + " Avg",
+                            style: TextStyle(
+                                fontSize: 23, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -710,20 +672,6 @@ class _DetailSellerKostState extends State<DetailSellerKost> {
   }
 
   grafikSeller() {
-    final List<ChartData> chartData = [
-      ChartData("Januari", 1000000),
-      ChartData("Februari", 750000),
-      ChartData("Maret", 500000),
-      ChartData("April", 400000),
-      ChartData("Mei", 500000),
-      ChartData("Juni", 1000000),
-      ChartData("Juli", 2000000),
-      ChartData("Agustus", 750000),
-      ChartData("September", 500000),
-      ChartData("Oktober", 500000),
-      ChartData("November", 250000),
-      ChartData("Desember", 250000),
-    ];
     return Padding(
       padding: EdgeInsets.all(12),
       child: Column(
@@ -759,13 +707,13 @@ class _DetailSellerKostState extends State<DetailSellerKost> {
                     // minorGridLines: MinorGridLines(width: 0),
                     ),
                 series: <CartesianSeries>[
-                  AreaSeries<ChartData, String>(
+                  AreaSeries<Chart, String>(
                       color: Colors.blue.shade100,
                       borderColor: Colors.blue,
                       borderWidth: 2,
-                      dataSource: chartData,
-                      xValueMapper: (ChartData exp, _) => exp.x,
-                      yValueMapper: (ChartData exp, _) => exp.y),
+                      dataSource: dataChart!,
+                      xValueMapper: (Chart exp, _) => exp.month,
+                      yValueMapper: (Chart exp, _) => exp.value.profit),
                 ]),
           ),
         ],

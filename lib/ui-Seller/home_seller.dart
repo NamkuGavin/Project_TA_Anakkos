@@ -109,6 +109,7 @@ class _HomeSellerState extends State<HomeSeller> {
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {
+                        timer?.cancel();
                         SharedCode.navigatorPush(
                             context,
                             DetailSellerKost(
