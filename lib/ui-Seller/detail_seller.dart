@@ -183,18 +183,21 @@ class _DetailSellerKostState extends State<DetailSellerKost> {
                   color: Colors.white)),
         ),
         Positioned(
-          top: 75,
+          top: 80,
           left: 30,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(Icons.location_on_rounded, color: Colors.white, size: 20.w),
               SizedBox(width: 7.w),
-              Text(widget.dataDetail.kostLocation,
-                  style: GoogleFonts.inter(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Colors.white))
+              SizedBox(
+                width: 300.w,
+                child: Text(widget.dataDetail.kostLocation,
+                    style: GoogleFonts.inter(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Colors.white)),
+              )
             ],
           ),
         ),
@@ -205,7 +208,9 @@ class _DetailSellerKostState extends State<DetailSellerKost> {
               style: GoogleFonts.inter(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
-                  color: Color(0xFF2BE32F))),
+                  color: widget.dataDetail.status != "pending"
+                      ? Color(0xFF2BE32F)
+                      : Colors.yellow.shade800)),
         ),
       ],
     );
@@ -244,8 +249,8 @@ class _DetailSellerKostState extends State<DetailSellerKost> {
                   ),
                   SizedBox(height: 10.h),
                   Text("Rp. " + widget.dataDetail.profit,
-                      style: TextStyle(
-                          fontSize: 23, fontWeight: FontWeight.bold)),
+                      style:
+                          TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
                   SizedBox(height: 5.h),
                   Text("per Bulan"),
                 ],
@@ -265,8 +270,8 @@ class _DetailSellerKostState extends State<DetailSellerKost> {
                     ),
                   ),
                   child: Padding(
-                    padding:
-                        EdgeInsets.only(left: 10, right: 15, top: 15, bottom: 15),
+                    padding: EdgeInsets.only(
+                        left: 10, right: 15, top: 15, bottom: 15),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,8 +313,8 @@ class _DetailSellerKostState extends State<DetailSellerKost> {
                     ),
                   ),
                   child: Padding(
-                    padding:
-                    EdgeInsets.only(left: 15, right: 20, top: 15, bottom: 15),
+                    padding: EdgeInsets.only(
+                        left: 15, right: 20, top: 15, bottom: 15),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,

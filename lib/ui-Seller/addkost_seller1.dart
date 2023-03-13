@@ -250,11 +250,32 @@ class _AddKostPage1State extends State<AddKostPage1> {
                       ),
                     ),
                     kostImg != null
-                        ? Image.file(
-                            File(kostImg!.path),
-                            height: 125.h,
-                            width: 225.w,
-                            fit: BoxFit.fill,
+                        ? Stack(
+                            children: [
+                              Image.file(
+                                File(kostImg!.path),
+                                height: 125.h,
+                                width: 225.w,
+                                fit: BoxFit.fill,
+                              ),
+                              Positioned(
+                                top: 10,
+                                left: 10,
+                                child: CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: Colors.white,
+                                  child: IconButton(
+                                    icon: Icon(Icons.delete_forever,
+                                        color: Colors.black, size: 23),
+                                    onPressed: () {
+                                      setState(() {
+                                        kostImg = null;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
                           )
                         : Container(),
                   ],
@@ -313,7 +334,29 @@ class _AddKostPage1State extends State<AddKostPage1> {
                                   return Padding(
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 8),
-                                    child: Image.file(roomImg[index]),
+                                    child: Stack(
+                                      children: [
+                                        Image.file(roomImg[index]),
+                                        Positioned(
+                                          top: 10,
+                                          left: 10,
+                                          child: CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor: Colors.white,
+                                            child: IconButton(
+                                              icon: Icon(Icons.delete_forever,
+                                                  color: Colors.black,
+                                                  size: 23),
+                                              onPressed: () {
+                                                setState(() {
+                                                  roomImg.removeAt(index);
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   );
                                 },
                               ),

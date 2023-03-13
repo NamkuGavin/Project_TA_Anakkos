@@ -279,6 +279,7 @@ class _HomeSellerState extends State<HomeSeller> {
                   borderRadius: BorderRadius.circular(10)),
             ),
             onPressed: () {
+              timer?.cancel();
               SharedCode.navigatorPush(context, AddKostPage1());
             },
             child: Row(

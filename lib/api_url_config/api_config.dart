@@ -1005,11 +1005,19 @@ class ApiService {
   }
 
   Future<RegisterGoogleModel> getRegisterGoogle(
-      {required String email, required String name}) async {
+      {required String email,
+      required String name,
+      required String first_name,
+      required String last_name}) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
-    final body = {"name": name, "email": email};
+    final body = {
+      "name": name,
+      "email": email,
+      "first_name": first_name,
+      "last_name": last_name
+    };
     print("RAW REGISTER GOOGLE: " + body.toString());
     print("URL REGISTER GOOGLE: " +
         ServerConfig.baseURL +

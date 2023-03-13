@@ -48,6 +48,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
 
   editProfile() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+    _isLoad.value = true;
     LoginModel result = await ApiService().getLogin(
         email: pref.getString("email_owner").toString(),
         password: pref.getString("pass_owner").toString());
@@ -55,6 +56,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
         id_user: result.data.id,
         token: result.token,
         name: _fullNameController.text);
+    _isLoad.value = false;
     setState(() {
       Navigator.pop(context, 'update');
     });
@@ -62,6 +64,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
 
   editProfile_withImage(File file) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+    _isLoad.value = true;
     LoginModel result = await ApiService().getLogin(
         email: pref.getString("email_owner").toString(),
         password: pref.getString("pass_owner").toString());
@@ -70,6 +73,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
         token: result.token,
         name: _fullNameController.text,
         file: file);
+    _isLoad.value = false;
     setState(() {
       Navigator.pop(context, 'update');
     });
@@ -120,112 +124,114 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
             child: Form(
               key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: GestureDetector(
-                      onTap: _selectImage,
-                      child: Stack(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Color(0XFFE7E7E7),
-                            radius: 50,
-                            backgroundImage: _pickedImage != null
-                                ? FileImage(
-                                    File(
-                                      _pickedImage!.path!,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: GestureDetector(
+                        onTap: _selectImage,
+                        child: Stack(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Color(0XFFE7E7E7),
+                              radius: 50,
+                              backgroundImage: _pickedImage != null
+                                  ? FileImage(
+                                      File(
+                                        _pickedImage!.path!,
+                                      ),
+                                    )
+                                  : imageProfile != ''
+                                      ? NetworkImage(imageProfile)
+                                          as ImageProvider
+                                      : null,
+                              child: imageProfile != '' || _pickedImage != null
+                                  ? null
+                                  : Text(
+                                      SharedCode().getInitials(name),
+                                      style: textTheme.headline2!.copyWith(
+                                        color: Colors.black,
+                                        fontSize: 22,
+                                      ),
                                     ),
-                                  )
-                                : imageProfile != ''
-                                    ? NetworkImage(imageProfile)
-                                        as ImageProvider
-                                    : null,
-                            child: imageProfile != '' || _pickedImage != null
-                                ? null
-                                : Text(
-                                    SharedCode().getInitials(name),
-                                    style: textTheme.headline2!.copyWith(
-                                      color: Colors.black,
-                                      fontSize: 22,
-                                    ),
-                                  ),
-                          ),
-                          Positioned(
-                            bottom: 5,
-                            right: 3,
-                            child: CircleAvatar(
-                              radius: 12,
-                              child: Icon(Icons.edit_rounded, size: 12),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              bottom: 5,
+                              right: 3,
+                              child: CircleAvatar(
+                                radius: 12,
+                                child: Icon(Icons.edit_rounded, size: 12),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 32.h,
-                  ),
-                  Text(
-                    'Nama Lengkap',
-                    style: textTheme.bodyText1!.copyWith(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
+                    SizedBox(
+                      height: 32.h,
                     ),
-                  ),
-                  SizedBox(
-                    height: 8.h,
-                  ),
-                  _textFormTransaction(
-                    textTheme,
-                    hint: 'Masukkan nama lengkap',
-                    controller: _fullNameController,
-                    validator: (value) => SharedCode().nameValidator(value),
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    'Email',
-                    style: textTheme.bodyText1!.copyWith(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
+                    Text(
+                      'Nama Lengkap',
+                      style: textTheme.bodyText1!.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 50,
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
+                    SizedBox(
+                      height: 8.h,
                     ),
-                    child: Text(
-                      email,
-                      style: textTheme.bodyText1,
+                    _textFormTransaction(
+                      textTheme,
+                      hint: 'Masukkan nama lengkap',
+                      controller: _fullNameController,
+                      validator: (value) => SharedCode().nameValidator(value),
                     ),
-                  ),
-                  SizedBox(
-                    height: 32,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        _isLoad.value = true;
-                        _pickedImage != null
-                            ? editProfile_withImage(
-                                File(_pickedImage!.path.toString()))
-                            : editProfile();
-                        _isLoad.value = false;
-                      }
-                    },
-                    child: Text('Edit'),
-                  ),
-                ],
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      'Email',
+                      style: textTheme.bodyText1!.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 50,
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        email,
+                        style: textTheme.bodyText1,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 32,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          _isLoad.value = true;
+                          _pickedImage != null
+                              ? editProfile_withImage(
+                                  File(_pickedImage!.path.toString()))
+                              : editProfile();
+                          _isLoad.value = false;
+                        }
+                      },
+                      child: Text('Edit'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
