@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future addNote(KostbyPopularData dataMark) async {
+  Future addNote(dataMark) async {
     final kost_fav = KostFav(
         idKost: dataMark.id,
         name: dataMark.kostName,
@@ -187,96 +187,99 @@ class _HomePageState extends State<HomePage> {
   kostHomePage() {
     return _isLoad
         ? LoadingAnimation()
-        : Stack(
-            children: [
-              Column(
-                children: [
-                  headerHome(),
-                  popularKost(),
-                ],
-              ),
-              Positioned(
-                top: 155,
-                left: 5,
-                child: SizedBox(
-                  width: 355.w,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 5,
-                          child: SearchBar(
-                            controller: _seacrhController,
-                            // onChanged: (String) async {
-                            //   if (_seacrhController.text == "") {
-                            //     setState(() {
-                            //       location = "jakarta";
-                            //       _isLoad = true;
-                            //     });
-                            //     await getKostbyLoc();
-                            //     await getKostbyPopular();
-                            //     setState(() {
-                            //       _isLoad = false;
-                            //     });
-                            //   } else {
-                            //     setState(() {
-                            //       location = _seacrhController.text;
-                            //       _isLoad = true;
-                            //     });
-                            //     await getKostbyLoc();
-                            //     await getKostbyPopular();
-                            //     setState(() {
-                            //       _isLoad = false;
-                            //     });
-                            //   }
-                            // },
+        : SingleChildScrollView(
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    headerHome(),
+                    popularKost(),
+                    nearbyKost(),
+                  ],
+                ),
+                Positioned(
+                  top: 155,
+                  left: 5,
+                  child: SizedBox(
+                    width: 355.w,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: SearchBar(
+                              controller: _seacrhController,
+                              // onChanged: (String) async {
+                              //   if (_seacrhController.text == "") {
+                              //     setState(() {
+                              //       location = "jakarta";
+                              //       _isLoad = true;
+                              //     });
+                              //     await getKostbyLoc();
+                              //     await getKostbyPopular();
+                              //     setState(() {
+                              //       _isLoad = false;
+                              //     });
+                              //   } else {
+                              //     setState(() {
+                              //       location = _seacrhController.text;
+                              //       _isLoad = true;
+                              //     });
+                              //     await getKostbyLoc();
+                              //     await getKostbyPopular();
+                              //     setState(() {
+                              //       _isLoad = false;
+                              //     });
+                              //   }
+                              // },
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 8),
-                            child: InkWell(
-                              onTap: () {
-                                _scaffoldKey.currentState!.openEndDrawer();
-                              },
-                              child: Container(
-                                height: 50.h,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.grey, width: 1),
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        spreadRadius: 2,
-                                        blurRadius: 5,
-                                        offset: Offset(
-                                            0, 3), // changes position of shadow
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 8),
+                              child: InkWell(
+                                onTap: () {
+                                  _scaffoldKey.currentState!.openEndDrawer();
+                                },
+                                child: Container(
+                                  height: 50.h,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.grey, width: 1),
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          spreadRadius: 2,
+                                          blurRadius: 5,
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
+                                        ),
+                                      ],
+                                      color: Colors.white),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: SvgPicture.asset(
+                                        "assets/icon/filter.svg",
+                                        height: 25.h,
+                                        width: 25.w,
                                       ),
-                                    ],
-                                    color: Colors.white),
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Center(
-                                    child: SvgPicture.asset(
-                                      "assets/icon/filter.svg",
-                                      height: 25.h,
-                                      width: 25.w,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
     // SingleChildScrollView(
     //   child: Column(
@@ -649,171 +652,284 @@ class _HomePageState extends State<HomePage> {
   }
 
   nearbyKost() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Column(
+      children: [
+        SizedBox(height: 20.h),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Text("Kost Terdekat",
-                    style: GoogleFonts.inter(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    )),
-              ),
-              Expanded(
-                child: Divider(
-                  color: Colors.grey,
-                  thickness: 0.5,
-                ),
-              ),
+              Text("Near by",
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  )),
+              GestureDetector(
+                onTap: () {},
+                child: Text("See more",
+                    style: GoogleFonts.roboto(color: Colors.grey)),
+              )
             ],
           ),
-          SizedBox(height: 10.h),
-          dataKostbyLoc.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset(
-                        'assets/lottie/not_found.json',
-                        width: 225.w,
-                        repeat: false,
-                      ),
-                      Text(
-                        'Belum ada Kost yang Tersedia',
-                        style: Theme.of(context).textTheme.headline3!.copyWith(
-                              fontSize: 17,
-                              color: Color(0XFF9B9B9B),
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
-                    ],
-                  ),
-                )
-              : GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 0.57,
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10.0,
-                    mainAxisSpacing: 10.0,
-                  ),
-                  itemCount: dataKostbyLoc.length == 1
-                      ? 1
-                      : dataKostbyLoc.length == 2
-                          ? 2
-                          : dataKostbyLoc.length == 3
-                              ? 3
-                              : dataKostbyLoc.length == 4
-                                  ? 4
-                                  : dataKostbyLoc.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                      onTap: () {
-                        SharedCode.navigatorPush(
-                            context,
-                            DetailKost(
-                              idKost: dataKostbyLoc[index].id.toString(),
-                              model: dataKostbyLoc[index],
-                            ));
-                      },
-                      child: Card(
-                        color: Colors.white,
-                        elevation: 5,
-                        shadowColor: Colors.black,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: SizedBox(
+            child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: dataKostbyLoc.length,
+              itemBuilder: (BuildContext context, int index) {
+                var dataKostLoc = dataKostbyLoc[index];
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: ListTile(
+                    dense: true,
+                    visualDensity: VisualDensity(vertical: 4),
+                    leading: SizedBox(
+                        width: 100.w,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            child: Image.network(dataKostLoc.coverImg,
+                                fit: BoxFit.fill))),
+                    title: Text(dataKostLoc.kostName,
+                        style: GoogleFonts.roboto(
+                            fontWeight: FontWeight.w600, fontSize: 15)),
+                    subtitle: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 8.h),
+                        Text("Rp. " + dataKostLoc.roomPrice + "/ Bulan",
+                            style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13,
+                                color: ColorValues.primaryBlue)),
+                        SizedBox(height: 5.h),
+                        Row(
                           children: [
-                            SizedBox(
-                              height: 125.h,
-                              width: 150.w,
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.vertical(
-                                      bottom: Radius.circular(10)),
-                                  child: Image.network(
-                                      dataKostbyLoc[index].coverImg,
-                                      fit: BoxFit.fill)),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 4),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 12.h),
-                                  DottedBorder(
-                                    color: Colors.black,
-                                    strokeWidth: 1,
-                                    child: Text(dataKostbyLoc[index].kostType,
-                                        style: GoogleFonts.inter(fontSize: 11)),
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text(dataKostbyLoc[index].kostName,
-                                      style: GoogleFonts.inter(fontSize: 11)),
-                                  SizedBox(height: 4.h),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Icon(Icons.location_on_rounded, size: 13),
-                                      Expanded(
-                                        child: Text(
-                                            dataKostbyLoc[index].location,
-                                            style: GoogleFonts.inter(
-                                                fontSize: 11)),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: 6.h),
-                                  Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: Text(
-                                        "Rp. " +
-                                            dataKostbyLoc[index]
-                                                .roomPrice
-                                                .toString() +
-                                            " / Bulan",
-                                        style: GoogleFonts.inter(fontSize: 11)),
-                                  )
-                                ],
-                              ),
-                            )
+                            SvgPicture.asset("assets/icon/room.svg"),
+                            SizedBox(width: 8.w),
+                            Text(dataKostLoc.unitOpen + " Kamar tersedia",
+                                style: GoogleFonts.roboto(
+                                    fontWeight: FontWeight.w400, fontSize: 12)),
                           ],
                         ),
-                      ),
-                    );
-                  },
-                ),
-          SizedBox(height: 5.h),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ColorValues.primaryBlue,
-                  foregroundColor: Colors.white,
-                  minimumSize: Size(20.w, 30.h),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                onPressed: () {
-                  SharedCode.navigatorPush(
-                      context, NearByKost(location: location));
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Lainnya', style: GoogleFonts.inter(fontSize: 12)),
-                    Icon(Icons.double_arrow_rounded)
-                  ],
-                )),
-          )
-        ],
-      ),
+                        SizedBox(height: 5.h),
+                        Row(
+                          children: [
+                            dataKostLoc.kostType == "Cowok"
+                                ? SvgPicture.asset("assets/icon/cowok.svg")
+                                : dataKostLoc.kostType == "Cewek"
+                                    ? SvgPicture.asset("assets/icon/cewek.svg",
+                                        width: 14.w)
+                                    : dataKostLoc.kostType == "Campur"
+                                        ? SvgPicture.asset(
+                                            "assets/icon/campur.svg")
+                                        : Container(),
+                            SizedBox(width: 8.w),
+                            Text(dataKostLoc.kostType,
+                                style: GoogleFonts.roboto(
+                                    fontWeight: FontWeight.w400, fontSize: 12)),
+                          ],
+                        ),
+                      ],
+                    ),
+                    trailing: IconButton(
+                        onPressed: () async {
+                          SharedPreferences pref =
+                              await SharedPreferences.getInstance();
+                          if (pref.getString("token_user") == null &&
+                              user == null) {
+                            SharedCode.navigatorPush(context, RolePage());
+                          } else if (user != null) {
+                            await addNote(dataKostLoc);
+                            setState(() {
+                              _iconColor = ColorValues.primaryPurple;
+                            });
+                          } else {
+                            await addNote(dataKostLoc);
+                            setState(() {
+                              _iconColor = ColorValues.primaryPurple;
+                            });
+                          }
+                        },
+                        icon:
+                            Icon(Icons.bookmark, color: Colors.grey.shade300)),
+                  ),
+                );
+              },
+            ),
+          ),
+        )
+      ],
     );
+    //   Padding(
+    //   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+    //   child: Column(
+    //     crossAxisAlignment: CrossAxisAlignment.start,
+    //     children: [
+    //       Row(
+    //         children: [
+    //           Padding(
+    //             padding: EdgeInsets.symmetric(horizontal: 15),
+    //             child: Text("Kost Terdekat",
+    //                 style: GoogleFonts.inter(
+    //                   fontWeight: FontWeight.w600,
+    //                   fontSize: 14,
+    //                 )),
+    //           ),
+    //           Expanded(
+    //             child: Divider(
+    //               color: Colors.grey,
+    //               thickness: 0.5,
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //       SizedBox(height: 10.h),
+    //       dataKostbyLoc.isEmpty
+    //           ? Center(
+    //               child: Column(
+    //                 mainAxisAlignment: MainAxisAlignment.center,
+    //                 children: [
+    //                   Lottie.asset(
+    //                     'assets/lottie/not_found.json',
+    //                     width: 225.w,
+    //                     repeat: false,
+    //                   ),
+    //                   Text(
+    //                     'Belum ada Kost yang Tersedia',
+    //                     style: Theme.of(context).textTheme.headline3!.copyWith(
+    //                           fontSize: 17,
+    //                           color: Color(0XFF9B9B9B),
+    //                           fontWeight: FontWeight.w500,
+    //                         ),
+    //                   ),
+    //                 ],
+    //               ),
+    //             )
+    //           : GridView.builder(
+    //               shrinkWrap: true,
+    //               physics: NeverScrollableScrollPhysics(),
+    //               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    //                 childAspectRatio: 0.57,
+    //                 crossAxisCount: 2,
+    //                 crossAxisSpacing: 10.0,
+    //                 mainAxisSpacing: 10.0,
+    //               ),
+    //               itemCount: dataKostbyLoc.length == 1
+    //                   ? 1
+    //                   : dataKostbyLoc.length == 2
+    //                       ? 2
+    //                       : dataKostbyLoc.length == 3
+    //                           ? 3
+    //                           : dataKostbyLoc.length == 4
+    //                               ? 4
+    //                               : dataKostbyLoc.length,
+    //               itemBuilder: (BuildContext context, int index) {
+    //                 return InkWell(
+    //                   onTap: () {
+    //                     SharedCode.navigatorPush(
+    //                         context,
+    //                         DetailKost(
+    //                           idKost: dataKostbyLoc[index].id.toString(),
+    //                           model: dataKostbyLoc[index],
+    //                         ));
+    //                   },
+    //                   child: Card(
+    //                     color: Colors.white,
+    //                     elevation: 5,
+    //                     shadowColor: Colors.black,
+    //                     child: Column(
+    //                       crossAxisAlignment: CrossAxisAlignment.start,
+    //                       children: [
+    //                         SizedBox(
+    //                           height: 125.h,
+    //                           width: 150.w,
+    //                           child: ClipRRect(
+    //                               borderRadius: BorderRadius.vertical(
+    //                                   bottom: Radius.circular(10)),
+    //                               child: Image.network(
+    //                                   dataKostbyLoc[index].coverImg,
+    //                                   fit: BoxFit.fill)),
+    //                         ),
+    //                         Padding(
+    //                           padding: EdgeInsets.symmetric(horizontal: 4),
+    //                           child: Column(
+    //                             crossAxisAlignment: CrossAxisAlignment.start,
+    //                             children: [
+    //                               SizedBox(height: 12.h),
+    //                               DottedBorder(
+    //                                 color: Colors.black,
+    //                                 strokeWidth: 1,
+    //                                 child: Text(dataKostbyLoc[index].kostType,
+    //                                     style: GoogleFonts.inter(fontSize: 11)),
+    //                               ),
+    //                               SizedBox(height: 4.h),
+    //                               Text(dataKostbyLoc[index].kostName,
+    //                                   style: GoogleFonts.inter(fontSize: 11)),
+    //                               SizedBox(height: 4.h),
+    //                               Row(
+    //                                 crossAxisAlignment:
+    //                                     CrossAxisAlignment.start,
+    //                                 children: [
+    //                                   Icon(Icons.location_on_rounded, size: 13),
+    //                                   Expanded(
+    //                                     child: Text(
+    //                                         dataKostbyLoc[index].location,
+    //                                         style: GoogleFonts.inter(
+    //                                             fontSize: 11)),
+    //                                   )
+    //                                 ],
+    //                               ),
+    //                               SizedBox(height: 6.h),
+    //                               Align(
+    //                                 alignment: Alignment.bottomRight,
+    //                                 child: Text(
+    //                                     "Rp. " +
+    //                                         dataKostbyLoc[index]
+    //                                             .roomPrice
+    //                                             .toString() +
+    //                                         " / Bulan",
+    //                                     style: GoogleFonts.inter(fontSize: 11)),
+    //                               )
+    //                             ],
+    //                           ),
+    //                         )
+    //                       ],
+    //                     ),
+    //                   ),
+    //                 );
+    //               },
+    //             ),
+    //       SizedBox(height: 5.h),
+    //       Align(
+    //         alignment: Alignment.bottomRight,
+    //         child: ElevatedButton(
+    //             style: ElevatedButton.styleFrom(
+    //               backgroundColor: ColorValues.primaryBlue,
+    //               foregroundColor: Colors.white,
+    //               minimumSize: Size(20.w, 30.h),
+    //               shape: RoundedRectangleBorder(
+    //                   borderRadius: BorderRadius.circular(10)),
+    //             ),
+    //             onPressed: () {
+    //               SharedCode.navigatorPush(
+    //                   context, NearByKost(location: location));
+    //             },
+    //             child: Row(
+    //               mainAxisSize: MainAxisSize.min,
+    //               children: [
+    //                 Text('Lainnya', style: GoogleFonts.inter(fontSize: 12)),
+    //                 Icon(Icons.double_arrow_rounded)
+    //               ],
+    //             )),
+    //       )
+    //     ],
+    //   ),
+    // );
   }
 
   ongoingKost() {
