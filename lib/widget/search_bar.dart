@@ -37,7 +37,7 @@ class _SearchBarState extends State<SearchBar> {
               color: Colors.black,
             ),
             // suffixIconColor: ColorValues().greyColor,
-            hintText: "Cari lokasi kos di sini",
+            hintText: "Cari lokasi kos",
             hintStyle: TextStyle(fontSize: 15, color: Colors.grey.shade400),
             filled: true,
             fillColor: Colors.grey.shade100,
