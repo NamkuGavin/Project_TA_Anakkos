@@ -81,7 +81,7 @@ class HistoryData {
         dueDate: json["due_date"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
-        kost: Kost.fromJson(json["kost"]),
+        kost: Kost.fromJson(json ["kost"]),
       );
 
   Map<String, dynamic> toJson() => {

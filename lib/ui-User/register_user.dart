@@ -1,8 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/helper/firebase_service.dart';
@@ -57,161 +59,227 @@ class _RegisterUserState extends State<RegisterUser> {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Center(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/logo/anakkos_logo1.svg',
-                          width: size.width * 0.35,
-                        ),
-                        SizedBox(
-                          height: 48.h,
-                        ),
-                        Text(
-                          'Daftar Akun',
-                          style: textTheme.headline5!.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8.h,
-                        ),
-                        Text(
-                          'Masukkan form di bawah untuk mendaftar',
-                          style: textTheme.bodyText2,
-                        ),
-                        SizedBox(
-                          height: 24.h,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.blue.shade900,
+        body: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 30),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50), color: Colors.white),
+            child: Stack(
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: CustomTextFormField(
-                                label: 'Masukkan nama depan',
-                                controller: _firstNameController,
-                                validator: (value) =>
-                                    SharedCode().nameValidator(value),
+                            // SvgPicture.asset(
+                            //   'assets/logo/anakkos_logo3.svg',
+                            //   width: size.width * 0.35,
+                            // ),
+                            // SizedBox(
+                            //   height: 48.h,
+                            // ),
+                            Text(
+                              'Daftar',
+                              style: textTheme.headline5!.copyWith(
+                                color: Colors.blue.shade900,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                             SizedBox(
-                              width: 12.w,
+                              height: 5.h,
                             ),
-                            Expanded(
-                              child: CustomTextFormField(
-                                label: 'Masukkan nama belakang',
-                                controller: _lastNameController,
-                                validator: (value) =>
-                                    SharedCode().nameValidator(value),
+                            Text(
+                              'Buat akun untuk melanjutkan',
+                              style: textTheme.bodyText2!.copyWith(
+                                  color: Colors.blue.shade800,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(
+                              height: 24.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: CustomTextFormField(
+                                    label: 'Nama depan',
+                                    controller: _firstNameController,
+                                    validator: (value) =>
+                                        SharedCode().nameValidator(value),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 12.w,
+                                ),
+                                Expanded(
+                                  child: CustomTextFormField(
+                                    label: 'Nama belakang',
+                                    controller: _lastNameController,
+                                    validator: (value) =>
+                                        SharedCode().nameValidator(value),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 12.h,
+                            ),
+                            CustomTextFormField(
+                              isEmail: true,
+                              label: 'Masukkan email',
+                              controller: _emailController,
+                              textInputType: TextInputType.emailAddress,
+                              validator: (value) =>
+                                  SharedCode().emailValidator(value),
+                            ),
+                            SizedBox(
+                              height: 12.h,
+                            ),
+                            CustomTextFormField(
+                              isPhone: true,
+                              label: 'Masukkan No Handphone',
+                              controller: _NoHPController,
+                              textInputType: TextInputType.number,
+                              validator: (value) =>
+                                  SharedCode().emptyValidator(value),
+                            ),
+                            SizedBox(
+                              height: 12.h,
+                            ),
+                            CustomTextFormField(
+                              label: 'Masukkan kata sandi',
+                              controller: _passwordController,
+                              isPassword: true,
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            FlutterPwValidator(
+                                controller: _passwordController,
+                                minLength: 6,
+                                uppercaseCharCount: 1,
+                                numericCharCount: 2,
+                                width: 310.w,
+                                height: 100.h,
+                                onSuccess: () {},
+                                onFail: () {}),
+                            SizedBox(
+                              height: 24.h,
+                            ),
+                            Center(
+                              child: Container(
+                                width: 250.w,
+                                padding: EdgeInsets.symmetric(vertical: 7),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.blue.shade800),
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                      )),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.white),
+                                      foregroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.blue.shade800)),
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      await getRegister();
+                                      await SharedCode.navigatorPush(
+                                          context, LoginUser());
+                                    }
+                                  },
+                                  child: Text('DAFTAR',
+                                      style: textTheme.headline6!.copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.blue.shade900)),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 12.h,
+                            ),
+                            Center(
+                              child: Text(
+                                'Atau',
+                                style: textTheme.bodyText2,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 12.h,
+                            ),
+                            Center(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await FirebaseService()
+                                      .signInGoogle(context)
+                                      .then(
+                                        (value) => value
+                                            ? SharedCode.navigatorPushAndRemove(
+                                                context,
+                                                NavigationWidgetBarUser())
+                                            : null,
+                                      );
+                                },
+                                child: ButtonSignInGoogle(),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            Center(
+                              child: RichText(
+                                text: TextSpan(
+                                  text: 'Sudah mempunyai akun? ',
+                                  style: textTheme.bodyText1!
+                                      .copyWith(fontWeight: FontWeight.w600),
+                                  children: [
+                                    TextSpan(
+                                      text: 'Masuk',
+                                      style: textTheme.bodyText1!.copyWith(
+                                        color: Color(0XFF2FA0DF),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () => Navigator.of(context)
+                                            .pop(PageTransition(
+                                                child: LoginUser(),
+                                                type: PageTransitionType
+                                                    .bottomToTopPop,
+                                                duration:
+                                                    Duration(milliseconds: 500),
+                                                reverseDuration:
+                                                    Duration(milliseconds: 500),
+                                                childCurrent: widget)),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 12.h,
-                        ),
-                        CustomTextFormField(
-                          label: 'Masukkan email',
-                          controller: _emailController,
-                          textInputType: TextInputType.emailAddress,
-                          validator: (value) =>
-                              SharedCode().emailValidator(value),
-                        ),
-                        SizedBox(
-                          height: 12.h,
-                        ),
-                        CustomTextFormField(
-                          label: 'Masukkan No Handphone',
-                          controller: _NoHPController,
-                          textInputType: TextInputType.number,
-                          validator: (value) =>
-                              SharedCode().emptyValidator(value),
-                        ),
-                        SizedBox(
-                          height: 12.h,
-                        ),
-                        CustomTextFormField(
-                          label: 'Masukkan kata sandi',
-                          controller: _passwordController,
-                          isPassword: true,
-                          validator: (value) =>
-                              SharedCode().passwordValidator(value),
-                        ),
-                        SizedBox(
-                          height: 24.h,
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              await getRegister();
-                              await SharedCode.navigatorPush(
-                                  context, LoginUser());
-                            }
-                          },
-                          child: Text('Daftar'),
-                        ),
-                        SizedBox(
-                          height: 16.h,
-                        ),
-                        Text(
-                          'Atau',
-                          style: textTheme.bodyText2,
-                        ),
-                        SizedBox(
-                          height: 16.h,
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            await FirebaseService().signInGoogle(context).then(
-                                  (value) => value
-                                      ? SharedCode.navigatorPushAndRemove(
-                                          context, NavigationWidgetBarUser())
-                                      : null,
-                                );
-                          },
-                          child: ButtonSignInGoogle(),
-                        ),
-                        SizedBox(
-                          height: 40.h,
-                        ),
-                        RichText(
-                          text: TextSpan(
-                            text: 'Sudah punya akun? ',
-                            style: textTheme.bodyText1,
-                            children: [
-                              TextSpan(
-                                text: 'Masuk',
-                                style: textTheme.bodyText1!.copyWith(
-                                  color: Color(0XFF2FA0DF),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () => SharedCode.navigatorPush(
-                                      context, LoginUser()),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+                _isLoad ? LoadingAnimation() : Container(),
+              ],
             ),
-            _isLoad ? LoadingAnimation() : Container(),
-          ],
+          ),
         ),
       ),
     );

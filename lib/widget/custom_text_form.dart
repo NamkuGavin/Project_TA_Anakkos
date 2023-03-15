@@ -8,6 +8,9 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType textInputType;
   final String? Function(String?)? validator;
   final bool isPassword;
+  final bool isEmail;
+  final bool isUser;
+  final bool isPhone;
   final double borderRadius;
 
   const CustomTextFormField(
@@ -17,6 +20,9 @@ class CustomTextFormField extends StatefulWidget {
       this.textInputType = TextInputType.text,
       this.validator,
       this.isPassword = false,
+      this.isEmail = false,
+      this.isUser = false,
+      this.isPhone = false,
       this.borderRadius = 8})
       : super(key: key);
 
@@ -81,7 +87,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         labelText: widget.label,
         labelStyle: textTheme.bodyText1!.copyWith(color: Color(0XFF9B9B9B)),
         contentPadding: EdgeInsets.symmetric(vertical: 19, horizontal: 16),
-        suffixIcon: widget.isPassword
+        prefixIcon: widget.isPassword
             ? IconButton(
                 splashRadius: 30,
                 onPressed: () {
@@ -99,7 +105,22 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                         color: Color(0XFF9B9B9B),
                       ),
               )
-            : null,
+            : widget.isEmail
+                ? Icon(
+                    Icons.email,
+                    color: Color(0XFF9B9B9B),
+                  )
+                : widget.isUser
+                    ? Icon(
+                        Icons.account_box,
+                        color: Color(0XFF9B9B9B),
+                      )
+                    : widget.isPhone
+                        ? Icon(
+                            Icons.phone_android,
+                            color: Color(0XFF9B9B9B),
+                          )
+                        : null,
       ),
     );
   }
