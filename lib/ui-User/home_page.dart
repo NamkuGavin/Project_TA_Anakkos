@@ -47,7 +47,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Color _iconColor = Colors.white;
+  bool _isPressed1 = false;
+  bool _isPressed2 = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final user = FirebaseAuth.instance.currentUser;
   bool _isLoad = false;
@@ -679,12 +680,28 @@ class _HomePageState extends State<HomePage> {
             child: ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: dataKostbyLoc.length,
+              itemCount: dataKostbyLoc.length == 1
+                  ? 1
+                  : dataKostbyLoc.length == 2
+                      ? 2
+                      : dataKostbyLoc.length == 3
+                          ? 3
+                          : dataKostbyLoc.length == 4
+                              ? 4
+                              : dataKostbyLoc.length,
               itemBuilder: (BuildContext context, int index) {
                 var dataKostLoc = dataKostbyLoc[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: ListTile(
+                    onTap: () {
+                      SharedCode.navigatorPush(
+                          context,
+                          DetailKost(
+                            idKost: dataKostbyLoc[index].id.toString(),
+                            model: dataKostbyLoc[index],
+                          ));
+                    },
                     dense: true,
                     visualDensity: VisualDensity(vertical: 4),
                     leading: SizedBox(
@@ -746,17 +763,18 @@ class _HomePageState extends State<HomePage> {
                           } else if (user != null) {
                             await addNote(dataKostLoc);
                             setState(() {
-                              _iconColor = ColorValues.primaryPurple;
+                              _isPressed2 = !_isPressed2;
                             });
                           } else {
                             await addNote(dataKostLoc);
                             setState(() {
-                              _iconColor = ColorValues.primaryPurple;
+                              _isPressed2 = !_isPressed2;
                             });
                           }
                         },
-                        icon:
-                            Icon(Icons.bookmark, color: Colors.grey.shade300)),
+                        icon: _isPressed2
+                            ? Icon(Icons.favorite, color: Colors.red)
+                            : Icon(Icons.favorite_border, color: Colors.black)),
                   ),
                 );
               },
@@ -1554,89 +1572,101 @@ class _HomePageState extends State<HomePage> {
   buildKostPopular(KostbyPopularData dataPopular, int index) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Stack(
-        children: [
-          ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: Image.network(dataPopular.coverImg, fit: BoxFit.fill)),
-          Positioned(
-            top: 140,
-            left: 15,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(dataPopular.kostName,
-                    style: GoogleFonts.roboto(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17)),
-                Text("Gambir, Jakarta",
-                    style:
-                        GoogleFonts.roboto(color: Colors.white, fontSize: 13)),
-              ],
+      child: InkWell(
+        onTap: () {
+          SharedCode.navigatorPush(
+              context,
+              DetailKost(
+                idKost: dataKostbyLoc[index].id.toString(),
+                model: dataKostbyLoc[index],
+              ));
+        },
+        child: Stack(
+          children: [
+            ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: Image.network(dataPopular.coverImg, fit: BoxFit.fill)),
+            Positioned(
+              top: 140,
+              left: 15,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(dataPopular.kostName,
+                      style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17)),
+                  Text("Gambir, Jakarta",
+                      style: GoogleFonts.roboto(
+                          color: Colors.white, fontSize: 13)),
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            top: 165,
-            left: 220,
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: RatingBar(
-                    initialRating: double.parse(dataPopular.rating),
-                    itemCount: 5,
-                    itemSize: 17.w,
-                    ignoreGestures: true,
-                    ratingWidget: RatingWidget(
-                      full: Icon(
-                        Icons.star,
-                        color: Colors.yellow.shade700,
+            Positioned(
+              top: 165,
+              left: 220,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: RatingBar(
+                      initialRating: double.parse(dataPopular.rating),
+                      itemCount: 5,
+                      itemSize: 17.w,
+                      ignoreGestures: true,
+                      ratingWidget: RatingWidget(
+                        full: Icon(
+                          Icons.star,
+                          color: Colors.yellow.shade700,
+                        ),
+                        half: Icon(
+                          Icons.star_half,
+                          color: Colors.yellow.shade700,
+                        ),
+                        empty: Icon(
+                          Icons.star_border,
+                          color: Colors.yellow.shade700,
+                        ),
                       ),
-                      half: Icon(
-                        Icons.star_half,
-                        color: Colors.yellow.shade700,
-                      ),
-                      empty: Icon(
-                        Icons.star_border,
-                        color: Colors.yellow.shade700,
-                      ),
+                      onRatingUpdate: (double value) {},
                     ),
-                    onRatingUpdate: (double value) {},
                   ),
-                ),
-                Text(dataPopular.rating,
-                    style: GoogleFonts.roboto(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13)),
-              ],
+                  Text(dataPopular.rating,
+                      style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13)),
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            left: 285,
-            child: IconButton(
-                onPressed: () async {
-                  SharedPreferences pref =
-                      await SharedPreferences.getInstance();
-                  if (pref.getString("token_user") == null && user == null) {
-                    SharedCode.navigatorPush(context, RolePage());
-                  } else if (user != null) {
-                    await addNote(dataPopular);
-                    setState(() {
-                      _iconColor = ColorValues.primaryPurple;
-                    });
-                  } else {
-                    await addNote(dataPopular);
-                    setState(() {
-                      _iconColor = ColorValues.primaryPurple;
-                    });
-                  }
-                },
-                icon: Icon(Icons.bookmark, color: _iconColor)),
-          )
-        ],
+            Positioned(
+              left: 285,
+              child: IconButton(
+                  onPressed: () async {
+                    SharedPreferences pref =
+                        await SharedPreferences.getInstance();
+                    if (pref.getString("token_user") == null && user == null) {
+                      SharedCode.navigatorPush(context, RolePage());
+                    } else if (user != null) {
+                      await addNote(dataPopular);
+                      setState(() {
+                        _isPressed1 = !_isPressed1;
+                      });
+                    } else {
+                      await addNote(dataPopular);
+                      setState(() {
+                        _isPressed1 = !_isPressed1;
+                      });
+                    }
+                  },
+                  icon: _isPressed1
+                      ? Icon(Icons.favorite, color: Colors.red)
+                      : Icon(Icons.favorite_border, color: Colors.white)),
+            )
+          ],
+        ),
       ),
     );
   }
