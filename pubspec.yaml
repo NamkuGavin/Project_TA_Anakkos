@@ -80,6 +80,7 @@ dependencies:
   midtrans_sdk: ^0.3.4
   page_transition:
   google_nav_bar:
+  scaffold_gradient_background:
 
 #firebase
   firebase_auth:
