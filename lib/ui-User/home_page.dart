@@ -11,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
@@ -429,7 +430,14 @@ class _HomePageState extends State<HomePage> {
                     fontSize: 14,
                   )),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(PageTransition(
+                      child: PopulerKost(location: location),
+                      type: PageTransitionType.leftToRightWithFade,
+                      duration: Duration(milliseconds: 500),
+                      reverseDuration: Duration(milliseconds: 500),
+                      childCurrent: widget));
+                },
                 child: Text("See more",
                     style: GoogleFonts.roboto(color: Colors.grey)),
               )
@@ -667,7 +675,16 @@ class _HomePageState extends State<HomePage> {
                     fontSize: 14,
                   )),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(PageTransition(
+                      child: NearByKost(location: location),
+                      type: PageTransitionType.rightToLeftWithFade,
+                      duration: Duration(milliseconds: 500),
+                      reverseDuration: Duration(milliseconds: 500),
+                      childCurrent: widget));
+                  // SharedCode.navigatorPush(
+                  //     context, NearByKost(location: location));
+                },
                 child: Text("See more",
                     style: GoogleFonts.roboto(color: Colors.grey)),
               )
