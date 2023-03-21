@@ -81,6 +81,7 @@ dependencies:
   page_transition:
   google_nav_bar:
   scaffold_gradient_background:
+  readmore:
 
 #firebase
   firebase_auth:
