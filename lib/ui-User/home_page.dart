@@ -28,6 +28,7 @@ import 'package:project_anakkos_app/model/login_google_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-User/booking_pay_page.dart';
 import 'package:project_anakkos_app/ui-User/detail_kost.dart';
+import 'package:project_anakkos_app/ui-User/detail_kost_old.dart';
 import 'package:project_anakkos_app/ui-User/role_page.dart';
 import 'package:project_anakkos_app/widget/chat_widget/chatWidget_user.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
