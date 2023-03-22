@@ -427,134 +427,134 @@ class _DetailKostState extends State<DetailKost> {
     );
   }
 
-  buildSheet() {
-    return makeDismissible(
-      child: DraggableScrollableSheet(
-          initialChildSize: 0.7,
-          minChildSize: 0.3,
-          maxChildSize: 0.7,
-          builder: (_, controller) {
-            return Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    spreadRadius: 5,
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              padding: EdgeInsets.all(20),
-              child: ListView(
-                controller: controller,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Text("Fasilitas Kamar",
-                        style: GoogleFonts.roboto(
-                            fontWeight: FontWeight.bold, fontSize: 20)),
-                  ),
-                  Text(
-                      dataDetailKost!.kostName +
-                          "\n" +
-                          dataDetailKost!.location,
-                      style: GoogleFonts.roboto()),
-                  Padding(
-                    padding: EdgeInsets.only(top: 25),
-                    child: Text("Spesifikasi Kamar",
-                        style: GoogleFonts.roboto(fontSize: 17)),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SvgPicture.asset("assets/icon/Cube.svg")),
-                        Expanded(
-                            flex: 7,
-                            child: Text(dataDetailKost!.width +
-                                " X " +
-                                dataDetailKost!.weight +
-                                " Meter")),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 4),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child:
-                                SvgPicture.asset("assets/icon/Electric.svg")),
-                        Expanded(
-                            flex: 7,
-                            child: Text(dataDetailKost!.elecPrice == "0"
-                                ? "Termasuk Listrik"
-                                : "Tidak Termasuk Listrik")),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: DottedLine(dashColor: Colors.black),
-                  ),
-                  Text("Fasilitas", style: GoogleFonts.roboto(fontSize: 17)),
-                  SizedBox(height: 8.h),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: dataFasilitas!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          children: [
-                            if (dataFasilitas![index][0].name == "Bantal")
-                              Expanded(
-                                  child: SvgPicture.asset(
-                                      "assets/icon/Pillow.svg"))
-                            else if (dataFasilitas![index][0].name == "Kasur")
-                              Expanded(
-                                  child:
-                                      SvgPicture.asset("assets/icon/Bed.svg"))
-                            else if (dataFasilitas![index][0].name == "Lemari")
-                              Expanded(
-                                  child: SvgPicture.asset(
-                                      "assets/icon/Cupboard.svg"))
-                            else if (dataFasilitas![index][0].name == "Meja")
-                              Expanded(
-                                  child:
-                                      SvgPicture.asset("assets/icon/Table.svg"))
-                            else if (dataFasilitas![index][0].name == "Kursi")
-                              Expanded(
-                                  child:
-                                      SvgPicture.asset("assets/icon/Chair.svg"))
-                            else if (dataFasilitas![index][0].name == "Kipas" ||
-                                dataFasilitas![index][0].name == "AC")
-                              Expanded(
-                                  child:
-                                      SvgPicture.asset("assets/icon/Fan.svg"))
-                            else if (dataFasilitas![index][0].name == "Dalam" ||
-                                dataFasilitas![index][0].name == "Luar")
-                              Expanded(
-                                  child: SvgPicture.asset(
-                                      "assets/icon/Toilet.svg",
-                                      height: 20.h)),
-                            Expanded(
-                                flex: 7,
-                                child: Text(dataFasilitas![index][0].name)),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            );
-          }),
-    );
-  }
+  // buildSheet() {
+  //   return makeDismissible(
+  //     child: DraggableScrollableSheet(
+  //         initialChildSize: 0.7,
+  //         minChildSize: 0.3,
+  //         maxChildSize: 0.7,
+  //         builder: (_, controller) {
+  //           return Container(
+  //             decoration: BoxDecoration(
+  //               color: Colors.white,
+  //               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //               boxShadow: [
+  //                 BoxShadow(
+  //                   color: Colors.grey,
+  //                   spreadRadius: 5,
+  //                   blurRadius: 10,
+  //                 ),
+  //               ],
+  //             ),
+  //             padding: EdgeInsets.all(20),
+  //             child: ListView(
+  //               controller: controller,
+  //               children: [
+  //                 Padding(
+  //                   padding: EdgeInsets.symmetric(vertical: 6),
+  //                   child: Text("Fasilitas Kamar",
+  //                       style: GoogleFonts.roboto(
+  //                           fontWeight: FontWeight.bold, fontSize: 20)),
+  //                 ),
+  //                 Text(
+  //                     dataDetailKost!.kostName +
+  //                         "\n" +
+  //                         dataDetailKost!.location,
+  //                     style: GoogleFonts.roboto()),
+  //                 Padding(
+  //                   padding: EdgeInsets.only(top: 25),
+  //                   child: Text("Spesifikasi Kamar",
+  //                       style: GoogleFonts.roboto(fontSize: 17)),
+  //                 ),
+  //                 Padding(
+  //                   padding: EdgeInsets.symmetric(vertical: 12),
+  //                   child: Row(
+  //                     children: [
+  //                       Expanded(
+  //                           child: SvgPicture.asset("assets/icon/Cube.svg")),
+  //                       Expanded(
+  //                           flex: 7,
+  //                           child: Text(dataDetailKost!.width +
+  //                               " X " +
+  //                               dataDetailKost!.weight +
+  //                               " Meter")),
+  //                     ],
+  //                   ),
+  //                 ),
+  //                 Padding(
+  //                   padding: EdgeInsets.symmetric(vertical: 4),
+  //                   child: Row(
+  //                     children: [
+  //                       Expanded(
+  //                           child:
+  //                               SvgPicture.asset("assets/icon/Electric.svg")),
+  //                       Expanded(
+  //                           flex: 7,
+  //                           child: Text(dataDetailKost!.elecPrice == "0"
+  //                               ? "Termasuk Listrik"
+  //                               : "Tidak Termasuk Listrik")),
+  //                     ],
+  //                   ),
+  //                 ),
+  //                 Padding(
+  //                   padding: EdgeInsets.symmetric(vertical: 12),
+  //                   child: DottedLine(dashColor: Colors.black),
+  //                 ),
+  //                 Text("Fasilitas", style: GoogleFonts.roboto(fontSize: 17)),
+  //                 SizedBox(height: 8.h),
+  //                 ListView.builder(
+  //                   shrinkWrap: true,
+  //                   itemCount: dataFasilitas!.length,
+  //                   itemBuilder: (BuildContext context, int index) {
+  //                     return Padding(
+  //                       padding: EdgeInsets.symmetric(vertical: 10),
+  //                       child: Row(
+  //                         children: [
+  //                           if (dataFasilitas![index][0].name == "Bantal")
+  //                             Expanded(
+  //                                 child: SvgPicture.asset(
+  //                                     "assets/icon/Pillow.svg"))
+  //                           else if (dataFasilitas![index][0].name == "Kasur")
+  //                             Expanded(
+  //                                 child:
+  //                                     SvgPicture.asset("assets/icon/Bed.svg"))
+  //                           else if (dataFasilitas![index][0].name == "Lemari")
+  //                             Expanded(
+  //                                 child: SvgPicture.asset(
+  //                                     "assets/icon/Cupboard.svg"))
+  //                           else if (dataFasilitas![index][0].name == "Meja")
+  //                             Expanded(
+  //                                 child:
+  //                                     SvgPicture.asset("assets/icon/Table.svg"))
+  //                           else if (dataFasilitas![index][0].name == "Kursi")
+  //                             Expanded(
+  //                                 child:
+  //                                     SvgPicture.asset("assets/icon/Chair.svg"))
+  //                           else if (dataFasilitas![index][0].name == "Kipas" ||
+  //                               dataFasilitas![index][0].name == "AC")
+  //                             Expanded(
+  //                                 child:
+  //                                     SvgPicture.asset("assets/icon/Fan.svg"))
+  //                           else if (dataFasilitas![index][0].name == "Dalam" ||
+  //                               dataFasilitas![index][0].name == "Luar")
+  //                             Expanded(
+  //                                 child: SvgPicture.asset(
+  //                                     "assets/icon/Toilet.svg",
+  //                                     height: 20.h)),
+  //                           Expanded(
+  //                               flex: 7,
+  //                               child: Text(dataFasilitas![index][0].name)),
+  //                         ],
+  //                       ),
+  //                     );
+  //                   },
+  //                 ),
+  //               ],
+  //             ),
+  //           );
+  //         }),
+  //   );
+  // }
 
   // buildUlasanComment() {
   //   return makeDismissible(
@@ -796,171 +796,241 @@ class _DetailKostState extends State<DetailKost> {
                       ),
                     ],
                   ),
-                  padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Ulasan Penyewa",
-                          style: GoogleFonts.roboto(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 5),
-                        child: Row(
-                          children: [
-                            Icon(Icons.star,
-                                color: ColorValues.primaryPurple, size: 12),
-                            SizedBox(width: 3),
-                            Text(dataDetailKost!.rating.toString(),
-                                style: GoogleFonts.roboto(fontSize: 12)),
-                            SizedBox(width: 3),
-                            Icon(Icons.circle,
-                                size: 6, color: Colors.grey[400]),
-                            // SizedBox(width: 3),
-                            // Text(
-                            //   "(" + "143" + " Ulasan)",
-                            //   style: GoogleFonts.roboto(
-                            //       fontSize: 12, color: Colors.grey[600]),
-                            // ),
-                          ],
-                        ),
-                      ),
-                      Text(dataDetailKost!.location,
-                          style:
-                              GoogleFonts.roboto(fontWeight: FontWeight.bold)),
-                      dataComment!.isEmpty
-                          ? Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Center(
-                                    child: Lottie.asset(
-                                      'assets/lottie/not_found.json',
-                                      width: 175.w,
-                                      repeat: false,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text("Ulasan Penyewa",
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
+                              SizedBox(width: 63.w),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 2,
+                                      blurRadius:
+                                          5, // changes position of shadow
                                     ),
+                                  ],
+                                ),
+                                child: CircleAvatar(
+                                  radius: 17,
+                                  backgroundColor: Colors.white,
+                                  child: IconButton(
+                                    icon: Icon(Icons.close,
+                                        color: Colors.black, size: 17),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
                                   ),
-                                  Center(
-                                    child: Text(
-                                      'Belum ada Komen yang tertulis',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline3!
-                                          .copyWith(
-                                            fontSize: 15,
-                                            color: Color(0XFF9B9B9B),
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
-                            )
-                          : Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 15),
-                                child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: dataComment!.length,
-                                    controller: controller,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 8),
-                                        child: Row(
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: CircleAvatar(
-                                                backgroundColor:
-                                                    Color(0XFFE7E7E7),
-                                                radius: 20,
-                                                backgroundImage: NetworkImage(
-                                                    dataComment![index]
-                                                        .user
-                                                        .pfp),
-                                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 578.h,
+                          color: Color(0xFFEFEFEF),
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                        dataComment!.length.toString() +
+                                            " Ulasan",
+                                        style:
+                                            GoogleFonts.roboto(fontSize: 17)),
+                                    SizedBox(width: 25.w),
+                                    Icon(Icons.star,
+                                        color: Colors.yellow.shade700,
+                                        size: 20),
+                                    SizedBox(width: 5.w),
+                                    Text(dataDetailKost!.rating.toString(),
+                                        style:
+                                            GoogleFonts.roboto(fontSize: 17)),
+                                    // SizedBox(width: 3),
+                                    // Text(
+                                    //   "(" + "143" + " Ulasan)",
+                                    //   style: GoogleFonts.roboto(
+                                    //       fontSize: 12, color: Colors.grey[600]),
+                                    // ),
+                                  ],
+                                ),
+                                SizedBox(height: 5.h),
+                                dataComment!.isEmpty
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                            child: Lottie.asset(
+                                              'assets/lottie/not_found.json',
+                                              width: 175.w,
+                                              repeat: false,
                                             ),
-                                            Expanded(
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
+                                          ),
+                                          Center(
+                                            child: Text(
+                                              'Belum ada Komen yang tertulis',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline3!
+                                                  .copyWith(
+                                                    fontSize: 15,
+                                                    color: Color(0XFF9B9B9B),
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : ListView.builder(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: dataComment!.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 8),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(12)),
+                                              ),
+                                              child: ListTile(
+                                                leading: CircleAvatar(
+                                                  backgroundColor:
+                                                      Color(0XFFE7E7E7),
+                                                  radius: 20,
+                                                  backgroundImage: NetworkImage(
                                                       dataComment![index]
                                                           .user
-                                                          .name,
-                                                      style: GoogleFonts.roboto(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold)),
-                                                  Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Icon(Icons.star,
-                                                          color: ColorValues
-                                                              .primaryPurple,
-                                                          size: 11),
-                                                      SizedBox(width: 3),
-                                                      Text(
-                                                          dataComment![index]
-                                                              .rating
-                                                              .toString(),
-                                                          style: GoogleFonts
-                                                              .roboto(
-                                                                  fontSize:
-                                                                      12)),
-                                                      SizedBox(width: 3),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                top: 3),
-                                                        child: Icon(
-                                                            Icons.circle,
-                                                            size: 6,
-                                                            color: Colors
-                                                                .grey[400]),
-                                                      ),
-                                                      SizedBox(width: 3),
-                                                      Text(
-                                                          DateFormat(
-                                                                  'yy/MM/d HH:mm')
-                                                              .format(
-                                                                  dataComment![
-                                                                          index]
-                                                                      .createdAt),
-                                                          style: GoogleFonts
-                                                              .roboto(
-                                                                  fontSize:
-                                                                      11)),
-                                                    ],
-                                                  ),
-                                                  Text(
-                                                      dataComment![index]
-                                                          .commentBody,
-                                                      style: GoogleFonts.roboto(
-                                                          fontSize: 12)),
-                                                ],
+                                                          .pfp),
+                                                ),
+                                                title: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                        dataComment![index]
+                                                            .user
+                                                            .name,
+                                                        style:
+                                                            GoogleFonts.roboto(
+                                                                fontSize: 13,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                    Row(
+                                                      children: [
+                                                        Icon(Icons.star,
+                                                            color: Colors.yellow
+                                                                .shade700),
+                                                        SizedBox(width: 2.w),
+                                                        Text(
+                                                            dataComment![index]
+                                                                .rating,
+                                                            style: GoogleFonts
+                                                                .roboto(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontSize:
+                                                                        12)),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                                subtitle: Text(
+                                                    dataComment![index]
+                                                        .commentBody,
+                                                    style: GoogleFonts.roboto(
+                                                        fontSize: 13)),
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      );
-                                    }),
-                              ),
+                                          );
+                                          //   Padding(
+                                          //   padding: EdgeInsets.symmetric(vertical: 8),
+                                          //   child: Row(
+                                          //     children: [
+                                          //       Padding(
+                                          //         padding: EdgeInsets.all(8.0),
+                                          //         child: CircleAvatar(
+                                          //           backgroundColor: Color(0XFFE7E7E7),
+                                          //           radius: 20,
+                                          //           backgroundImage:
+                                          //               NetworkImage(dataComment![index].user.pfp),
+                                          //         ),
+                                          //       ),
+                                          //       Expanded(
+                                          //         child: Column(
+                                          //           mainAxisSize: MainAxisSize.min,
+                                          //           mainAxisAlignment: MainAxisAlignment.start,
+                                          //           crossAxisAlignment: CrossAxisAlignment.start,
+                                          //           children: [
+                                          //             Text(dataComment![index].user.name,
+                                          //                 style: GoogleFonts.roboto(
+                                          //                     fontSize: 12, fontWeight: FontWeight.bold)),
+                                          //             Row(
+                                          //               mainAxisSize: MainAxisSize.min,
+                                          //               mainAxisAlignment: MainAxisAlignment.start,
+                                          //               crossAxisAlignment: CrossAxisAlignment.start,
+                                          //               children: [
+                                          //                 Icon(Icons.star,
+                                          //                     color: ColorValues.primaryPurple, size: 12),
+                                          //                 SizedBox(width: 3),
+                                          //                 Text(dataComment![index].rating.toString(),
+                                          //                     style: GoogleFonts.roboto(fontSize: 11)),
+                                          //                 SizedBox(width: 3),
+                                          //                 Padding(
+                                          //                   padding: EdgeInsets.only(top: 3),
+                                          //                   child: Icon(Icons.circle,
+                                          //                       size: 6, color: Colors.grey[400]),
+                                          //                 ),
+                                          //                 SizedBox(width: 3),
+                                          //                 Text(
+                                          //                     DateFormat('yy/MM/d HH:mm')
+                                          //                         .format(dataComment![index].createdAt),
+                                          //                     style: GoogleFonts.roboto(fontSize: 11)),
+                                          //               ],
+                                          //             ),
+                                          //             SizedBox(height: 2.h),
+                                          //             Text(dataComment![index].commentBody,
+                                          //                 style: GoogleFonts.roboto(fontSize: 12)),
+                                          //           ],
+                                          //         ),
+                                          //       ),
+                                          //     ],
+                                          //   ),
+                                          // );
+                                        }),
+                              ],
                             ),
-                    ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               });
@@ -1474,7 +1544,7 @@ class _DetailKostState extends State<DetailKost> {
             return ListTile(
               leading: CircleAvatar(
                 backgroundColor: Color(0XFFE7E7E7),
-                radius: 23,
+                radius: 20,
                 backgroundImage: NetworkImage(dataComment![index].user.pfp),
               ),
               title: Row(
