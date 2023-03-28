@@ -3,7 +3,9 @@ import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/ui-Seller/chat_seller.dart';
@@ -30,35 +32,45 @@ class _NavigationWidgetBarSellerState extends State<NavigationWidgetBarSeller> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       body: Center(
         child: _pages.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: ColorValues.primaryPurple,
-        unselectedItemColor: Color(0XFF9B9B9B),
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
-        selectedLabelStyle: textTheme.bodyText2,
-        unselectedLabelStyle: textTheme.bodyText2,
-        showUnselectedLabels: true,
-        showSelectedLabels: true,
-        elevation: 5,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.home, size: 25),
-            label: 'Home',
+      bottomNavigationBar: GNav(
+        padding: EdgeInsets.symmetric(horizontal: 22, vertical: 20),
+        haptic: true,
+        gap: 8,
+        activeColor: Color(0xFF386BF6),
+        selectedIndex: _selectedIndex,
+        onTabChange: _onItemTapped,
+        tabs: [
+          GButton(
+            leading: _selectedIndex == 0
+                ? SvgPicture.asset(
+                    "assets/icon_navbar_new/home-active.svg",
+                    width: 25.w,
+                  )
+                : SvgPicture.asset(
+                    "assets/icon_navbar_new/home.svg",
+                    width: 25.w,
+                  ),
+            icon: CupertinoIcons.home,
+            text: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.chat_bubble_text_fill, size: 25),
-            label: 'Chat',
+          GButton(
+            leading: _selectedIndex == 1
+                ? SvgPicture.asset("assets/icon_navbar_new/message-active.svg")
+                : SvgPicture.asset("assets/icon_navbar_new/message.svg"),
+            icon: CupertinoIcons.chat_bubble_text_fill,
+            text: 'Chat',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.profile_circled, size: 25),
-            label: 'Profile',
+          GButton(
+            leading: _selectedIndex == 2
+                ? SvgPicture.asset("assets/icon_navbar_new/profile-active.svg")
+                : SvgPicture.asset("assets/icon_navbar_new/profile.svg"),
+            icon: CupertinoIcons.profile_circled,
+            text: 'Profil',
           ),
         ],
       ),
@@ -68,6 +80,7 @@ class _NavigationWidgetBarSellerState extends State<NavigationWidgetBarSeller> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      print(_selectedIndex);
     });
   }
 }

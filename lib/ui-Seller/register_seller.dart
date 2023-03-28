@@ -2,7 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
 import 'package:project_anakkos_app/helper/firebase_service.dart';
@@ -11,9 +13,11 @@ import 'package:project_anakkos_app/ui-Seller/login_seller.dart';
 import 'package:project_anakkos_app/ui-User/login_user.dart';
 import 'package:project_anakkos_app/widget/bottomNavigation_user.dart';
 import 'package:project_anakkos_app/widget/custom_text_form.dart';
+import 'package:project_anakkos_app/widget/custom_text_form_login.dart';
 import 'package:project_anakkos_app/widget/google_signin_button.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:provider/provider.dart';
+import 'package:scaffold_gradient_background/scaffold_gradient_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterSeller extends StatefulWidget {
@@ -59,7 +63,19 @@ class _RegisterSellerState extends State<RegisterSeller> {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
+    return ScaffoldGradientBackground(
+      gradient: LinearGradient(
+        begin: Alignment.bottomCenter,
+        end: Alignment.topCenter,
+        stops: [
+          0.1,
+          1.0,
+        ],
+        colors: [
+          Color(0xFF58A9FF),
+          Color(0xFF6060FF),
+        ],
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -75,24 +91,23 @@ class _RegisterSellerState extends State<RegisterSeller> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
-                          'assets/logo/anakkos_logo1.svg',
-                          width: size.width * 0.4,
+                          'assets/logo/anakkos_logo2.svg',
+                          width: size.width * 0.42,
                         ),
                         SizedBox(
-                          height: 48.h,
+                          height: 40.h,
                         ),
                         Text(
                           'Daftar Akun',
-                          style: textTheme.headline5!.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8.h,
+                          style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 23),
                         ),
                         Text(
                           'Masukkan form di bawah untuk mendaftar',
-                          style: textTheme.bodyText2,
+                          style: GoogleFonts.poppins(
+                              color: Colors.white, fontSize: 13),
                         ),
                         SizedBox(
                           height: 24.h,
@@ -101,7 +116,8 @@ class _RegisterSellerState extends State<RegisterSeller> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
-                              child: CustomTextFormField(
+                              child: CustomTextFormFieldLogin(
+                                isUser: true,
                                 label: 'Masukkan nama depan',
                                 controller: _firstNameController,
                                 validator: (value) =>
@@ -112,7 +128,8 @@ class _RegisterSellerState extends State<RegisterSeller> {
                               width: 12.w,
                             ),
                             Expanded(
-                              child: CustomTextFormField(
+                              child: CustomTextFormFieldLogin(
+                                isUser: true,
                                 label: 'Masukkan nama belakang',
                                 controller: _lastNameController,
                                 validator: (value) =>
@@ -124,7 +141,8 @@ class _RegisterSellerState extends State<RegisterSeller> {
                         SizedBox(
                           height: 12.h,
                         ),
-                        CustomTextFormField(
+                        CustomTextFormFieldLogin(
+                          isEmail: true,
                           label: 'Masukkan email',
                           controller: _emailController,
                           textInputType: TextInputType.emailAddress,
@@ -134,7 +152,8 @@ class _RegisterSellerState extends State<RegisterSeller> {
                         SizedBox(
                           height: 12.h,
                         ),
-                        CustomTextFormField(
+                        CustomTextFormFieldLogin(
+                          isPhone: true,
                           label: 'Masukkan No Handphone',
                           controller: _NoHPController,
                           textInputType: TextInputType.number,
@@ -144,7 +163,7 @@ class _RegisterSellerState extends State<RegisterSeller> {
                         SizedBox(
                           height: 12.h,
                         ),
-                        CustomTextFormField(
+                        CustomTextFormFieldLogin(
                           label: 'Masukkan kata sandi',
                           controller: _passwordController,
                           isPassword: true,
@@ -155,6 +174,11 @@ class _RegisterSellerState extends State<RegisterSeller> {
                           height: 24.h,
                         ),
                         ElevatedButton(
+                          style: ButtonStyle(
+                              foregroundColor:
+                                  MaterialStateProperty.all(Colors.black),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white)),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               await getRegister();
@@ -163,25 +187,35 @@ class _RegisterSellerState extends State<RegisterSeller> {
                           child: Text('Daftar'),
                         ),
                         SizedBox(
-                          height: 40.h,
+                          height: 30.h,
                         ),
                         RichText(
                           text: TextSpan(
                             text: 'Sudah punya akun? ',
-                            style: textTheme.bodyText1,
+                            style: GoogleFonts.poppins(color: Colors.white),
                             children: [
                               TextSpan(
                                 text: 'Masuk',
-                                style: textTheme.bodyText1!.copyWith(
-                                  color: Color(0XFF2FA0DF),
-                                  fontWeight: FontWeight.w500,
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
                                 recognizer: TapGestureRecognizer()
-                                  ..onTap = () => SharedCode.navigatorPush(
-                                      context, LoginSeller()),
+                                  ..onTap = () => Navigator.of(context).pop(
+                                      PageTransition(
+                                          child: LoginSeller(),
+                                          type:
+                                              PageTransitionType.bottomToTopPop,
+                                          duration: Duration(milliseconds: 500),
+                                          reverseDuration:
+                                              Duration(milliseconds: 500),
+                                          childCurrent: widget)),
                               ),
                             ],
                           ),
+                        ),
+                        SizedBox(
+                          height: 20.h,
                         ),
                       ],
                     ),
@@ -189,7 +223,7 @@ class _RegisterSellerState extends State<RegisterSeller> {
                 ),
               ),
             ),
-            _isLoad ? LoadingAnimation() : Container()
+            _isLoad ? LoadingAnimation() : Container(),
           ],
         ),
       ),
