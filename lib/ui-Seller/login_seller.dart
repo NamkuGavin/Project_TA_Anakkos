@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
@@ -22,10 +23,12 @@ import 'package:project_anakkos_app/ui-User/register_user.dart';
 import 'package:project_anakkos_app/widget/bottomNavigation_seller.dart';
 import 'package:project_anakkos_app/widget/custom_text_field.dart';
 import 'package:project_anakkos_app/widget/custom_text_form.dart';
+import 'package:project_anakkos_app/widget/custom_text_form_login.dart';
 import 'package:project_anakkos_app/widget/google_signIn_provider.dart';
 import 'package:project_anakkos_app/widget/google_signin_button.dart';
 import 'package:project_anakkos_app/widget/loadingWidget.dart';
 import 'package:provider/provider.dart';
+import 'package:scaffold_gradient_background/scaffold_gradient_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widget/bottomNavigation_user.dart';
@@ -86,7 +89,19 @@ class _LoginSellerState extends State<LoginSeller> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
-    return Scaffold(
+    return ScaffoldGradientBackground(
+      gradient: LinearGradient(
+        begin: Alignment.bottomCenter,
+        end: Alignment.topCenter,
+        stops: [
+          0.2,
+          1.0,
+        ],
+        colors: [
+          Color(0xFF58A9FF),
+          Color(0xFF6060FF),
+        ],
+      ),
       key: scaffoldKey,
       body: SafeArea(
         child: Stack(
@@ -103,28 +118,30 @@ class _LoginSellerState extends State<LoginSeller> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
-                          'assets/logo/anakkos_logo1.svg',
-                          width: size.width * 0.4,
+                          'assets/logo/anakkos_logo2.svg',
+                          width: size.width * 0.42,
                         ),
                         SizedBox(
-                          height: 48.h,
+                          height: 40.h,
                         ),
                         Text(
                           'Selamat Datang',
-                          style: textTheme.headline5!
-                              .copyWith(fontWeight: FontWeight.w600),
-                        ),
-                        SizedBox(
-                          height: 8.h,
+                          style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 23),
                         ),
                         Text(
                           'Masukkan email dan kata sandi untuk masuk',
-                          style: textTheme.bodyText2,
+                          style: GoogleFonts.poppins(
+                              color: Colors.white, fontSize: 13),
                         ),
                         SizedBox(
                           height: 24.h,
                         ),
-                        CustomTextFormField(
+                        CustomTextFormFieldLogin(
+                          isEmail: true,
+                          borderRadius: 8,
                           label: 'Masukkan email',
                           controller: _emailController,
                           textInputType: TextInputType.emailAddress,
@@ -134,7 +151,8 @@ class _LoginSellerState extends State<LoginSeller> {
                         SizedBox(
                           height: 10.h,
                         ),
-                        CustomTextFormField(
+                        CustomTextFormFieldLogin(
+                          borderRadius: 8,
                           label: 'Masukkan kata sandi',
                           controller: _passwordController,
                           isPassword: true,
@@ -142,36 +160,46 @@ class _LoginSellerState extends State<LoginSeller> {
                               SharedCode().passwordValidator(value),
                         ),
                         SizedBox(
-                          height: 26.h,
+                          height: 30.h,
                         ),
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  ColorValues.primaryBlue)),
+                              foregroundColor:
+                                  MaterialStateProperty.all(Colors.black),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white)),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               await getLogin();
                             }
                           },
-                          child: Text('Masuk'),
+                          child: Text('Masuk',
+                              style: GoogleFonts.poppins(fontSize: 13)),
                         ),
                         SizedBox(
-                          height: 40,
+                          height: 40.h,
                         ),
                         RichText(
                           text: TextSpan(
                             text: 'Belum punya akun? ',
-                            style: textTheme.bodyText1,
+                            style: GoogleFonts.poppins(color: Colors.white),
                             children: [
                               TextSpan(
                                 text: 'Daftar',
-                                style: textTheme.bodyText1!.copyWith(
-                                  color: Color(0XFF2FA0DF),
-                                  fontWeight: FontWeight.w500,
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
                                 recognizer: TapGestureRecognizer()
-                                  ..onTap = () => SharedCode.navigatorPush(
-                                      context, RegisterSeller()),
+                                  ..onTap = () => Navigator.of(context).push(
+                                      PageTransition(
+                                          child: RegisterSeller(),
+                                          type:
+                                              PageTransitionType.bottomToTopPop,
+                                          duration: Duration(milliseconds: 500),
+                                          reverseDuration:
+                                              Duration(milliseconds: 500),
+                                          childCurrent: widget)),
                               ),
                             ],
                           ),

@@ -59,7 +59,7 @@ class _HomeSellerState extends State<HomeSeller> {
 
   @override
   void initState() {
-    timer = Timer.periodic(Duration(seconds: 3), (Timer t) => getKostSeller());
+    // timer = Timer.periodic(Duration(seconds: 3), (Timer t) => getKostSeller());
     getKostSeller();
     super.initState();
   }
@@ -120,128 +120,132 @@ class _HomeSellerState extends State<HomeSeller> {
                       child: Padding(
                         padding:
                             EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              border: Border.all(width: 0.5)),
-                          child: IntrinsicHeight(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(10)),
-                                  child: Container(
-                                      width: 100.w,
-                                      child: value[index].kostImg != "kosong"
-                                          ? Image.network(value[index].kostImg,
-                                              fit: BoxFit.fill)
-                                          : Image.asset(
-                                              "assets/dummykos/kost_1.png",
-                                              fit: BoxFit.fill)),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(value[index].kostName,
-                                            style: GoogleFonts.inter(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 11)),
-                                        SizedBox(height: 7.h),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: value[index].status ==
-                                                      "pending"
-                                                  ? Colors.yellow.shade800
-                                                  : value[index].status ==
-                                                          "rejected"
-                                                      ? Colors.red
-                                                      : Colors.green,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8, vertical: 5),
-                                            child: Text(value[index].status,
-                                                style: GoogleFonts.inter(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 10)),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12)),
+                                child: Container(
+                                    width: 100.w,
+                                    child: value[index].kostImg != "kosong"
+                                        ? Image.network(value[index].kostImg,
+                                            fit: BoxFit.fill)
+                                        : Image.asset(
+                                            "assets/dummykos/kost_1.png",
+                                            fit: BoxFit.fill)),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(value[index].kostName,
+                                          style: GoogleFonts.inter(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12)),
+                                      SizedBox(height: 7.h),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color:
+                                                value[index].status == "pending"
+                                                    ? Colors.yellow.shade800
+                                                    : value[index].status ==
+                                                            "rejected"
+                                                        ? Colors.red
+                                                        : Colors.green,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5))),
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 5),
+                                          child: Text(value[index].status,
+                                              style: GoogleFonts.inter(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 11)),
+                                        ),
+                                      ),
+                                      SizedBox(height: 7.h),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Icon(Icons.star_half,
+                                              size: 21,
+                                              color: Colors.yellow.shade700),
+                                          SizedBox(width: 4.w),
+                                          Text(
+                                              value[index].avgRating.toString(),
+                                              style: GoogleFonts.inter(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold))
+                                        ],
+                                      ),
+                                      SizedBox(height: 7.h),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SvgPicture.asset(
+                                              "assets/icon/room.svg",
+                                              width: 18.w),
+                                          SizedBox(width: 4.w),
+                                          Text(
+                                              value[index]
+                                                  .unitRented
+                                                  .toString(),
+                                              style: GoogleFonts.inter(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF8E8E8E)))
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(),
+                                          InkWell(
+                                            onTap: () {},
+                                            child: Container(
+                                              height: 40.h,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.3),
+                                                      spreadRadius: 2,
+                                                      blurRadius: 5,
+                                                      offset: Offset(0,
+                                                          3), // changes position of shadow
+                                                    ),
+                                                  ],
+                                                  color: Colors.red),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Center(
+                                                    child: Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                )),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(height: 7.h),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Icon(Icons.star,
-                                                size: 15, color: Colors.black),
-                                            SizedBox(width: 4.w),
-                                            Text(
-                                                value[index]
-                                                    .avgRating
-                                                    .toString(),
-                                                style: GoogleFonts.inter(
-                                                    fontSize: 11))
-                                          ],
-                                        ),
-                                        SizedBox(height: 7.h),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Icon(Icons.person,
-                                                size: 15, color: Colors.black),
-                                            SizedBox(width: 4.w),
-                                            Text(
-                                                value[index]
-                                                    .unitRented
-                                                    .toString(),
-                                                style: GoogleFonts.inter(
-                                                    fontSize: 11))
-                                          ],
-                                        ),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              height: 35.h,
-                                              width: 40.w,
-                                              child: IconButton(
-                                                  onPressed: () {},
-                                                  icon: Icon(
-                                                      CupertinoIcons.pencil)),
-                                            ),
-                                            SizedBox(width: 4.w),
-                                            SizedBox(
-                                              height: 35.h,
-                                              width: 40.w,
-                                              child: IconButton(
-                                                  onPressed: () async {
-                                                    await deleteKost(
-                                                        value[index].kostId);
-                                                  },
-                                                  icon: Icon(
-                                                      CupertinoIcons.trash)),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                )
-                              ],
-                            ),
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       ),
@@ -254,15 +258,10 @@ class _HomeSellerState extends State<HomeSeller> {
   appbarWidget() {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.white,
-      title: Text("Dashboard", style: GoogleFonts.roboto(color: Colors.black)),
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(0.0),
-        child: Container(
-          color: Colors.black,
-          height: 0.2.h,
-        ),
-      ),
+      backgroundColor: Color(0xFFECECEC),
+      toolbarHeight: 75.h,
+      title: Text("Dashboard",
+          style: GoogleFonts.roboto(color: Colors.black, fontSize: 18)),
     );
   }
 
