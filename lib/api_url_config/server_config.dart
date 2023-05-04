@@ -36,4 +36,5 @@ class ServerConfig {
   static String registerGoogle = "/reg-google";
   static String loginGoogle = "/log-google";
   static String getChart = "/get-chart";
+  static String getCurrentTrans = "/get-trans";
 }

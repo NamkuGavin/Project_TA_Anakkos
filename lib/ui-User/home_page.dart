@@ -474,6 +474,7 @@ class _HomePageState extends State<HomePage> {
                 return buildKostPopular(data, index);
               },
             ),
+            SizedBox(height: 15),
             buildIndicator(),
           ],
         ),
@@ -1602,10 +1603,14 @@ class _HomePageState extends State<HomePage> {
         child: Stack(
           children: [
             ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                child: Image.network(dataPopular.coverImg, fit: BoxFit.fill)),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                child: Container(
+                    width: double.infinity,
+                    height: 225,
+                    child:
+                        Image.network(dataPopular.coverImg, fit: BoxFit.fill))),
             Positioned(
-              top: 140,
+              top: 160,
               left: 15,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -1623,7 +1628,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
-              top: 165,
+              top: 175,
               left: 220,
               child: Row(
                 children: [

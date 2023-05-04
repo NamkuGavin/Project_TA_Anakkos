@@ -249,31 +249,29 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                     width: 1.0,
                                   ),
                                 ),
-                                child: Expanded(
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: kostRule_list.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return ListTile(
-                                        leading: Text(
-                                          '${index + 1}.', // menampilkan nomor urut
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                        title: Text(
-                                          kostRule_list[index],
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                        trailing: IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                kostRule_list.removeAt(index);
-                                              });
-                                            },
-                                            icon: Icon(Icons.clear)),
-                                      );
-                                    },
-                                  ),
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: kostRule_list.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ListTile(
+                                      leading: Text(
+                                        '${index + 1}.', // menampilkan nomor urut
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      title: Text(
+                                        kostRule_list[index],
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      trailing: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              kostRule_list.removeAt(index);
+                                            });
+                                          },
+                                          icon: Icon(Icons.clear)),
+                                    );
+                                  },
                                 ),
                               ),
                         SizedBox(height: 10.h),
@@ -354,31 +352,29 @@ class _AddKostPage3State extends State<AddKostPage3> {
                                     width: 1.0,
                                   ),
                                 ),
-                                child: Expanded(
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: roomRule_list.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return ListTile(
-                                        leading: Text(
-                                          '${index + 1}.', // menampilkan nomor urut
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                        title: Text(
-                                          roomRule_list[index],
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                        trailing: IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                roomRule_list.removeAt(index);
-                                              });
-                                            },
-                                            icon: Icon(Icons.clear)),
-                                      );
-                                    },
-                                  ),
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: roomRule_list.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ListTile(
+                                      leading: Text(
+                                        '${index + 1}.', // menampilkan nomor urut
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      title: Text(
+                                        roomRule_list[index],
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      trailing: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              roomRule_list.removeAt(index);
+                                            });
+                                          },
+                                          icon: Icon(Icons.clear)),
+                                    );
+                                  },
                                 ),
                               ),
                         SizedBox(height: 25.h),

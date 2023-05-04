@@ -16,6 +16,7 @@ import 'package:project_anakkos_app/model/comment_model.dart';
 import 'package:project_anakkos_app/model/create_chatRoom_model.dart';
 import 'package:project_anakkos_app/model/create_kost_model.dart';
 import 'package:project_anakkos_app/model/detail_kost_user_model.dart';
+import 'package:project_anakkos_app/model/get_current_trans_model.dart';
 import 'package:project_anakkos_app/model/history_model.dart';
 import 'package:project_anakkos_app/model/image_model.dart';
 import 'package:project_anakkos_app/model/kost_by_facility_model.dart';
@@ -1096,6 +1097,28 @@ class ApiService {
     print("RES CHART DETAIL: " + res.body.toString());
     if (res.statusCode == 200) {
       return ChartModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<CurrentTransaksiModel> getCurrentTrans({required idKost}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    print("URL COMMENT: " +
+        ServerConfig.baseURL +
+        ServerConfig.getCurrentTrans +
+        "/$idKost");
+    final res = await http.get(
+        Uri.parse(
+            ServerConfig.baseURL + ServerConfig.getCurrentTrans + "/$idKost"),
+        headers: headers);
+    print("STATUS CODE(COMMENT): " + res.statusCode.toString());
+    print("RES COMMENT: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return CurrentTransaksiModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

@@ -44,7 +44,6 @@ class _LoginSellerState extends State<LoginSeller> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isLoad = false;
 
   Future getLogin() async {
@@ -102,7 +101,6 @@ class _LoginSellerState extends State<LoginSeller> {
           Color(0xFF6060FF),
         ],
       ),
-      key: scaffoldKey,
       body: SafeArea(
         child: Stack(
           children: [

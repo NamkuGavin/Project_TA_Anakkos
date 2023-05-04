@@ -10,6 +10,7 @@ import 'package:lottie/lottie.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
 import 'package:project_anakkos_app/common/color_values.dart';
 import 'package:project_anakkos_app/common/shared_code.dart';
+import 'package:project_anakkos_app/model/get_current_trans_model.dart';
 import 'package:project_anakkos_app/model/login_model.dart';
 import 'package:project_anakkos_app/ui-User/Edit%20Profile/edit_profile_apps.dart';
 import 'package:project_anakkos_app/ui-User/bookmark_page.dart';
@@ -69,6 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
       LoginModel result = await ApiService().getLogin(
           email: pref.getString("email_user").toString(),
           password: pref.getString("pass_user").toString());
+      // CurrentTransaksiModel res = await ApiService().getCurrentTrans(idKost: result.data.id);
       username = result.data.name;
       email = result.data.email;
       photo = result.data.pfp;
@@ -136,91 +138,157 @@ class _ProfilePageState extends State<ProfilePage> {
         body: SafeArea(
           child: username.isEmpty || email.isEmpty
               ? Center(child: Text("No Data Available"))
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(28, 75, 28, 0),
-                      child: Column(
-                        children: [
-                          headerProfileApps(username, email, photo),
-                          SizedBox(
-                            height: 16.h,
-                          ),
-                          Divider(
-                            color: Color(0XFFECEEF2),
-                            thickness: 1,
-                          ),
-                          SizedBox(
-                            height: 32.h,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 28, vertical: 30),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(50),
-                            topRight: Radius.circular(50),
-                          ),
-                        ),
+              : SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(28, 75, 28, 0),
                         child: Column(
                           children: [
-                            _button(
-                              onPress: () {
-                                SharedCode.navigatorPush(
-                                    context, BookmarkPage());
-                              },
-                              icon: 'Bookmark',
-                              title: 'Bookmark',
-                            ),
+                            headerProfileApps(username, email, photo),
                             SizedBox(
                               height: 16.h,
                             ),
-                            _button(
-                              onPress: () async {
-                                final result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditProfileApps()));
-                                print('result: ' + result);
-                                await getProfileApps();
-                              },
-                              icon: 'PersonalInfo',
-                              title: 'Edit Profil',
+                            Divider(
+                              color: Color(0XFFECEEF2),
+                              thickness: 1,
                             ),
                             SizedBox(
-                              height: 16,
-                            ),
-                            _button(
-                              onPress: () async {
-                                setState(() {
-                                  _widget = LoadingAnimation();
-                                });
-                                SharedPreferences pref =
-                                    await SharedPreferences.getInstance();
-                                await ApiService().logout(
-                                    pref.getString('token_user').toString());
-                                await pref.clear();
-                                await SharedCode.navigatorPushAndRemove(
-                                    context, RolePage());
-                              },
-                              icon: 'Logout',
-                              title: 'Keluar',
-                              isLogout: true,
+                              height: 32.h,
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 28, vertical: 30),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(50),
+                              topRight: Radius.circular(50),
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Column(
+                              //   mainAxisAlignment: MainAxisAlignment.start,
+                              //   crossAxisAlignment: CrossAxisAlignment.start,
+                              //   children: [
+                              //     Text(
+                              //       "Your current kos",
+                              //       style: GoogleFonts.poppins(
+                              //         color: Colors.black,
+                              //         fontWeight: FontWeight.w600,
+                              //       ),
+                              //     ),
+                              //     Padding(
+                              //       padding:
+                              //           const EdgeInsets.symmetric(vertical: 10),
+                              //       child: IntrinsicHeight(
+                              //         child: Row(
+                              //           crossAxisAlignment:
+                              //               CrossAxisAlignment.stretch,
+                              //           mainAxisAlignment:
+                              //               MainAxisAlignment.start,
+                              //           children: [
+                              //             ClipRRect(
+                              //               borderRadius: BorderRadius.all(
+                              //                   Radius.circular(13)),
+                              //               child: Container(
+                              //                   height: 100.h,
+                              //                   width: 110.w,
+                              //                   child: SvgPicture.asset(
+                              //                       "assets/images/boardingone.svg",
+                              //                       fit: BoxFit.fill)),
+                              //             ),
+                              //             Expanded(
+                              //               child: Padding(
+                              //                 padding: EdgeInsets.all(8.0),
+                              //                 child: Column(
+                              //                   mainAxisAlignment:
+                              //                       MainAxisAlignment.start,
+                              //                   crossAxisAlignment:
+                              //                       CrossAxisAlignment.start,
+                              //                   children: [
+                              //                     SizedBox(height: 20.h),
+                              //                     Text("Kost Godaan Dunia",
+                              //                         style: GoogleFonts.inter(
+                              //                             fontWeight:
+                              //                                 FontWeight.bold,
+                              //                             fontSize: 15)),
+                              //                     Text(
+                              //                         "Stay duration: 27 Aug - 27 Sep",
+                              //                         style: GoogleFonts.inter(
+                              //                             fontSize: 12)),
+                              //                   ],
+                              //                 ),
+                              //               ),
+                              //             )
+                              //           ],
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+                              // SizedBox(
+                              //   height: 20.h,
+                              // ),
+                              Text(
+                                "Setting",
+                                style: GoogleFonts.poppins(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 16.h,
+                              ),
+                              _button(
+                                onPress: () async {
+                                  final result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditProfileApps()));
+                                  print('result: ' + result);
+                                  await getProfileApps();
+                                },
+                                icon: 'PersonalInfo',
+                                title: 'Edit Profil',
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              _button(
+                                onPress: () async {
+                                  setState(() {
+                                    _widget = LoadingAnimation();
+                                  });
+                                  SharedPreferences pref =
+                                      await SharedPreferences.getInstance();
+                                  await ApiService().logout(
+                                      pref.getString('token_user').toString());
+                                  await pref.clear();
+                                  await SharedCode.navigatorPushAndRemove(
+                                      context, RolePage());
+                                },
+                                icon: 'Logout',
+                                title: 'Keluar',
+                                isLogout: true,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
         ));
   }
