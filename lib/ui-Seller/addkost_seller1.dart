@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cupertino_stepper/cupertino_stepper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_anakkos_app/api_url_config/api_config.dart';
@@ -24,8 +26,6 @@ class _AddKostPage1State extends State<AddKostPage1> {
   TextEditingController _kostName = TextEditingController();
   TextEditingController _totalKamar = TextEditingController();
   TextEditingController _lokasiAlamat = TextEditingController();
-  TextEditingController _lokasiKota = TextEditingController();
-  TextEditingController _lokasiProvinsi = TextEditingController();
   TextEditingController _lokasiKodePos = TextEditingController();
   TextEditingController _lokasiGoogleMaps = TextEditingController();
   String category = "";
@@ -164,9 +164,10 @@ class _AddKostPage1State extends State<AddKostPage1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF9F9F9),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFFECECEC),
         title: Text("Add Kost",
             style: GoogleFonts.roboto(color: Colors.black, fontSize: 17)),
         bottom: PreferredSize(
@@ -198,6 +199,8 @@ class _AddKostPage1State extends State<AddKostPage1> {
                   controller: _kostName,
                   validator: (value) => SharedCode().emptyValidator(value),
                   decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       hintText: 'Masukkan Nama Kost',
                       hintStyle: GoogleFonts.poppins(
                           fontSize: 14,
@@ -218,67 +221,73 @@ class _AddKostPage1State extends State<AddKostPage1> {
                           borderRadius: BorderRadius.circular(8))),
                 ),
                 SizedBox(height: 25.h),
-                Text('Foto Kost',
+                Text('Kost Picture',
                     style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600, color: Colors.black45)),
                 SizedBox(height: 15.h),
-                Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: InkWell(
-                        onTap: () {
-                          showOptionKostImg();
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.8),
-                                spreadRadius: 2,
-                                blurRadius: 5, // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.add, size: 50.w),
-                          ),
-                        ),
-                      ),
-                    ),
-                    kostImg != null
-                        ? Stack(
-                            children: [
-                              Image.file(
-                                File(kostImg!.path),
-                                height: 125.h,
-                                width: 225.w,
-                                fit: BoxFit.fill,
-                              ),
-                              Positioned(
-                                top: 10,
-                                left: 10,
-                                child: CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.white,
-                                  child: IconButton(
-                                    icon: Icon(Icons.delete_forever,
-                                        color: Colors.black, size: 23),
-                                    onPressed: () {
-                                      setState(() {
-                                        kostImg = null;
-                                      });
-                                    },
-                                  ),
+                Center(
+                  child: kostImg != null
+                      ? Stack(
+                          children: [
+                            Image.file(
+                              File(kostImg!.path),
+                              height: 175.h,
+                              width: double.infinity,
+                              fit: BoxFit.fill,
+                            ),
+                            Positioned(
+                              top: 10,
+                              left: 10,
+                              child: CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.white,
+                                child: IconButton(
+                                  icon: Icon(Icons.delete_forever,
+                                      color: Colors.black, size: 23),
+                                  onPressed: () {
+                                    setState(() {
+                                      kostImg = null;
+                                    });
+                                  },
                                 ),
                               ),
-                            ],
-                          )
-                        : Container(),
-                  ],
+                            ),
+                          ],
+                        )
+                      : InkWell(
+                          onTap: () {
+                            showOptionKostImg();
+                          },
+                          child: Container(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.all(15),
+                              child: DottedBorder(
+                                  color: Colors.grey.shade500,
+                                  strokeWidth: 1.25,
+                                  dashPattern: [8, 4],
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 35, vertical: 15),
+                                    child: Column(
+                                      children: [
+                                        SvgPicture.asset(
+                                            "assets/images/gallery.svg"),
+                                        Text("Click here to upload your image",
+                                            style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 13)),
+                                        Text("Supports JPG, JPEG, PNG",
+                                            style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 10,
+                                                color: Colors.grey))
+                                      ],
+                                    ),
+                                  )),
+                            ),
+                          ),
+                        ),
                 ),
                 kostImg == null
                     ? Padding(
@@ -294,35 +303,37 @@ class _AddKostPage1State extends State<AddKostPage1> {
                     style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600, color: Colors.black45)),
                 SizedBox(height: 15.h),
-                Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: InkWell(
-                        onTap: () {
-                          showOptionRoomImg();
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.8),
-                                spreadRadius: 2,
-                                blurRadius: 5, // changes position of shadow
+                roomImg.isNotEmpty
+                    ? Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12),
+                            child: InkWell(
+                              onTap: () {
+                                showOptionRoomImg();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.8),
+                                      spreadRadius: 2,
+                                      blurRadius:
+                                          5, // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(Icons.add, size: 50.w),
+                                ),
                               ),
-                            ],
+                            ),
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.add, size: 50.w),
-                          ),
-                        ),
-                      ),
-                    ),
-                    roomImg.isNotEmpty
-                        ? SizedBox(
+                          SizedBox(
                             height: 200.h,
                             width: 225.w,
                             child: Scrollbar(
@@ -362,9 +373,42 @@ class _AddKostPage1State extends State<AddKostPage1> {
                               ),
                             ),
                           )
-                        : Container(),
-                  ],
-                ),
+                        ],
+                      )
+                    : InkWell(
+                        onTap: () {
+                          showOptionRoomImg();
+                        },
+                        child: Container(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.all(15),
+                            child: DottedBorder(
+                                color: Colors.grey.shade500,
+                                strokeWidth: 1.25,
+                                dashPattern: [8, 4],
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 35, vertical: 15),
+                                  child: Column(
+                                    children: [
+                                      SvgPicture.asset(
+                                          "assets/images/gallery.svg"),
+                                      Text("Click here to upload your image",
+                                          style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 13)),
+                                      Text("Supports JPG, JPEG, PNG",
+                                          style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 10,
+                                              color: Colors.grey))
+                                    ],
+                                  ),
+                                )),
+                          ),
+                        ),
+                      ),
                 roomImg.isEmpty
                     ? Padding(
                         padding: EdgeInsets.only(left: 9.w, top: 15.h),
@@ -427,6 +471,8 @@ class _AddKostPage1State extends State<AddKostPage1> {
                   validator: (value) => SharedCode().emptyValidator(value),
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       hintText: 'Masukkan Jumlah Kamar',
                       hintStyle: GoogleFonts.poppins(
                           fontSize: 14,
@@ -457,55 +503,9 @@ class _AddKostPage1State extends State<AddKostPage1> {
                   controller: _lokasiAlamat,
                   validator: (value) => SharedCode().emptyValidator(value),
                   decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       hintText: "Masukkan Alamat Lengkap",
-                      hintStyle: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: Colors.black26,
-                          fontWeight: FontWeight.w500),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xffD6D6D6)),
-                          borderRadius: BorderRadius.circular(8)),
-                      errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                          borderRadius: BorderRadius.circular(8)),
-                      focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                          borderRadius: BorderRadius.circular(8)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: ColorValues.primaryBlue),
-                          borderRadius: BorderRadius.circular(8))),
-                ),
-                SizedBox(height: 15.h),
-                TextFormField(
-                  controller: _lokasiKota,
-                  validator: (value) => SharedCode().emptyValidator(value),
-                  decoration: InputDecoration(
-                      hintText: "Masukkan Kota",
-                      hintStyle: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: Colors.black26,
-                          fontWeight: FontWeight.w500),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xffD6D6D6)),
-                          borderRadius: BorderRadius.circular(8)),
-                      errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                          borderRadius: BorderRadius.circular(8)),
-                      focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                          borderRadius: BorderRadius.circular(8)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: ColorValues.primaryBlue),
-                          borderRadius: BorderRadius.circular(8))),
-                ),
-                SizedBox(height: 15.h),
-                TextFormField(
-                  controller: _lokasiProvinsi,
-                  validator: (value) => SharedCode().emptyValidator(value),
-                  decoration: InputDecoration(
-                      hintText: "Masukkan Provinsi",
                       hintStyle: GoogleFonts.poppins(
                           fontSize: 14,
                           color: Colors.black26,
@@ -530,6 +530,8 @@ class _AddKostPage1State extends State<AddKostPage1> {
                   validator: (value) => SharedCode().emptyValidator(value),
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       hintText: "Masukkan Kode Pos",
                       hintStyle: GoogleFonts.poppins(
                           fontSize: 14,
@@ -554,6 +556,8 @@ class _AddKostPage1State extends State<AddKostPage1> {
                   controller: _lokasiGoogleMaps,
                   validator: (value) => SharedCode().emptyValidator(value),
                   decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
                       hintText: "Masukkan Link Google Maps",
                       hintStyle: GoogleFonts.poppins(
                           fontSize: 14,
@@ -574,79 +578,47 @@ class _AddKostPage1State extends State<AddKostPage1> {
                           borderRadius: BorderRadius.circular(8))),
                 ),
                 SizedBox(height: 20.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          foregroundColor: Colors.white,
-                          minimumSize: Size(0.w, 0.h),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                        onPressed: () {
-                          SharedCode.navigatorPop(context);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.close),
-                              Text('Batal',
-                                  style: GoogleFonts.inter(fontSize: 15)),
-                            ],
-                          ),
-                        )),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ColorValues.primaryPurple,
-                          foregroundColor: Colors.white,
-                          minimumSize: Size(0.w, 0.h),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate() &&
-                              category != "" &&
-                              kostImg != null &&
-                              roomImg.isNotEmpty) {
-                            // await getLogin();
-                            await SharedCode.navigatorPush(
-                                context,
-                                AddKostPage2(
-                                  kost_name: _kostName.text,
-                                  kost_type: category,
-                                  total_unit: _totalKamar.text,
-                                  location: _lokasiAlamat.text +
-                                      ", " +
-                                      _lokasiKota.text +
-                                      ", " +
-                                      _lokasiProvinsi.text +
-                                      ", " +
-                                      _lokasiKodePos.text,
-                                  location_url: _lokasiGoogleMaps.text,
-                                  roomImg: roomImg,
-                                  kostImg: kostImg!,
-                                ));
-                          }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('Selanjutnya',
-                                  style: GoogleFonts.inter(fontSize: 15)),
-                              Icon(Icons.arrow_forward_ios_rounded)
-                            ],
-                          ),
-                        )),
-                  ],
-                )
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorValues.primaryPurple,
+                      foregroundColor: Colors.white,
+                      minimumSize: Size(0.w, 0.h),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate() &&
+                          category != "" &&
+                          kostImg != null &&
+                          roomImg.isNotEmpty) {
+                        // await getLogin();
+                        await SharedCode.navigatorPush(
+                            context,
+                            AddKostPage2(
+                              kost_name: _kostName.text,
+                              kost_type: category,
+                              total_unit: _totalKamar.text,
+                              location: _lokasiAlamat.text +
+                                  ", " +
+                                  _lokasiKodePos.text,
+                              location_url: _lokasiGoogleMaps.text,
+                              roomImg: roomImg,
+                              kostImg: kostImg!,
+                            ));
+                      }
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Selanjutnya',
+                              style: GoogleFonts.inter(fontSize: 15)),
+                          Icon(Icons.arrow_forward_ios_rounded)
+                        ],
+                      ),
+                    ))
               ],
             ),
           ),
